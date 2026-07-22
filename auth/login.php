@@ -83,7 +83,6 @@ if (isset($_POST['login'])) {
     <input type="email" name="email" required>
 
     <br><br>
-
     <label>Mot de passe</label>
     <input type="password" name="password" required>
 
@@ -96,4 +95,6 @@ if (isset($_POST['login'])) {
 </form>
     
 </body>
-</html>
+</html> 
+</body>
+<!-- </html>  -->
