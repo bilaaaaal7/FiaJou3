@@ -96,5 +96,3 @@ if (isset($_POST['login'])) {
     
 </body>
 </html> 
-</body>
-<!-- </html>  -->
