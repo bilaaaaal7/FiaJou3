@@ -348,12 +348,12 @@ if (isset($_POST['login'])) {
                 <form method="POST" action="">
                     <div class="mb-3">
                         <label for="email" class="form-label" data-i18n="emailLabel">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="exemple@email.com" required>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="" required>
                     </div>
 
                     <div class="mb-3">
                         <label for="password" class="form-label" data-i18n="passwordLabel">Mot de passe</label>
-                        <input type="password" class="form-control" id="password" name="password" placeholder="••••••••" required>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="" required>
                     </div>
 
                     <div class="d-grid mt-4">
@@ -407,7 +407,7 @@ if (isset($_POST['login'])) {
                 }
             });
 
-            document.getElementById('email').placeholder = lang === 'en' ? 'example@email.com' : 'exemple@email.com';
+            document.getElementById('email').placeholder = lang === 'en' ? '' : '';
             document.documentElement.lang = lang;
             localStorage.setItem('fiajou3_lang', lang);
         }
