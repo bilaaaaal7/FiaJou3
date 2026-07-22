@@ -51,7 +51,7 @@ if(isset($_POST['commander'])){
         VALUES(?,?,?,?,?,?,?,?)
     ");
 
-    $result = $stmt->execute([
+    $stmt->execute([
         $user_id,
         $zone_id,
         $date_commande,
@@ -62,14 +62,10 @@ if(isset($_POST['commander'])){
         $commentaire
     ]);
 
-    var_dump($result);
-    echo "<pre>";
-    print_r($stmt->errorInfo());
-    echo "</pre>";
-    exit();
-
 
     $order_id = $pdo->lastInsertId();
+
+
 
     foreach($_SESSION['panier'] as $product_id => $quantite){
 
@@ -90,18 +86,12 @@ if(isset($_POST['commander'])){
             VALUES(?,?,?,?)
         ");
 
-        $result = $stmt->execute([
+        $stmt->execute([
             $order_id,
             $product_id,
             $quantite,
             $prix
         ]);
-
-        var_dump($result);
-        print_r($stmt->errorInfo());
-        exit();
-
-
 
     }
 
