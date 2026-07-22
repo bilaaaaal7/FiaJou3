@@ -45,15 +45,20 @@ if (isset($_POST['login'])) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>Connexion - FiaJou3</title>
+    <title id="pageTitle">Connexion - FiaJou3</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/images/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/images/favicon-16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/favicon-180.png">
+    <link rel="shortcut icon" href="../assets/images/favicon.ico">
+
+    <link id="bootstrapCss" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -83,6 +88,10 @@ if (isset($_POST['login'])) {
             position: relative;
         }
 
+        html[dir="rtl"] body {
+            font-family: 'Tajawal', 'Poppins', sans-serif;
+        }
+
         /* subtle decorative glow, purely cosmetic */
         body::before {
             content: "";
@@ -94,6 +103,11 @@ if (isset($_POST['login'])) {
             background: radial-gradient(circle, rgba(184, 134, 59, 0.06) 0%, rgba(184, 134, 59, 0) 70%);
             pointer-events: none;
             z-index: 0;
+        }
+
+        html[dir="rtl"] body::before {
+            right: auto;
+            left: -10%;
         }
 
         /* ---------- Language switcher ---------- */
@@ -129,6 +143,15 @@ if (isset($_POST['login'])) {
 
         .lang-switcher button:not(.active):hover {
             color: var(--dark);
+        }
+
+        html[dir="rtl"] .lang-switcher {
+            right: auto;
+            left: 20px;
+        }
+
+        html[dir="rtl"] .lang-switcher button {
+            font-family: 'Tajawal', 'Poppins', sans-serif;
         }
 
         /* ---------- Layout / centering ---------- */
@@ -308,6 +331,11 @@ if (isset($_POST['login'])) {
                 right: 14px;
             }
 
+            html[dir="rtl"] .lang-switcher {
+                right: auto;
+                left: 14px;
+            }
+
             .lang-switcher button {
                 padding: 6px 12px;
                 font-size: 0.75rem;
@@ -327,6 +355,7 @@ if (isset($_POST['login'])) {
     <div class="lang-switcher" role="group" aria-label="Sélecteur de langue">
         <button type="button" class="active" data-lang="fr" onclick="setLang('fr')">French</button>
         <button type="button" data-lang="en" onclick="setLang('en')">English</button>
+        <button type="button" data-lang="ar" onclick="setLang('ar')">العربية</button>
     </div>
 
     <div class="page-wrap">
@@ -391,24 +420,54 @@ if (isset($_POST['login'])) {
                 passwordLabel: "Password",
                 submitBtn: "Sign in",
                 noAccount: "Don't have an account?",
-                registerLink: "Sign up"
+                registerLink: "Sign up",
+                pageTitle: "Login - FiaJou3"
+            },
+            ar: {
+                title: "تسجيل الدخول",
+                subtitle: "سعداء بعودتك، سجّل الدخول إلى حسابك",
+                emailLabel: "البريد الإلكتروني",
+                passwordLabel: "كلمة المرور",
+                submitBtn: "تسجيل الدخول",
+                noAccount: "ليس لديك حساب؟",
+                registerLink: "إنشاء حساب",
+                pageTitle: "تسجيل الدخول - فياجوع"
             }
         };
 
+        i18n.fr.pageTitle = "Connexion - FiaJou3";
+
+        const BOOTSTRAP_LTR = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css";
+        const BOOTSTRAP_RTL = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css";
+
         function setLang(lang) {
+            if (!i18n[lang]) return;
+
             document.querySelectorAll('.lang-switcher button').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.lang === lang);
             });
 
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                if (i18n[lang] && i18n[lang][key]) {
+                if (i18n[lang][key]) {
                     el.textContent = i18n[lang][key];
                 }
             });
 
-            document.getElementById('email').placeholder = lang === 'en' ? '' : '';
+            const dir = lang === 'ar' ? 'rtl' : 'ltr';
             document.documentElement.lang = lang;
+            document.documentElement.dir = dir;
+
+            const bootstrapCss = document.getElementById('bootstrapCss');
+            const targetHref = dir === 'rtl' ? BOOTSTRAP_RTL : BOOTSTRAP_LTR;
+            if (bootstrapCss && bootstrapCss.getAttribute('href') !== targetHref) {
+                bootstrapCss.setAttribute('href', targetHref);
+            }
+
+            if (i18n[lang].pageTitle) {
+                document.getElementById('pageTitle').textContent = i18n[lang].pageTitle;
+            }
+
             localStorage.setItem('fiajou3_lang', lang);
         }
 
