@@ -16,6 +16,10 @@ $nbOrders = $stmt->fetchColumn();
 <head>
     <meta charset="UTF-8">
     <title>Dashboard Admin</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/images/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/images/favicon-16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/favicon-180.png">
+    <link rel="shortcut icon" href="../assets/images/favicon.ico">
 <style>
 body{
     font-family: Arial, sans-serif;
