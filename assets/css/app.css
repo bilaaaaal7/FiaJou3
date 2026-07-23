@@ -1,0 +1,60 @@
+/*
+  Styles globaux de l'application.
+  La partie "dashboard" est reprise telle quelle du bloc <style> original
+  de admin/index.php. La partie navbar est nouvelle (la navbar elle-même
+  n'existait pas dans le projet original, elle a été ajoutée par la
+  réorganisation en architecture MVC).
+*/
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    margin: 40px;
+}
+
+h1 {
+    text-align: center;
+}
+
+.dashboard {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 40px;
+}
+
+.card {
+    width: 220px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    text-align: center;
+}
+
+.card h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.card p {
+    font-size: 40px;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+/* ---------- Navbar (nouveau, minimal) ---------- */
+.fiajou-navbar {
+    background: #1a1a1a;
+    margin: -40px -40px 30px -40px;
+    padding: 10px 40px;
+}
+
+.fiajou-navbar .navbar-brand,
+.fiajou-navbar .nav-link {
+    color: #f5f5f5;
+}
+
+.fiajou-navbar .nav-link:hover {
+    color: #b8863b;
+}

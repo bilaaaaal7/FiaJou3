@@ -1,0 +1,21 @@
+RewriteEngine On
+
+# ------------------------------------------------------------------
+# Protège les dossiers internes (contrôleurs, modèles, config, vues)
+# contre tout accès direct par navigateur. Ils ne doivent être chargés
+# que via index.php / urlRewrite.php.
+# ------------------------------------------------------------------
+RewriteRule ^(config|modele|controleur|vue)(/|$) - [F,L]
+
+# ------------------------------------------------------------------
+# Routage propre : toute requête qui ne correspond pas à un fichier ou
+# un dossier existant (assets, uploads, favicon...) est envoyée vers
+# index.php avec le chemin demandé dans le paramètre GET "route".
+# Exemple : /admin/plats -> index.php?route=admin/plats
+# ------------------------------------------------------------------
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?route=$1 [QSA,L]
+
+# Empêche le listage des dossiers
+Options -Indexes

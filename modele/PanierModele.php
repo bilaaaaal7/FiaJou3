@@ -1,0 +1,126 @@
+<?php
+/**
+ * Modèle Panier
+ * Le panier est stocké en session ($_SESSION['panier'] = [plat_id => quantite]).
+ * Ce modèle centralise toutes les opérations dessus.
+ */
+
+require_once __DIR__ . '/PlatModele.php';
+
+class PanierModele
+{
+    private function initialiser(): void
+    {
+        if (!isset($_SESSION['panier'])) {
+            $_SESSION['panier'] = [];
+        }
+    }
+
+    public function ajouter(int $platId): void
+    {
+        $this->initialiser();
+
+        if (isset($_SESSION['panier'][$platId])) {
+            $_SESSION['panier'][$platId]++;
+        } else {
+            $_SESSION['panier'][$platId] = 1;
+        }
+    }
+
+    public function augmenter(int $platId): void
+    {
+        $this->initialiser();
+
+        if (isset($_SESSION['panier'][$platId])) {
+            $_SESSION['panier'][$platId]++;
+        }
+    }
+
+    public function diminuer(int $platId): void
+    {
+        $this->initialiser();
+
+        if (isset($_SESSION['panier'][$platId])) {
+            $_SESSION['panier'][$platId]--;
+
+            if ($_SESSION['panier'][$platId] <= 0) {
+                unset($_SESSION['panier'][$platId]);
+            }
+        }
+    }
+
+    public function retirer(int $platId): void
+    {
+        $this->initialiser();
+        unset($_SESSION['panier'][$platId]);
+    }
+
+    public function vider(): void
+    {
+        unset($_SESSION['panier']);
+    }
+
+    public function estVide(): bool
+    {
+        return empty($_SESSION['panier']);
+    }
+
+    public function nombreArticles(): int
+    {
+        if (empty($_SESSION['panier'])) {
+            return 0;
+        }
+        return array_sum($_SESSION['panier']);
+    }
+
+    public function getContenuBrut(): array
+    {
+        return $_SESSION['panier'] ?? [];
+    }
+
+    /**
+     * Retourne le contenu détaillé du panier (infos plat + quantité + sous-total)
+     * ainsi que le total général.
+     */
+    public function getDetails(): array
+    {
+        $platModele = new PlatModele();
+        $panier = [];
+        $total = 0;
+
+        if (!empty($_SESSION['panier'])) {
+            foreach ($_SESSION['panier'] as $id => $quantite) {
+                $plat = $platModele->getParId((int) $id);
+
+                if ($plat) {
+                    $plat['quantite'] = $quantite;
+                    $plat['sous_total'] = $plat['prix'] * $quantite;
+                    $total += $plat['sous_total'];
+                    $panier[] = $plat;
+                }
+            }
+        }
+
+        return ['articles' => $panier, 'total' => $total];
+    }
+
+    /**
+     * Total du panier sans le détail (utilisé sur la page de commande).
+     */
+    public function getTotal(): float
+    {
+        $platModele = new PlatModele();
+        $total = 0;
+
+        if (!empty($_SESSION['panier'])) {
+            foreach ($_SESSION['panier'] as $id => $quantite) {
+                $plat = $platModele->getParId((int) $id);
+                if ($plat) {
+                    $total += $plat['prix'] * $quantite;
+                }
+            }
+        }
+
+        return $total;
+    }
+}
