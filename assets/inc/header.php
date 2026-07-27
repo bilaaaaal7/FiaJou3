@@ -2,14 +2,19 @@
 /**
  * En-tête commun (balise <head> + ouverture du <body>).
  * Variables attendues (optionnelles) avant l'include :
- *   $pageTitle : string  - titre de l'onglet
- *   $extraCss  : array   - fichiers CSS additionnels dans assets/css/
- *   $bodyClass : string  - classe CSS optionnelle sur <body>
+ *   $pageTitle       : string - titre de l'onglet (défini par défaut par
+ *                       route dans urlRewrite.php, surchargeable par la vue)
+ *   $metaDescription : string - meta description SEO (idem, via urlRewrite.php)
+ *   $metaKeywords    : string - meta keywords SEO, si pertinent (idem)
+ *   $extraCss        : array  - fichiers CSS additionnels dans assets/css/
+ *   $bodyClass       : string - classe CSS optionnelle sur <body>
  */
 
-$pageTitle = $pageTitle ?? APP_NAME;
-$extraCss  = $extraCss  ?? [];
-$bodyClass = $bodyClass ?? '';
+$pageTitle       = $pageTitle       ?? APP_NAME;
+$metaDescription = $metaDescription ?? 'Repas faits maison, livrés chez vous avec ' . APP_NAME . '.';
+$metaKeywords    = $metaKeywords    ?? '';
+$extraCss        = $extraCss        ?? [];
+$bodyClass       = $bodyClass       ?? '';
 ?>
 <!DOCTYPE html>
 <html lang="fr" dir="ltr">
@@ -17,6 +22,10 @@ $bodyClass = $bodyClass ?? '';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title id="pageTitle"><?php echo htmlspecialchars($pageTitle); ?></title>
+    <meta name="description" content="<?php echo htmlspecialchars($metaDescription); ?>">
+    <?php if (!empty($metaKeywords)): ?>
+    <meta name="keywords" content="<?php echo htmlspecialchars($metaKeywords); ?>">
+    <?php endif; ?>
 
     <link rel="icon" type="image/png" sizes="32x32" href="<?php echo BASE_URL; ?>/assets/images/favicon-32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="<?php echo BASE_URL; ?>/assets/images/favicon-16.png">
