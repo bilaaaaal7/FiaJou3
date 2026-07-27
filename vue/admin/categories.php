@@ -59,14 +59,18 @@ require ROOT_PATH . '/assets/inc/navbar.php';
             </div>
             <div class="form-group">
                 <label>Image (nom de fichier)</label>
-                <input type="text" name="image" value="<?php echo htmlspecialchars($image); ?>" required>
+                <input type="file" name="image" required>
             </div>
         </div>
         <input type="hidden" name="id" value="<?php echo $idModifier; ?>">
         <div class="form-actions">
             <?php if ($idModifier): ?>
                 <button type="submit" name="modifier" class="btn btn-gold">Modifier</button>
-                <a href="<?php echo BASE_URL; ?>/index.php?route=admin/categories" class="btn btn-outline">Annuler</a>
+                <form method="POST"
+                    action="<?php echo BASE_URL; ?>/index.php?route=admin/categories"
+                    enctype="multipart/form-data">
+                    <button type="submit" name="annuler" class="btn btn-outline">Annuler</button>
+                </form>
             <?php else: ?>
                 <button type="submit" name="ajouter" class="btn btn-gold">Ajouter</button>
             <?php endif; ?>
