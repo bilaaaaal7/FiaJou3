@@ -14,6 +14,7 @@ $nom = "";
 $description = "";
 $image = "";
 $idModifier = "";
+$error = "";
 
 if (isset($_POST['ajouter'])) {
     $nom = $_POST['nom'];
@@ -39,10 +40,14 @@ if (isset($_POST['modifier'])) {
 }
 
 if (isset($_GET['supprimer'])) {
-    $categorieModele->supprimer((int) $_GET['supprimer']);
+    $succes = $categorieModele->supprimer((int) $_GET['supprimer']);
 
-    header('Location: ' . BASE_URL . '/index.php?route=admin/categories');
-    exit;
+    if (!$succes) {
+        $error = "Impossible de supprimer cette catégorie : elle contient encore des plats. Supprimez ou déplacez d'abord ses plats.";
+    } else {
+        header('Location: ' . BASE_URL . '/index.php?route=admin/categories');
+        exit;
+    }
 }
 
 if (isset($_GET['modifier'])) {

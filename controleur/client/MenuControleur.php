@@ -12,9 +12,9 @@ require_once ROOT_PATH . '/modele/PanierModele.php';
 $panierModele = new PanierModele();
 
 if (isset($_GET['ajouter'])) {
-    $panierModele->ajouter((int) $_GET['ajouter']);
+    $succes = $panierModele->ajouter((int) $_GET['ajouter']);
 
-    header('Location: ' . BASE_URL . '/index.php?route=client');
+    header('Location: ' . BASE_URL . '/index.php?route=client' . ($succes ? '' : '&erreur=indisponible'));
     exit;
 }
 

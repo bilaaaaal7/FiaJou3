@@ -7,6 +7,10 @@
 
 $extraJs = $extraJs ?? [];
 ?>
+<?php if (est_connecte()): ?>
+    </div>
+</div>
+<?php endif; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <?php foreach ($extraJs as $js): ?>
     <script src="<?php echo BASE_URL; ?>/assets/js/<?php echo htmlspecialchars($js); ?>"></script>

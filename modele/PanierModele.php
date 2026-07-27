@@ -16,24 +16,42 @@ class PanierModele
         }
     }
 
-    public function ajouter(int $platId): void
+    public function ajouter(int $platId): bool
     {
         $this->initialiser();
+
+        $platModele = new PlatModele();
+        $plat = $platModele->getParId($platId);
+
+        if (!$plat || !$plat['disponible']) {
+            return false;
+        }
+
+        $quantiteActuelle = $_SESSION['panier'][$platId] ?? 0;
+        if ($quantiteActuelle >= 20) {
+            return false;
+        }
 
         if (isset($_SESSION['panier'][$platId])) {
             $_SESSION['panier'][$platId]++;
         } else {
             $_SESSION['panier'][$platId] = 1;
         }
+        return true;
     }
 
-    public function augmenter(int $platId): void
+    public function augmenter(int $platId): bool
     {
         $this->initialiser();
 
         if (isset($_SESSION['panier'][$platId])) {
+            if ($_SESSION['panier'][$platId] >= 20) {
+                return false;
+            }
             $_SESSION['panier'][$platId]++;
+            return true;
         }
+        return false;
     }
 
     public function diminuer(int $platId): void
@@ -122,5 +140,29 @@ class PanierModele
         }
 
         return $total;
+    }
+
+    /**
+     * Valide le panier (vérifie disponibilité et quantités).
+     */
+    public function valider(): array
+    {
+        $platModele = new PlatModele();
+        $erreurs = [];
+
+        if (!empty($_SESSION['panier'])) {
+            foreach ($_SESSION['panier'] as $id => $quantite) {
+                $plat = $platModele->getParId((int) $id);
+                if (!$plat) {
+                    $erreurs[] = "Le plat #$id n'existe plus.";
+                    unset($_SESSION['panier'][$id]);
+                } elseif (!$plat['disponible']) {
+                    $erreurs[] = "Le plat \"{$plat['nom']}\" n'est plus disponible.";
+                    unset($_SESSION['panier'][$id]);
+                }
+            }
+        }
+
+        return $erreurs;
     }
 }

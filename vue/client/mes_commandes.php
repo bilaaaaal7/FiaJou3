@@ -1,47 +1,67 @@
 <?php
 $pageTitle = "Mes commandes - " . APP_NAME;
+$extraCss = ['admin.css'];
 require ROOT_PATH . '/assets/inc/header.php';
 require ROOT_PATH . '/assets/inc/navbar.php';
 ?>
 
-<h1>Mes commandes</h1>
+<div style="max-width: 1100px; margin: 0 auto;">
 
-<table border="1" cellpadding="10">
+    <div class="topbar">
+        <h1>Mes commandes</h1>
+        <a href="<?php echo BASE_URL; ?>/index.php?route=client" class="btn btn-gold btn-sm">Consulter le menu</a>
+    </div>
 
-<tr>
-    <th>ID</th>
-    <th>Date de commande</th>
-    <th>Date livraison</th>
-    <th>Heure livraison</th>
-    <th>Total</th>
-    <th>Statut</th>
-    <th>Commentaire</th>
-</tr>
+    <?php if (!empty($commandes)): ?>
+    <div class="panel">
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Date commande</th>
+                        <th>Date livraison</th>
+                        <th>Heure</th>
+                        <th>Total</th>
+                        <th>Statut</th>
+                        <th>Commentaire</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($commandes as $commande): ?>
+                    <tr>
+                        <td><?php echo (int) $commande['id']; ?></td>
+                        <td><?php echo htmlspecialchars($commande['date_commande']); ?></td>
+                        <td><?php echo htmlspecialchars($commande['date_livraison']); ?></td>
+                        <td><?php echo htmlspecialchars($commande['heure_livraison']); ?></td>
+                        <td><?php echo number_format((float) $commande['total'], 2, ',', ' '); ?> DH</td>
+                        <td>
+                            <span class="badge-status st-<?php echo htmlspecialchars($commande['statut']); ?>">
+                                <?php echo STATUTS_COMMANDE[$commande['statut']] ?? $commande['statut']; ?>
+                            </span>
+                        </td>
+                        <td><?php echo htmlspecialchars($commande['commentaire'] ?? '-'); ?></td>
+                        <td>
+                            <a href="<?php echo BASE_URL; ?>/index.php?route=client/detail-commande&id=<?php echo (int) $commande['id']; ?>"
+                               class="btn btn-outline btn-sm">Détail</a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <?php else: ?>
+    <div class="panel">
+        <div class="empty-state">
+            Vous n'avez pas encore passé de commande.
+            <br><br>
+            <a href="<?php echo BASE_URL; ?>/index.php?route=client" class="btn btn-gold">Consulter le menu</a>
+        </div>
+    </div>
+    <?php endif; ?>
 
-<?php foreach ($commandes as $commande) { ?>
-
-<tr>
-    <td><?php echo $commande['id']; ?></td>
-    <td><?php echo $commande['date_commande']; ?></td>
-    <td><?php echo $commande['date_livraison']; ?></td>
-    <td><?php echo $commande['heure_livraison']; ?></td>
-    <td><?php echo $commande['total']; ?> DH</td>
-    <td><?php echo $commande['statut']; ?></td>
-    <td><?php echo $commande['commentaire']; ?></td>
-</tr>
-
-<?php } ?>
-
-<?php if (empty($commandes)) { ?>
-<tr>
-    <td colspan="7">Vous n'avez pas encore passé de commande.</td>
-</tr>
-<?php } ?>
-
-</table>
-
-<br>
-
-<a href="<?php echo BASE_URL; ?>/index.php?route=client">Retour au menu</a>
+</div>
 
 <?php require ROOT_PATH . '/assets/inc/footer.php'; ?>

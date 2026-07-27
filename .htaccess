@@ -4,8 +4,14 @@ RewriteEngine On
 # Protège les dossiers internes (contrôleurs, modèles, config, vues)
 # contre tout accès direct par navigateur. Ils ne doivent être chargés
 # que via index.php / urlRewrite.php.
+#
+# Inclut aussi les anciens dossiers pré-refactorisation (admin, auth,
+# client, cuisinier, livreur, includes) : ce sont des fichiers legacy
+# non utilisés par le routeur actuel, sans aucune vérification de
+# session/rôle. Ils restent dans le dépôt mais ne doivent plus jamais
+# être accessibles directement.
 # ------------------------------------------------------------------
-RewriteRule ^(config|modele|controleur|vue)(/|$) - [F,L]
+RewriteRule ^(config|modele|controleur|vue|admin|auth|client|cuisinier|livreur|includes)(/|$) - [F,L]
 
 # ------------------------------------------------------------------
 # Routage propre : toute requête qui ne correspond pas à un fichier ou

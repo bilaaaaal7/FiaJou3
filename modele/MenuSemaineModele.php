@@ -1,0 +1,108 @@
+<?php
+/**
+ * Modèle Menu de la semaine
+ * Accès aux tables `weekly_menus` et `weekly_menu_items`.
+ */
+
+require_once __DIR__ . '/Database.php';
+
+class MenuSemaineModele
+{
+    private PDO $pdo;
+
+    public function __construct()
+    {
+        $this->pdo = Database::getConnection();
+    }
+
+    public function getTous(): array
+    {
+        $stmt = $this->pdo->query("SELECT * FROM weekly_menus ORDER BY date_creation DESC");
+        return $stmt->fetchAll();
+    }
+
+    public function getParId(int $id): array|false
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM weekly_menus WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch();
+    }
+
+    public function getPublie(): array|false
+    {
+        $stmt = $this->pdo->query(
+            "SELECT * FROM weekly_menus WHERE statut = 'publie' ORDER BY date_creation DESC LIMIT 1"
+        );
+        return $stmt->fetch();
+    }
+
+    public function getItems(int $menuId): array
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT wmi.*, plats.nom AS plat_nom, plats.prix, plats.image, plats.disponible,
+                    categories.nom AS categorie
+             FROM weekly_menu_items wmi
+             INNER JOIN plats ON wmi.product_id = plats.id
+             INNER JOIN categories ON plats.category_id = categories.id
+             WHERE wmi.weekly_menu_id = ?
+             ORDER BY FIELD(wmi.jour, 'lundi','mardi','mercredi','jeudi','vendredi','samedi','dimanche'), categories.nom"
+        );
+        $stmt->execute([$menuId]);
+        return $stmt->fetchAll();
+    }
+
+    public function creer(string $nom): int
+    {
+        $stmt = $this->pdo->prepare(
+            "INSERT INTO weekly_menus (nom, date_creation, statut) VALUES (?, CURDATE(), 'brouillon')"
+        );
+        $stmt->execute([$nom]);
+        return (int) $this->pdo->lastInsertId();
+    }
+
+    public function mettreAJourStatut(int $id, string $statut): void
+    {
+        if ($statut === 'publie') {
+            $stmt = $this->pdo->prepare("UPDATE weekly_menus SET statut = 'brouillon' WHERE statut = 'publie'");
+            $stmt->execute();
+        }
+        $stmt = $this->pdo->prepare("UPDATE weekly_menus SET statut = ? WHERE id = ?");
+        $stmt->execute([$statut, $id]);
+    }
+
+    public function supprimer(int $id): void
+    {
+        $stmt = $this->pdo->prepare("DELETE FROM weekly_menu_items WHERE weekly_menu_id = ?");
+        $stmt->execute([$id]);
+        $stmt = $this->pdo->prepare("DELETE FROM weekly_menus WHERE id = ?");
+        $stmt->execute([$id]);
+    }
+
+    public function ajouterItem(int $menuId, int $productId, string $jour): void
+    {
+        $stmt = $this->pdo->prepare(
+            "INSERT INTO weekly_menu_items (weekly_menu_id, product_id, jour) VALUES (?, ?, ?)"
+        );
+        $stmt->execute([$menuId, $productId, $jour]);
+    }
+
+    public function supprimerItem(int $itemId): void
+    {
+        $stmt = $this->pdo->prepare("DELETE FROM weekly_menu_items WHERE id = ?");
+        $stmt->execute([$itemId]);
+    }
+
+    public function getItemsParJour(int $menuId): array
+    {
+        $items = $this->getItems($menuId);
+        $parJour = [];
+        $jours = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
+        foreach ($jours as $j) {
+            $parJour[$j] = [];
+        }
+        foreach ($items as $item) {
+            $parJour[$item['jour']][] = $item;
+        }
+        return $parJour;
+    }
+}

@@ -17,6 +17,23 @@ function utilisateur_role(): ?string
 }
 
 /**
+ * Convertit un rôle utilisateur en route par défaut de son espace.
+ * Nécessaire car certains rôles (cook, driver) ont une valeur différente
+ * du nom de leur route (cuisinier, livreur).
+ */
+function route_par_defaut_pour_role(?string $role): string
+{
+    $redirects = [
+        ROLE_ADMIN     => 'admin',
+        ROLE_CLIENT    => 'client/dashboard',
+        ROLE_CUISINIER => 'cuisinier',
+        ROLE_LIVREUR   => 'livreur',
+    ];
+
+    return $redirects[$role] ?? ($role ?? 'connexion');
+}
+
+/**
  * Redirige vers la page de connexion si l'utilisateur n'est pas connecté.
  */
 function exiger_connexion(): void

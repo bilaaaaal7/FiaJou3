@@ -19,6 +19,7 @@ $image = "";
 $disponible = 1;
 $category_id = "";
 $idModifier = "";
+$error = "";
 
 if (isset($_POST['ajouter'])) {
     $category_id = $_POST['category_id'];
@@ -72,10 +73,14 @@ if (isset($_POST['modifier'])) {
 }
 
 if (isset($_GET['supprimer'])) {
-    $platModele->supprimer((int) $_GET['supprimer']);
+    $succes = $platModele->supprimer((int) $_GET['supprimer']);
 
-    header('Location: ' . BASE_URL . '/index.php?route=admin/plats');
-    exit;
+    if (!$succes) {
+        $error = "Impossible de supprimer ce plat : il fait partie de commandes existantes. Vous pouvez le rendre indisponible à la place.";
+    } else {
+        header('Location: ' . BASE_URL . '/index.php?route=admin/plats');
+        exit;
+    }
 }
 
 if (isset($_GET['modifier'])) {

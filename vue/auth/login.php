@@ -38,6 +38,10 @@ require ROOT_PATH . '/assets/inc/header.php';
                         <input type="password" class="form-control" id="password" name="password" placeholder="" required>
                     </div>
 
+                    <div class="text-end mb-3">
+                        <a href="<?php echo BASE_URL; ?>/index.php?route=mot-de-passe-oublie" class="small" style="color:var(--gold-dark);" data-i18n="forgotPassword">Mot de passe oublié ?</a>
+                    </div>
+
                     <div class="d-grid mt-4">
                         <button type="submit" name="login" class="btn btn-gold" data-i18n="submitBtn">Se connecter</button>
                     </div>
@@ -62,6 +66,7 @@ require ROOT_PATH . '/assets/inc/header.php';
                 subtitle: "Ravis de vous revoir, connectez-vous à votre compte",
                 emailLabel: "Email",
                 passwordLabel: "Mot de passe",
+                forgotPassword: "Mot de passe oublié ?",
                 submitBtn: "Se connecter",
                 noAccount: "Pas encore de compte ?",
                 registerLink: "Inscrivez-vous"
@@ -71,6 +76,7 @@ require ROOT_PATH . '/assets/inc/header.php';
                 subtitle: "Welcome back, please sign in to your account",
                 emailLabel: "Email",
                 passwordLabel: "Password",
+                forgotPassword: "Forgot password?",
                 submitBtn: "Sign in",
                 noAccount: "Don't have an account?",
                 registerLink: "Sign up",
@@ -81,6 +87,7 @@ require ROOT_PATH . '/assets/inc/header.php';
                 subtitle: "سعداء بعودتك، سجّل الدخول إلى حسابك",
                 emailLabel: "البريد الإلكتروني",
                 passwordLabel: "كلمة المرور",
+                forgotPassword: "نسيت كلمة المرور؟",
                 submitBtn: "تسجيل الدخول",
                 noAccount: "ليس لديك حساب؟",
                 registerLink: "إنشاء حساب",

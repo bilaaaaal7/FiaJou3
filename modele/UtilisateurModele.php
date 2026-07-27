@@ -29,6 +29,19 @@ class UtilisateurModele
         return $stmt->fetch();
     }
 
+    public function getProfilComplet(int $userId): array|false
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT users.id, users.email, users.actif, profiles.prenom, profiles.nom,
+                    profiles.telephone, profiles.adresse, profiles.ville, profiles.role
+             FROM users
+             INNER JOIN profiles ON users.id = profiles.user_id
+             WHERE users.id = ?"
+        );
+        $stmt->execute([$userId]);
+        return $stmt->fetch();
+    }
+
     public function creerCompte(array $donnees): int
     {
         $hashedPassword = password_hash($donnees['password'], PASSWORD_DEFAULT);
@@ -49,7 +62,33 @@ class UtilisateurModele
             $donnees['telephone'],
             $donnees['adresse'],
             $donnees['ville'],
-            ROLE_CLIENT,
+            $donnees['role'] ?? ROLE_CLIENT,
+        ]);
+
+        return $userId;
+    }
+
+    public function creerComptePersonnel(array $donnees, string $role): int
+    {
+        $hashedPassword = password_hash($donnees['password'], PASSWORD_DEFAULT);
+
+        $stmt = $this->pdo->prepare("INSERT INTO users (email, password) VALUES (?, ?)");
+        $stmt->execute([$donnees['email'], $hashedPassword]);
+
+        $userId = (int) $this->pdo->lastInsertId();
+
+        $stmt = $this->pdo->prepare(
+            "INSERT INTO profiles (user_id, prenom, nom, telephone, adresse, ville, role)
+             VALUES (?, ?, ?, ?, ?, ?, ?)"
+        );
+        $stmt->execute([
+            $userId,
+            $donnees['prenom'],
+            $donnees['nom'],
+            $donnees['telephone'] ?? '',
+            $donnees['adresse'] ?? '',
+            $donnees['ville'] ?? '',
+            $role,
         ]);
 
         return $userId;
@@ -58,17 +97,46 @@ class UtilisateurModele
     public function getTousAvecProfil(): array
     {
         $stmt = $this->pdo->query(
-            "SELECT users.id, users.email, profiles.prenom, profiles.nom, profiles.role
+            "SELECT users.id, users.email, users.actif, profiles.prenom, profiles.nom, profiles.role
              FROM users
-             INNER JOIN profiles ON users.id = profiles.user_id"
+             INNER JOIN profiles ON users.id = profiles.user_id
+             ORDER BY profiles.nom"
         );
         return $stmt->fetchAll();
+    }
+
+    public function getParRole(string $role): array
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT users.id, users.email, users.actif, profiles.prenom, profiles.nom, profiles.telephone
+             FROM users
+             INNER JOIN profiles ON users.id = profiles.user_id
+             WHERE profiles.role = ?
+             ORDER BY profiles.nom"
+        );
+        $stmt->execute([$role]);
+        return $stmt->fetchAll();
+    }
+
+    public function getClients(): array
+    {
+        return $this->getParRole(ROLE_CLIENT);
+    }
+
+    public function getCuisiniers(): array
+    {
+        return $this->getParRole(ROLE_CUISINIER);
+    }
+
+    public function getLivreurs(): array
+    {
+        return $this->getParRole(ROLE_LIVREUR);
     }
 
     public function getByIdAvecProfil(int $id): array|false
     {
         $stmt = $this->pdo->prepare(
-            "SELECT users.id, users.email, profiles.prenom, profiles.nom,
+            "SELECT users.id, users.email, users.actif, profiles.prenom, profiles.nom,
                     profiles.telephone, profiles.adresse, profiles.ville, profiles.role
              FROM users
              INNER JOIN profiles ON users.id = profiles.user_id
@@ -91,25 +159,76 @@ class UtilisateurModele
         $stmt->execute([
             $donnees['prenom'],
             $donnees['nom'],
-            $donnees['telephone'],
-            $donnees['adresse'],
-            $donnees['ville'],
+            $donnees['telephone'] ?? '',
+            $donnees['adresse'] ?? '',
+            $donnees['ville'] ?? '',
             $donnees['role'],
             $id,
         ]);
     }
 
-    public function supprimer(int $id): void
+    public function mettreAJourProfil(int $id, array $donnees): void
     {
-        $stmt = $this->pdo->prepare("DELETE FROM profiles WHERE user_id = ?");
-        $stmt->execute([$id]);
+        $stmt = $this->pdo->prepare(
+            "UPDATE profiles
+             SET prenom = ?, nom = ?, telephone = ?, adresse = ?, ville = ?
+             WHERE user_id = ?"
+        );
+        $stmt->execute([
+            $donnees['prenom'],
+            $donnees['nom'],
+            $donnees['telephone'] ?? '',
+            $donnees['adresse'] ?? '',
+            $donnees['ville'] ?? '',
+            $id,
+        ]);
+    }
 
-        $stmt = $this->pdo->prepare("DELETE FROM users WHERE id = ?");
-        $stmt->execute([$id]);
+    public function changerMdp(int $id, string $nouveauMdp): void
+    {
+        $hashed = password_hash($nouveauMdp, PASSWORD_DEFAULT);
+        $stmt = $this->pdo->prepare("UPDATE users SET password = ? WHERE id = ?");
+        $stmt->execute([$hashed, $id]);
+    }
+
+    public function setActif(int $id, bool $actif): void
+    {
+        $stmt = $this->pdo->prepare("UPDATE users SET actif = ? WHERE id = ?");
+        $stmt->execute([$actif ? 1 : 0, $id]);
+    }
+
+    public function supprimer(int $id): bool
+    {
+        try {
+            $this->pdo->beginTransaction();
+            $stmt = $this->pdo->prepare("DELETE FROM profiles WHERE user_id = ?");
+            $stmt->execute([$id]);
+
+            $stmt = $this->pdo->prepare("DELETE FROM users WHERE id = ?");
+            $stmt->execute([$id]);
+
+            $this->pdo->commit();
+            return true;
+        } catch (PDOException $e) {
+            $this->pdo->rollBack();
+            if ($e->getCode() === '23000') {
+                return false;
+            }
+            throw $e;
+        }
     }
 
     public function compter(): int
     {
         return (int) $this->pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
+    }
+
+    public function compterParRole(string $role): int
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT COUNT(*) FROM profiles WHERE role = ?"
+        );
+        $stmt->execute([$role]);
+        return (int) $stmt->fetchColumn();
     }
 }

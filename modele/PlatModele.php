@@ -28,7 +28,7 @@ class PlatModele
     public function getMenu(): array
     {
         $stmt = $this->pdo->prepare(
-            "SELECT plats.id, plats.nom, plats.description, plats.prix, plats.image,
+            "SELECT plats.id, plats.nom, plats.description, plats.prix, plats.image, plats.disponible,
                     categories.nom AS categorie
              FROM plats
              INNER JOIN categories ON plats.category_id = categories.id
@@ -79,10 +79,18 @@ class PlatModele
         ]);
     }
 
-    public function supprimer(int $id): void
+    public function supprimer(int $id): bool
     {
         $stmt = $this->pdo->prepare("DELETE FROM plats WHERE id = ?");
-        $stmt->execute([$id]);
+        try {
+            $stmt->execute([$id]);
+            return true;
+        } catch (PDOException $e) {
+            if ($e->getCode() === '23000') {
+                return false;
+            }
+            throw $e;
+        }
     }
 
     public function compter(): int

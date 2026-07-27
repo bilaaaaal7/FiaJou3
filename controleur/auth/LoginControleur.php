@@ -17,6 +17,8 @@ if (isset($_POST['login'])) {
 
     if (!$user) {
         $error = "Cet email n'existe pas.";
+    } elseif (!$user['actif']) {
+        $error = "Votre compte a été désactivé. Contactez l'administrateur.";
     } elseif (!password_verify($password, $user['password'])) {
         $error = "Mot de passe incorrect.";
     } else {
@@ -26,7 +28,9 @@ if (isset($_POST['login'])) {
         $_SESSION['prenom']  = $profile['prenom'];
         $_SESSION['role']    = $profile['role'];
 
-        header('Location: ' . BASE_URL . '/index.php?route=' . $profile['role']);
+        $route = route_par_defaut_pour_role($profile['role']);
+
+        header('Location: ' . BASE_URL . '/index.php?route=' . $route);
         exit;
     }
 }

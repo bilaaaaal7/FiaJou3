@@ -45,10 +45,18 @@ class CategorieModele
         $stmt->execute([$nom, $description, $image, $id]);
     }
 
-    public function supprimer(int $id): void
+    public function supprimer(int $id): bool
     {
         $stmt = $this->pdo->prepare("DELETE FROM categories WHERE id = ?");
-        $stmt->execute([$id]);
+        try {
+            $stmt->execute([$id]);
+            return true;
+        } catch (PDOException $e) {
+            if ($e->getCode() === '23000') {
+                return false;
+            }
+            throw $e;
+        }
     }
 
     public function compter(): int

@@ -27,14 +27,16 @@ define('UPLOADS_URL', BASE_URL . '/uploads');
 // Rôles disponibles dans l'application (contrôle d'accès basé sur les rôles)
 define('ROLE_ADMIN', 'admin');
 define('ROLE_CLIENT', 'client');
-define('ROLE_CUISINIER', 'cuisinier');
-define('ROLE_LIVREUR', 'livreur');
+define('ROLE_CUISINIER', 'cook');
+define('ROLE_LIVREUR', 'driver');
 
-// Statuts possibles d'une commande
+// Statuts possibles d'une commande (doivent correspondre à l'ENUM de la BDD)
 define('STATUTS_COMMANDE', [
-    'En attente',
-    'En préparation',
-    'En livraison',
-    'Livrée',
-    'Annulée',
+    'en_attente'    => 'En attente',
+    'confirmee'     => 'Confirmée',
+    'en_preparation'=> 'En préparation',
+    'prete'         => 'Prête',
+    'en_livraison'  => 'En livraison',
+    'livree'        => 'Livrée',
+    'annulee'       => 'Annulée',
 ]);

@@ -6,9 +6,10 @@
  */
 
 if (est_connecte()) {
-    header('Location: ' . BASE_URL . '/index.php?route=' . utilisateur_role());
+    $route = route_par_defaut_pour_role(utilisateur_role());
+    header('Location: ' . BASE_URL . '/index.php?route=' . $route);
     exit;
 }
 
-header('Location: ' . BASE_URL . '/index.php?route=connexion');
+header('Location: ' . BASE_URL . '/index.php?route=accueil');
 exit;

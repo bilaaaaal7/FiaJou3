@@ -18,6 +18,7 @@ $adresse = "";
 $ville = "";
 $role = "";
 $idModifier = "";
+$error = "";
 
 $users = $utilisateurModele->getTousAvecProfil();
 
@@ -37,10 +38,14 @@ if (isset($_GET['modifier'])) {
 }
 
 if (isset($_GET['supprimer'])) {
-    $utilisateurModele->supprimer((int) $_GET['supprimer']);
+    $succes = $utilisateurModele->supprimer((int) $_GET['supprimer']);
 
-    header('Location: ' . BASE_URL . '/index.php?route=admin/utilisateurs');
-    exit;
+    if (!$succes) {
+        $error = "Impossible de supprimer cet utilisateur : il a des commandes ou données associées. Vous pouvez le désactiver à la place.";
+    } else {
+        header('Location: ' . BASE_URL . '/index.php?route=admin/utilisateurs');
+        exit;
+    }
 }
 
 if (isset($_POST['modifier'])) {

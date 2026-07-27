@@ -156,6 +156,45 @@ a { text-decoration: none; color: inherit; }
 
 .kpi-card.gold .kpi-value { color: var(--gold-dark); }
 
+/* ---------- Accès rapide (dashboard launcher) ---------- */
+.quick-access-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px;
+    margin-bottom: 30px;
+}
+
+.quick-access-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 18px 16px;
+    box-shadow: 0 2px 10px rgba(26,26,26,0.05);
+    border: 1px solid var(--border);
+    text-decoration: none;
+    color: var(--dark);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.quick-access-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(26,26,26,0.10);
+    border-color: var(--gold);
+    color: var(--dark);
+}
+
+.quick-access-card .quick-access-icon {
+    font-size: 1.5rem;
+}
+
+.quick-access-card .quick-access-label {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
 /* ---------- Panels / Tables ---------- */
 .panel {
     background: #fff;
@@ -356,4 +395,35 @@ table.data-table tr:hover td { background: #fbf9f4; }
     background: #fff;
     cursor: pointer;
     font-size: 1.1rem;
+}
+
+/* ---------- Responsive mobile/tablet ---------- */
+@media (max-width: 768px) {
+    body { margin: 0; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .kpi-card { padding: 14px; }
+    .kpi-card .kpi-value { font-size: 1.4rem; }
+    .panel { padding: 16px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+    .filter-bar { flex-direction: column; align-items: stretch; }
+    .actions-cell { flex-direction: column; gap: 4px; }
+    h1 { font-size: 1.3rem; }
+    .table-wrap { margin: 0 -16px; }
+}
+
+@media (max-width: 480px) {
+    .kpi-grid { grid-template-columns: 1fr; }
+    .topbar { flex-direction: column; align-items: flex-start; gap: 8px; }
+    table.data-table { font-size: 0.8rem; }
+    table.data-table th, table.data-table td { padding: 8px 6px; }
+}
+
+/* ---------- Navbar responsive ---------- */
+.fiajou-navbar .navbar-toggler { border-color: rgba(255,255,255,0.2); }
+.fiajou-navbar .navbar-toggler-icon { background: none; border: none; color: #f5f5f5; font-size: 1.2rem; }
+
+@media (max-width: 991px) {
+    .fiajou-navbar .navbar-collapse { padding: 10px 0; }
+    .fiajou-navbar .nav-link { padding: 6px 0; }
 }

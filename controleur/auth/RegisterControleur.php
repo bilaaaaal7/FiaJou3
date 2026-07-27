@@ -19,8 +19,14 @@ if (isset($_POST['register'])) {
     $password = $_POST['password'];
     $confirmation = $_POST['confirmation'];
 
-    if ($password != $confirmation) {
+    if (empty($prenom) || empty($nom) || empty($telephone) || empty($email) || empty($password)) {
+        $error = "Tous les champs obligatoires doivent être remplis.";
+    } elseif (strlen($password) < 6) {
+        $error = "Le mot de passe doit contenir au moins 6 caractères.";
+    } elseif ($password != $confirmation) {
         $error = "Les mots de passe ne correspondent pas.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = "L'adresse email n'est pas valide.";
     } else {
         $utilisateurModele = new UtilisateurModele();
         $existant = $utilisateurModele->findByEmail($email);

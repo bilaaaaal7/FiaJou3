@@ -1,20 +1,17 @@
 <?php
 /**
  * Routeur de l'application (urlRewrite.php)
- *
- * Ce fichier ne contient que la table de routage et la fonction de
- * dispatch. Il est inclus par index.php, qui est le seul point d'entrée
- * HTTP de l'application (voir .htaccess).
- *
- * Chaque route pointe vers un fichier du dossier controleur/, responsable
- * de la logique métier, qui inclut ensuite la vue correspondante.
  */
 
 $routes = [
+    // Page d'accueil publique
+    'accueil'              => 'controleur/AccueilControleur.php',
+
     // Authentification
     'connexion'            => 'controleur/auth/LoginControleur.php',
     'inscription'          => 'controleur/auth/RegisterControleur.php',
     'deconnexion'          => 'controleur/auth/LogoutControleur.php',
+    'mot-de-passe-oublie'  => 'controleur/auth/MotDePasseOublieControleur.php',
 
     // Espace administrateur
     'admin'                => 'controleur/admin/DashboardControleur.php',
@@ -22,26 +19,33 @@ $routes = [
     'admin/plats'          => 'controleur/admin/PlatControleur.php',
     'admin/commandes'      => 'controleur/admin/CommandeControleur.php',
     'admin/utilisateurs'   => 'controleur/admin/UtilisateurControleur.php',
+    'admin/zones'          => 'controleur/admin/ZoneControleur.php',
+    'admin/cuisiniers'     => 'controleur/admin/CuisinierControleur.php',
+    'admin/livreurs'       => 'controleur/admin/LivreurControleur.php',
+    'admin/assignation'    => 'controleur/admin/AssignationControleur.php',
+    'admin/menu-semaine'   => 'controleur/admin/MenuSemaineControleur.php',
 
     // Espace client
     'client'               => 'controleur/client/MenuControleur.php',
+    'client/produit'       => 'controleur/client/ProduitControleur.php',
+    'client/dashboard'     => 'controleur/client/DashboardControleur.php',
     'client/panier'        => 'controleur/client/PanierControleur.php',
     'client/commander'     => 'controleur/client/CommanderControleur.php',
     'client/mes-commandes' => 'controleur/client/MesCommandesControleur.php',
+    'client/detail-commande' => 'controleur/client/DetailCommandeControleur.php',
+    'client/profil'        => 'controleur/client/ProfilControleur.php',
+    'client/menu-semaine'  => 'controleur/client/MenuSemaineControleur.php',
+    'client/notifications' => 'controleur/client/NotificationsControleur.php',
 
     // Espace cuisinier
     'cuisinier'            => 'controleur/cuisinier/DashboardControleur.php',
+    'cuisinier/historique' => 'controleur/cuisinier/HistoriqueControleur.php',
 
     // Espace livreur
     'livreur'              => 'controleur/livreur/DashboardControleur.php',
+    'livreur/historique'   => 'controleur/livreur/HistoriqueControleur.php',
 ];
 
-/**
- * Analyse la route demandée (paramètre GET `route`, alimenté par le
- * réécriture d'URL définie dans .htaccess) et charge le contrôleur
- * correspondant. Si la route est vide, charge default.php (page d'accueil).
- * Si la route est inconnue, affiche une page 404.
- */
 function dispatch(): void
 {
     global $routes;
