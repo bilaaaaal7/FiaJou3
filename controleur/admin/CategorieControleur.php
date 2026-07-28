@@ -19,7 +19,8 @@ $error = "";
 if (isset($_POST['ajouter'])) {
     $nom = $_POST['nom'];
     $description = $_POST['description'];
-    $image = $_POST['image'];
+    $image = $_FILES['image']['name'];
+    $tmp = $_FILES['image']['tmp_name'];
 
     $categorieModele->creer($nom, $description, $image);
 
@@ -31,7 +32,22 @@ if (isset($_POST['modifier'])) {
     $id = (int) $_POST['id'];
     $nom = $_POST['nom'];
     $description = $_POST['description'];
-    $image = $_POST['image'];
+    $image = "";
+
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+
+        $image = $_FILES['image']['name'];
+        $tmp = $_FILES['image']['tmp_name'];
+
+        move_uploaded_file($tmp, ROOT_PATH . "/uploads/" . $image);
+    }   
+
+    if (!empty($image)) {
+        move_uploaded_file($tmp, ROOT_PATH . '/uploads/' . $image);
+    } else {
+        $categorie = $categorieModele->getParId($id);
+        $image = $categorie['image'];
+    }
 
     $categorieModele->mettreAJour($id, $nom, $description, $image);
 
