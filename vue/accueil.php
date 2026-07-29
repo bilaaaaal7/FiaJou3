@@ -20,7 +20,7 @@ $jourLabels = [
 ];
 
 // Quelques photos maison pour illustrer le hero et les mises en avant
-$photoTajine   = UPLOADS_URL . '/tajine-poulet-olives-1-scaled.jpg';
+$photoTajine   = UPLOADS_URL . '/acceuil.png';
 $photoCouscous = UPLOADS_URL . '/couscous.jpg';
 $photoViande   = UPLOADS_URL . '/viande-hachee-poulet.jpg';
 
