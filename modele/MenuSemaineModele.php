@@ -38,17 +38,40 @@ class MenuSemaineModele
 
     public function getItems(int $menuId): array
     {
-        $stmt = $this->pdo->prepare(
-            "SELECT wmi.*, plats.nom AS plat_nom, plats.prix, plats.image, plats.disponible,
-                    categories.nom AS categorie
-             FROM weekly_menu_items wmi
-             INNER JOIN plats ON wmi.product_id = plats.id
-             INNER JOIN categories ON plats.category_id = categories.id
-             WHERE wmi.weekly_menu_id = ?
-             ORDER BY FIELD(wmi.jour, 'lundi','mardi','mercredi','jeudi','vendredi','samedi','dimanche'), categories.nom"
-        );
+        $stmt = $this->pdo->prepare("SELECT * FROM weekly_menu_items WHERE weekly_menu_id = ?");
         $stmt->execute([$menuId]);
-        return $stmt->fetchAll();
+        $items = $stmt->fetchAll();
+
+        require_once __DIR__ . '/PlatModele.php';
+        require_once __DIR__ . '/CategorieModele.php';
+        $platModele = new PlatModele();
+        $categorieModele = new CategorieModele();
+
+        $categories = [];
+        foreach ($categorieModele->getToutes() as $categorie) {
+            $categories[$categorie['id']] = $categorie['nom'];
+        }
+
+        foreach ($items as &$item) {
+            $plat = $platModele->getParId((int) $item['product_id']);
+            $item['plat_nom'] = $plat['nom'] ?? null;
+            $item['prix'] = $plat['prix'] ?? null;
+            $item['image'] = $plat['image'] ?? null;
+            $item['disponible'] = $plat['disponible'] ?? null;
+            $item['categorie'] = $plat ? ($categories[$plat['category_id']] ?? null) : null;
+        }
+        unset($item);
+
+        $ordreJours = ['lundi' => 1, 'mardi' => 2, 'mercredi' => 3, 'jeudi' => 4,
+                        'vendredi' => 5, 'samedi' => 6, 'dimanche' => 7];
+
+        usort($items, function ($a, $b) use ($ordreJours) {
+            $jourA = $ordreJours[$a['jour']] ?? 99;
+            $jourB = $ordreJours[$b['jour']] ?? 99;
+            return [$jourA, $a['categorie']] <=> [$jourB, $b['categorie']];
+        });
+
+        return $items;
     }
 
     public function creer(string $nom): int

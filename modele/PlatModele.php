@@ -1,105 +1,163 @@
 <?php
 /**
- * Modèle Plat
- * Accès à la table `plats`.
+ * Modele Plat
+ * Donnees stockees directement dans le code (modele/data/plats.php),
+ * remplace l'ancien acces a la table `plats` en base de donnees.
  */
 
 require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/CategorieModele.php';
 
 class PlatModele
 {
-    private PDO $pdo;
+    private static ?array $plats = null;
 
-    public function __construct()
+    private const DATA_FILE = __DIR__ . '/data/plats.php';
+
+    private function charger(): void
     {
-        $this->pdo = Database::getConnection();
+        if (self::$plats === null) {
+            self::$plats = require self::DATA_FILE;
+        }
+    }
+
+    /**
+     * Reecrit le fichier data/plats.php avec le tableau courant.
+     */
+    private function sauvegarder(): void
+    {
+        $export = "<?php\n"
+            . "/**\n"
+            . " * Donnees statiques des plats.\n"
+            . " * Remplace la table `plats` de la base de donnees.\n"
+            . " * Fichier regenere automatiquement par PlatModele.\n"
+            . " */\n\n"
+            . "return " . var_export(self::$plats, true) . ";\n";
+
+        file_put_contents(self::DATA_FILE, $export);
     }
 
     public function getTous(): array
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM plats");
-        $stmt->execute();
-        return $stmt->fetchAll();
+        $this->charger();
+        return array_values(self::$plats);
     }
 
     /**
-     * Menu client : plats + nom de la catégorie, triés par catégorie puis nom.
+     * Menu client : plats + nom de la categorie, tries par categorie puis nom.
      */
     public function getMenu(): array
     {
-        $stmt = $this->pdo->prepare(
-            "SELECT plats.id, plats.nom, plats.description, plats.prix, plats.image, plats.disponible,
-                    categories.nom AS categorie
-             FROM plats
-             INNER JOIN categories ON plats.category_id = categories.id
-             ORDER BY categories.nom, plats.nom"
-        );
-        $stmt->execute();
-        return $stmt->fetchAll();
+        $this->charger();
+
+        $categorieModele = new CategorieModele();
+        $categories = [];
+        foreach ($categorieModele->getToutes() as $categorie) {
+            $categories[$categorie['id']] = $categorie['nom'];
+        }
+
+        $menu = [];
+        foreach (self::$plats as $plat) {
+            if (!isset($categories[$plat['category_id']])) {
+                continue; // equivalent a l'INNER JOIN d'origine
+            }
+
+            $menu[] = [
+                'id' => $plat['id'],
+                'nom' => $plat['nom'],
+                'description' => $plat['description'],
+                'prix' => $plat['prix'],
+                'image' => $plat['image'],
+                'disponible' => $plat['disponible'],
+                'categorie' => $categories[$plat['category_id']],
+            ];
+        }
+
+        usort($menu, function ($a, $b) {
+            return [$a['categorie'], $a['nom']] <=> [$b['categorie'], $b['nom']];
+        });
+
+        return $menu;
     }
 
     public function getParId(int $id): array|false
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM plats WHERE id = ?");
-        $stmt->execute([$id]);
-        return $stmt->fetch();
+        $this->charger();
+        return self::$plats[$id] ?? false;
     }
 
     public function creer(array $donnees): void
     {
-        $stmt = $this->pdo->prepare(
-            "INSERT INTO plats (category_id, nom, description, prix, image, disponible)
-             VALUES (?, ?, ?, ?, ?, ?)"
-        );
-        $stmt->execute([
-            $donnees['category_id'],
-            $donnees['nom'],
-            $donnees['description'],
-            $donnees['prix'],
-            $donnees['image'],
-            $donnees['disponible'],
-        ]);
+        $this->charger();
+
+        $nouvelId = self::$plats ? max(array_keys(self::$plats)) + 1 : 1;
+
+        self::$plats[$nouvelId] = [
+            'id' => $nouvelId,
+            'category_id' => (int) $donnees['category_id'],
+            'nom' => $donnees['nom'],
+            'description' => $donnees['description'],
+            'prix' => (float) $donnees['prix'],
+            'image' => $donnees['image'],
+            'disponible' => (int) $donnees['disponible'],
+        ];
+
+        $this->sauvegarder();
     }
 
     public function mettreAJour(int $id, array $donnees): void
     {
-        $stmt = $this->pdo->prepare(
-            "UPDATE plats
-             SET category_id = ?, nom = ?, description = ?, prix = ?, image = ?, disponible = ?
-             WHERE id = ?"
-        );
-        $stmt->execute([
-            $donnees['category_id'],
-            $donnees['nom'],
-            $donnees['description'],
-            $donnees['prix'],
-            $donnees['image'],
-            $donnees['disponible'],
-            $id,
-        ]);
+        $this->charger();
+
+        if (!isset(self::$plats[$id])) {
+            return;
+        }
+
+        self::$plats[$id] = [
+            'id' => $id,
+            'category_id' => (int) $donnees['category_id'],
+            'nom' => $donnees['nom'],
+            'description' => $donnees['description'],
+            'prix' => (float) $donnees['prix'],
+            'image' => $donnees['image'],
+            'disponible' => (int) $donnees['disponible'],
+        ];
+
+        $this->sauvegarder();
     }
 
     public function supprimer(int $id): bool
     {
-        $stmt = $this->pdo->prepare("DELETE FROM plats WHERE id = ?");
-        try {
-            $stmt->execute([$id]);
-            return true;
-        } catch (PDOException $e) {
-            if ($e->getCode() === '23000') {
-                return false;
-            }
-            throw $e;
+        $this->charger();
+
+        if (!isset(self::$plats[$id])) {
+            return false;
         }
+
+        // Meme comportement que l'ancienne contrainte de cle etrangere :
+        // on refuse la suppression si le plat fait partie de commandes existantes.
+        $pdo = Database::getConnection();
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM order_items WHERE product_id = ?");
+        $stmt->execute([$id]);
+
+        if ((int) $stmt->fetchColumn() > 0) {
+            return false;
+        }
+
+        unset(self::$plats[$id]);
+        $this->sauvegarder();
+
+        return true;
     }
 
     public function compter(): int
     {
-        return (int) $this->pdo->query("SELECT COUNT(*) FROM plats")->fetchColumn();
+        $this->charger();
+        return count(self::$plats);
     }
 
     /**
-     * Enregistre l'image uploadée d'un plat dans /uploads et retourne son nom de fichier.
+     * Enregistre l'image uploadee d'un plat dans /uploads et retourne son nom de fichier.
      */
     public function enregistrerImage(array $fichier): string
     {

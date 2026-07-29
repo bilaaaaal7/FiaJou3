@@ -159,15 +159,39 @@ class CommandeModele
 
     public function getItems(int $orderId): array
     {
-        $stmt = $this->pdo->prepare(
-            "SELECT order_items.*, plats.nom AS plat_nom, plats.image, categories.nom AS categorie
-             FROM order_items
-             INNER JOIN plats ON order_items.product_id = plats.id
-             INNER JOIN categories ON plats.category_id = categories.id
-             WHERE order_items.order_id = ?"
-        );
+        $stmt = $this->pdo->prepare("SELECT * FROM order_items WHERE order_id = ?");
         $stmt->execute([$orderId]);
-        return $stmt->fetchAll();
+        $items = $stmt->fetchAll();
+
+        $platModele = new PlatModele();
+        $categories = $this->indexCategoriesParId();
+
+        foreach ($items as &$item) {
+            $plat = $platModele->getParId((int) $item['product_id']);
+            $item['plat_nom'] = $plat['nom'] ?? null;
+            $item['image'] = $plat['image'] ?? null;
+            $item['categorie'] = $plat ? ($categories[$plat['category_id']] ?? null) : null;
+        }
+        unset($item);
+
+        return $items;
+    }
+
+    /**
+     * Tableau [category_id => nom] pour enrichir les résultats des jointures
+     * anciennement faites en SQL sur `plats` / `categories`.
+     */
+    private function indexCategoriesParId(): array
+    {
+        require_once __DIR__ . '/CategorieModele.php';
+        $categorieModele = new CategorieModele();
+
+        $index = [];
+        foreach ($categorieModele->getToutes() as $categorie) {
+            $index[$categorie['id']] = $categorie['nom'];
+        }
+
+        return $index;
     }
 
     public function mettreAJourStatut(int $id, string $statut): void
@@ -313,18 +337,32 @@ class CommandeModele
     public function produitsPlusCommandes(int $limit = 5): array
     {
         $stmt = $this->pdo->prepare(
-            "SELECT plats.nom, SUM(order_items.quantite) AS total_qte, SUM(order_items.quantite * order_items.prix) AS total_ca
+            "SELECT order_items.product_id,
+                    SUM(order_items.quantite) AS total_qte,
+                    SUM(order_items.quantite * order_items.prix) AS total_ca
              FROM order_items
-             INNER JOIN plats ON order_items.product_id = plats.id
              INNER JOIN orders ON order_items.order_id = orders.id
              WHERE orders.statut NOT IN ('annulee')
-             GROUP BY plats.id, plats.nom
-             ORDER BY total_qte DESC
-             LIMIT :limit"
+             GROUP BY order_items.product_id"
         );
-        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetchAll();
+        $lignes = $stmt->fetchAll();
+
+        $platModele = new PlatModele();
+        $resultat = [];
+
+        foreach ($lignes as $ligne) {
+            $plat = $platModele->getParId((int) $ligne['product_id']);
+            $resultat[] = [
+                'nom' => $plat['nom'] ?? null,
+                'total_qte' => $ligne['total_qte'],
+                'total_ca' => $ligne['total_ca'],
+            ];
+        }
+
+        usort($resultat, fn ($a, $b) => $b['total_qte'] <=> $a['total_qte']);
+
+        return array_slice($resultat, 0, $limit);
     }
 
     /**
@@ -333,18 +371,33 @@ class CommandeModele
     public function quantitesAProduire(): array
     {
         $stmt = $this->pdo->query(
-            "SELECT plats.id, plats.nom, plats.image, categories.nom AS categorie,
-                    SUM(order_items.quantite) AS total_quantite
+            "SELECT order_items.product_id, SUM(order_items.quantite) AS total_quantite
              FROM order_items
-             INNER JOIN plats ON order_items.product_id = plats.id
-             INNER JOIN categories ON plats.category_id = categories.id
              INNER JOIN orders ON order_items.order_id = orders.id
              WHERE orders.date_livraison = CURDATE()
                AND orders.statut IN ('en_attente', 'confirmee', 'en_preparation')
-             GROUP BY plats.id, plats.nom, plats.image, categories.nom
-             ORDER BY categories.nom, plats.nom"
+             GROUP BY order_items.product_id"
         );
-        return $stmt->fetchAll();
+        $lignes = $stmt->fetchAll();
+
+        $platModele = new PlatModele();
+        $categories = $this->indexCategoriesParId();
+        $resultat = [];
+
+        foreach ($lignes as $ligne) {
+            $plat = $platModele->getParId((int) $ligne['product_id']);
+            $resultat[] = [
+                'id' => $plat['id'] ?? $ligne['product_id'],
+                'nom' => $plat['nom'] ?? null,
+                'image' => $plat['image'] ?? null,
+                'categorie' => $plat ? ($categories[$plat['category_id']] ?? null) : null,
+                'total_quantite' => $ligne['total_quantite'],
+            ];
+        }
+
+        usort($resultat, fn ($a, $b) => [$a['categorie'], $a['nom']] <=> [$b['categorie'], $b['nom']]);
+
+        return $resultat;
     }
 
     /**
