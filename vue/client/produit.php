@@ -20,7 +20,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
 
         <div>
             <?php if ($categorie): ?>
-                <div style="font-size: 0.8rem; color: #8a8a8a; text-transform: uppercase; letter-spacing: 0.05em;">
+                <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">
                     <?php echo htmlspecialchars($categorie['nom']); ?>
                 </div>
             <?php endif; ?>

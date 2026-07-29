@@ -6,10 +6,14 @@
 */
 
 :root {
-    --gold: #b8863b;
-    --gold-dark: #96702f;
-    --dark: #1a1a1a;
-    --dark-2: #262626;
+    --gold: #ffbe33;
+    --gold-dark: #8a5a00;
+    --gold-hover: #e69c00;
+    --dark: #222831;
+    --dark-2: #171b21;
+    --border: #e6e7ea;
+    --font-body: 'Open Sans', Arial, sans-serif;
+    --font-display: 'Dancing Script', cursive;
 }
 
 * {
@@ -24,7 +28,7 @@ html, body {
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-body);
     background: #ffffff;
     min-height: 100vh;
     width: 100vw;
@@ -33,7 +37,7 @@ body {
 }
 
 html[dir="rtl"] body {
-    font-family: 'Tajawal', 'Poppins', sans-serif;
+    font-family: 'Tajawal', var(--font-body);
 }
 
 /* subtle decorative glow, purely cosmetic */
@@ -44,7 +48,7 @@ body::before {
     right: -10%;
     width: 45vw;
     height: 45vw;
-    background: radial-gradient(circle, rgba(184, 134, 59, 0.06) 0%, rgba(184, 134, 59, 0) 70%);
+    background: radial-gradient(circle, rgba(255, 190, 51, 0.10) 0%, rgba(255, 190, 51, 0) 70%);
     pointer-events: none;
     z-index: 0;
 }
@@ -61,8 +65,8 @@ html[dir="rtl"] body::before {
     right: 20px;
     z-index: 10;
     display: flex;
-    background: #f7f2e9;
-    border: 1px solid #e2d9c7;
+    background: #f4f5f6;
+    border: 1px solid #e6e7ea;
     border-radius: 999px;
     padding: 4px;
 }
@@ -71,7 +75,7 @@ html[dir="rtl"] body::before {
     border: none;
     background: transparent;
     color: #9a9a9a;
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-body);
     font-weight: 600;
     font-size: 0.8rem;
     padding: 7px 16px;
@@ -95,7 +99,7 @@ html[dir="rtl"] .lang-switcher {
 }
 
 html[dir="rtl"] .lang-switcher button {
-    font-family: 'Tajawal', 'Poppins', sans-serif;
+    font-family: 'Tajawal', var(--font-body);
 }
 
 /* ---------- Layout / centering ---------- */
@@ -116,9 +120,9 @@ html[dir="rtl"] .lang-switcher button {
     border-radius: 20px;
     border: none;
     box-shadow:
-        0 4px 10px rgba(184, 134, 59, 0.06),
-        0 15px 40px rgba(26, 26, 26, 0.08),
-        0 2px 60px rgba(184, 134, 59, 0.06);
+        0 4px 10px rgba(255, 190, 51, 0.10),
+        0 15px 40px rgba(34, 40, 49, 0.08),
+        0 2px 60px rgba(255, 190, 51, 0.06);
     overflow: hidden;
     width: 100%;
     max-width: 440px;
@@ -132,7 +136,7 @@ html[dir="rtl"] .lang-switcher button {
     background: #fff;
     padding: 34px 20px 16px;
     text-align: center;
-    border-bottom: 1px solid #f0e6d6;
+    border-bottom: 1px solid #eef0f2;
 }
 
 .logo-wrap img {
@@ -146,9 +150,10 @@ html[dir="rtl"] .lang-switcher button {
 }
 
 .login-title {
+    font-family: var(--font-display);
     color: var(--dark);
     font-weight: 700;
-    font-size: 1.5rem;
+    font-size: 2.1rem;
     text-align: center;
     margin-bottom: 6px;
 }
@@ -170,32 +175,32 @@ html[dir="rtl"] .lang-switcher button {
 
 .form-control {
     border-radius: 10px;
-    border: 1px solid #e2d9c7;
+    border: 1px solid var(--border, #e6e7ea);
     padding: 11px 14px;
     font-size: 0.95rem;
 }
 
 .form-control:focus {
     border-color: var(--gold);
-    box-shadow: 0 0 0 0.2rem rgba(184, 134, 59, 0.2);
+    box-shadow: 0 0 0 0.2rem rgba(255, 190, 51, 0.25);
 }
 
 .btn-gold {
-    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+    background: var(--gold);
     border: none;
-    color: #fff;
-    font-weight: 600;
-    border-radius: 10px;
+    color: var(--dark);
+    font-weight: 700;
+    border-radius: 999px;
     padding: 12px;
     font-size: 0.98rem;
     transition: all 0.2s ease-in-out;
 }
 
 .btn-gold:hover {
-    background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%);
-    color: #fff;
+    background: var(--gold-hover);
+    color: var(--dark);
     transform: translateY(-1px);
-    box-shadow: 0 8px 18px rgba(184, 134, 59, 0.35);
+    box-shadow: 0 8px 18px rgba(230, 156, 0, 0.35);
 }
 
 .divider-diamond {
@@ -207,7 +212,7 @@ html[dir="rtl"] .lang-switcher button {
 
 .divider-diamond hr {
     flex: 1;
-    border-top: 1px solid #e2d9c7;
+    border-top: 1px solid var(--border);
     margin: 0;
 }
 

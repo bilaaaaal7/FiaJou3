@@ -43,7 +43,7 @@ require ROOT_PATH . '/assets/inc/quick_access.php';
         </div>
         <?php if (!empty($itemsParCommande[$c['id']])): ?>
         <div style="margin-bottom:8px;">
-            <small style="color:#8a8a8a;">Articles:</small>
+            <small style="color:var(--text-muted);">Articles:</small>
             <?php foreach ($itemsParCommande[$c['id']] as $item): ?>
                 <span style="display:inline-block; background:var(--gold-light); padding:2px 8px; border-radius:6px; font-size:0.8rem; margin:2px;">
                     <?php echo htmlspecialchars($item['plat_nom']); ?> x<?php echo $item['quantite']; ?>
@@ -52,7 +52,7 @@ require ROOT_PATH . '/assets/inc/quick_access.php';
         </div>
         <?php endif; ?>
         <?php if (!empty($c['commentaire'])): ?>
-        <div style="margin-bottom:8px;"><small style="color:#666;">Commentaire: <?php echo htmlspecialchars($c['commentaire']); ?></small></div>
+        <div style="margin-bottom:8px;"><small style="color:var(--text-muted);">Commentaire: <?php echo htmlspecialchars($c['commentaire']); ?></small></div>
         <?php endif; ?>
         <form method="POST" action="<?php echo BASE_URL; ?>/index.php?route=cuisinier" style="display:inline-flex; gap:6px; align-items:center; flex-wrap:wrap;">
             <input type="hidden" name="id" value="<?php echo $c['id']; ?>">
@@ -82,7 +82,7 @@ require ROOT_PATH . '/assets/inc/quick_access.php';
         </div>
         <?php if (!empty($itemsParCommande[$c['id']])): ?>
         <div style="margin-bottom:8px;">
-            <small style="color:#8a8a8a;">Articles:</small>
+            <small style="color:var(--text-muted);">Articles:</small>
             <?php foreach ($itemsParCommande[$c['id']] as $item): ?>
                 <span style="display:inline-block; background:var(--gold-light); padding:2px 8px; border-radius:6px; font-size:0.8rem; margin:2px;">
                     <?php echo htmlspecialchars($item['plat_nom']); ?> x<?php echo $item['quantite']; ?>
@@ -91,7 +91,7 @@ require ROOT_PATH . '/assets/inc/quick_access.php';
         </div>
         <?php endif; ?>
         <?php if (!empty($c['commentaire'])): ?>
-        <div style="margin-bottom:8px;"><small style="color:#666;">Commentaire: <?php echo htmlspecialchars($c['commentaire']); ?></small></div>
+        <div style="margin-bottom:8px;"><small style="color:var(--text-muted);">Commentaire: <?php echo htmlspecialchars($c['commentaire']); ?></small></div>
         <?php endif; ?>
         <form method="POST" action="<?php echo BASE_URL; ?>/index.php?route=cuisinier" style="display:inline-flex; gap:6px; align-items:center; flex-wrap:wrap;">
             <input type="hidden" name="id" value="<?php echo $c['id']; ?>">

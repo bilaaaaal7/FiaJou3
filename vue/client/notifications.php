@@ -21,7 +21,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
     <div class="panel" style="padding:0;">
         <?php if (!empty($notifications)): ?>
             <?php foreach ($notifications as $n): ?>
-            <div style="padding:16px 20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:start; gap:12px; <?php echo !$n['est_lu'] ? 'background:#fdf8ef;' : ''; ?>">
+            <div style="padding:16px 20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:start; gap:12px; <?php echo !$n['est_lu'] ? 'background:var(--gold-light);' : ''; ?>">
                 <div>
                     <div style="font-weight:600; margin-bottom:4px;">
                         <?php if (!$n['est_lu']): ?>
@@ -29,7 +29,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
                         <?php endif; ?>
                         <?php echo htmlspecialchars($n['titre']); ?>
                     </div>
-                    <div style="color:#666; font-size:0.9rem; margin-bottom:4px;"><?php echo htmlspecialchars($n['message']); ?></div>
+                    <div style="color:var(--text-muted); font-size:0.9rem; margin-bottom:4px;"><?php echo htmlspecialchars($n['message']); ?></div>
                     <div style="color:#aaa; font-size:0.8rem;"><?php echo $n['date_notification']; ?></div>
                 </div>
                 <?php if (!$n['est_lu']): ?>

@@ -52,7 +52,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
                             if (!$cookFound) echo 'ID: ' . $cmd['assigned_cook_id'];
                             ?>
                         <?php else: ?>
-                            <em style="color:#999">Non assigné</em>
+                            <em style="color:var(--text-muted)">Non assigné</em>
                         <?php endif; ?>
                     </td>
                     <td>
@@ -69,7 +69,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
                             if (!$driverFound) echo 'ID: ' . $cmd['assigned_driver_id'];
                             ?>
                         <?php else: ?>
-                            <em style="color:#999">Non assigné</em>
+                            <em style="color:var(--text-muted)">Non assigné</em>
                         <?php endif; ?>
                     </td>
                     <td>

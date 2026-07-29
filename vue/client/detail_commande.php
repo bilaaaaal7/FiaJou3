@@ -122,23 +122,23 @@ require ROOT_PATH . '/assets/inc/navbar.php';
                             <span class="badge-status st-<?php echo htmlspecialchars($event['nouveau_statut']); ?>">
                                 <?php echo STATUTS_COMMANDE[$event['nouveau_statut']] ?? $event['nouveau_statut']; ?>
                             </span>
-                            <small style="color: #8a8a8a;">
+                            <small style="color: var(--text-muted);">
                                 <?php echo htmlspecialchars($event['date_modification']); ?>
                             </small>
                         </div>
                         <?php if (!empty($event['ancien_statut'])): ?>
-                            <small style="color: #8a8a8a;">
+                            <small style="color: var(--text-muted);">
                                 Changé de
                                 <strong><?php echo STATUTS_COMMANDE[$event['ancien_statut']] ?? $event['ancien_statut']; ?></strong>
                             </small>
                         <?php endif; ?>
                         <?php if (!empty($event['prenom'])): ?>
-                            <br><small style="color: #8a8a8a;">
+                            <br><small style="color: var(--text-muted);">
                                 par <?php echo htmlspecialchars($event['prenom'] . ' ' . $event['nom']); ?>
                             </small>
                         <?php endif; ?>
                         <?php if (!empty($event['commentaire'])): ?>
-                            <br><small style="color: #666;">
+                            <br><small style="color: var(--text-muted);">
                                 "<?php echo htmlspecialchars($event['commentaire']); ?>"
                             </small>
                         <?php endif; ?>

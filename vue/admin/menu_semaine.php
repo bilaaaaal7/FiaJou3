@@ -119,7 +119,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
             </table>
         </div>
         <?php else: ?>
-            <p style="color:#999; padding:10px 0;">Aucun plat pour ce jour.</p>
+            <p style="color:var(--text-muted); padding:10px 0;">Aucun plat pour ce jour.</p>
         <?php endif; ?>
     <?php endforeach; ?>
 </div>

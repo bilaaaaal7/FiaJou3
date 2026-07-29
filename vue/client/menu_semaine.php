@@ -14,7 +14,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
     <?php if ($menu): ?>
         <div class="panel" style="margin-bottom: 26px;">
             <h2><?php echo htmlspecialchars($menu['nom']); ?></h2>
-            <p style="color: #8a8a8a; margin: 0;">
+            <p style="color: var(--text-muted); margin: 0;">
                 Publié le <?php echo htmlspecialchars($menu['date_creation']); ?>
             </p>
         </div>
@@ -45,7 +45,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
                             <div style="font-weight: 600; font-size: 0.95rem;">
                                 <?php echo htmlspecialchars($item['plat_nom']); ?>
                             </div>
-                            <div style="font-size: 0.8rem; color: #8a8a8a; margin-top: 2px;">
+                            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">
                                 <?php echo htmlspecialchars($item['categorie']); ?>
                             </div>
                             <div style="margin-top: 8px; font-weight: 700; color: var(--gold-dark);">

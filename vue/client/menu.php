@@ -40,7 +40,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
                             <?php echo htmlspecialchars($plat['nom']); ?>
                         </a>
                     </div>
-                    <div style="font-size: 0.8rem; color: #8a8a8a; margin-top: 2px;">
+                    <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">
                         <?php echo htmlspecialchars($plat['description'] ?? ''); ?>
                     </div>
                     <div style="margin-top: 8px; font-weight: 700; color: var(--gold-dark);">

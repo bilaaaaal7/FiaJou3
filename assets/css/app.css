@@ -1,60 +1,131 @@
 /*
-  Styles globaux de l'application.
-  La partie "dashboard" est reprise telle quelle du bloc <style> original
-  de admin/index.php. La partie navbar est nouvelle (la navbar elle-même
-  n'existait pas dans le projet original, elle a été ajoutée par la
-  réorganisation en architecture MVC).
+  Styles globaux de l'application (chargés en premier par header.php,
+  avant les feuilles spécifiques par page comme admin.css / auth.css).
+  Palette et typographie alignées sur la charte graphique Feane
+  (gold #ffbe33 / dark #222831, Dancing Script + Open Sans).
 */
 
+:root {
+    --gold: #ffbe33;
+    --gold-dark: #8a5a00;
+    --gold-hover: #e69c00;
+    --gold-light: #fff4dd;
+    --dark: #222831;
+    --dark-2: #171b21;
+    --border: #e6e7ea;
+    --font-body: 'Open Sans', Arial, sans-serif;
+    --font-display: 'Dancing Script', cursive;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    background: #f5f5f5;
-    margin: 40px;
-}
-
-h1 {
-    text-align: center;
-}
-
-.dashboard {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-top: 40px;
-}
-
-.card {
-    width: 220px;
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-    text-align: center;
-}
-
-.card h2 {
+    font-family: var(--font-body);
+    background: #f7f7f9;
+    color: var(--dark);
     margin: 0;
-    font-size: 20px;
 }
 
-.card p {
-    font-size: 40px;
-    font-weight: bold;
-    margin-top: 15px;
-}
+h1, h2, h3 { color: var(--dark); }
 
-/* ---------- Navbar (nouveau, minimal) ---------- */
+.brand-font { font-family: var(--font-display); }
+
+/* ---------- Navbar publique (accueil) ---------- */
 .fiajou-navbar {
-    background: #1a1a1a;
-    margin: -40px -40px 30px -40px;
-    padding: 10px 40px;
+    background: var(--dark);
+    margin: 0 0 0 0;
+    padding: 14px 40px;
 }
 
-.fiajou-navbar .navbar-brand,
+.fiajou-navbar .navbar-brand {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.7rem;
+    color: #ffffff;
+}
+
 .fiajou-navbar .nav-link {
-    color: #f5f5f5;
+    color: #f0f0f0;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    padding: 6px 14px;
+    transition: color .2s ease;
 }
 
-.fiajou-navbar .nav-link:hover {
-    color: #b8863b;
+.fiajou-navbar .nav-link:hover,
+.fiajou-navbar .nav-link.active {
+    color: var(--gold);
+}
+
+/* Outline button variant used inside the dark navbar needs light text/border,
+   since the default .btn-outline (admin.css) is tuned for light backgrounds. */
+.fiajou-navbar .btn-outline {
+    color: #ffffff;
+    border-color: rgba(255,255,255,0.4);
+}
+.fiajou-navbar .btn-outline:hover {
+    color: var(--dark);
+    background: var(--gold);
+    border-color: var(--gold);
+}
+
+/* ---------- Hero (page d'accueil publique) ---------- */
+.home-hero {
+    position: relative;
+    min-height: 440px;
+    display: flex;
+    align-items: center;
+    padding: 90px 24px;
+    color: #ffffff;
+    background-size: cover;
+    background-position: center;
+}
+
+.home-hero .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, rgba(23,27,33,0.94) 0%, rgba(34,40,49,0.72) 55%, rgba(34,40,49,0.45) 100%);
+}
+
+.home-hero .hero-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 620px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.home-hero h1 {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 14px;
+    line-height: 1.15;
+}
+
+.home-hero p {
+    font-size: 1.05rem;
+    opacity: 0.92;
+    margin: 0 auto 28px;
+    max-width: 520px;
+}
+
+.home-hero .btn-gold {
+    padding: 12px 34px;
+    font-size: 0.95rem;
+}
+
+@media (max-width: 575px) {
+    .home-hero { padding: 60px 18px; min-height: auto; }
+    .home-hero h1 { font-size: 2.1rem; }
+}
+
+/* ---------- Navbar responsive ---------- */
+.fiajou-navbar .navbar-toggler { border-color: rgba(255,255,255,0.2); }
+.fiajou-navbar .navbar-toggler-icon { background: none; border: none; color: #f5f5f5; font-size: 1.2rem; }
+
+@media (max-width: 991px) {
+    .fiajou-navbar .navbar-collapse { padding: 10px 0; }
+    .fiajou-navbar .nav-link { padding: 6px 0; }
 }
