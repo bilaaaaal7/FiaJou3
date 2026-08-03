@@ -14,7 +14,7 @@ require ROOT_PATH . '/assets/inc/header.php';
     <div class="page-wrap">
         <div class="auth-card">
             <div class="logo-wrap">
-                <img src="<?php echo BASE_URL; ?>/assets/images/logo.png" alt="FiaJou3 Logo">
+                <span class="logo-mark" style="width:64px;height:64px;color:#171717;margin:0 auto;"><?php include ROOT_PATH . '/assets/inc/logo.php'; ?></span>
             </div>
 
             <div class="card-body-custom">

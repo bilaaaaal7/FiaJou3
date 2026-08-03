@@ -1,25 +1,29 @@
 /*
   Styles globaux de l'application (chargés en premier par header.php,
   avant les feuilles spécifiques par page comme admin.css / auth.css).
-  Palette et typographie alignées sur la charte graphique Feane
-  (gold #ffbe33 / dark #222831, Dancing Script + Open Sans).
+  Palette et typographie alignées sur la Charte Graphique officielle FiaJou3
+  (Noir Charbon #171717 / Or Tajine #B88618 / Crème Chaud #F8F5EF /
+  Gris Datte #706B62), typo Poppins (FR, gras, espacée) + Open Sans (texte
+  courant) + Tajawal (arabe).
 */
 
 :root {
-    --gold: #ffbe33;
-    --gold-dark: #8a5a00;
-    --gold-hover: #e69c00;
-    --gold-light: #fff4dd;
-    --dark: #222831;
-    --dark-2: #171b21;
-    --border: #e6e7ea;
+    --gold: #B88618;
+    --gold-dark: #7a5810;
+    --gold-hover: #976e14;
+    --gold-light: #f4ecd8;
+    --dark: #171717;
+    --dark-2: #0e0e0e;
+    --cream: #F8F5EF;
+    --muted: #706B62;
+    --border: #e8e2d3;
     --font-body: 'Open Sans', Arial, sans-serif;
-    --font-display: 'Dancing Script', cursive;
+    --font-display: 'Poppins', 'Open Sans', sans-serif;
 }
 
 body {
     font-family: var(--font-body);
-    background: #f7f7f9;
+    background: var(--cream);
     color: var(--dark);
     margin: 0;
 }
@@ -27,6 +31,11 @@ body {
 h1, h2, h3 { color: var(--dark); }
 
 .brand-font { font-family: var(--font-display); }
+
+/* ---------- Marque FiaJou3 (icône tajine + vapeur + horloge) ---------- */
+.logo-mark { display: inline-flex; align-items: center; justify-content: center; }
+.logo-mark svg { display: block; width: 100%; height: 100%; }
+.logo-mark img { display: block; width: 100%; height: 100%; object-fit: contain; }
 
 /* ---------- Navbar publique (accueil) ---------- */
 .fiajou-navbar {
@@ -37,10 +46,16 @@ h1, h2, h3 { color: var(--dark); }
 
 .fiajou-navbar .navbar-brand {
     font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 1.7rem;
+    font-weight: 800;
+    font-size: 1.5rem;
+    letter-spacing: 0.5px;
     color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
 }
+
+.fiajou-navbar .navbar-brand .logo-mark { color: #ffffff; }
 
 .fiajou-navbar .nav-link {
     color: #f0f0f0;
@@ -84,7 +99,7 @@ h1, h2, h3 { color: var(--dark); }
 .home-hero .hero-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(120deg, rgba(23,27,33,0.94) 0%, rgba(34,40,49,0.72) 55%, rgba(34,40,49,0.45) 100%);
+    background: linear-gradient(120deg, rgba(23,23,23,0.94) 0%, rgba(23,23,23,0.72) 55%, rgba(23,23,23,0.45) 100%);
 }
 
 .home-hero .hero-inner {

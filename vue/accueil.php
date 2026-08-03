@@ -41,7 +41,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
     <link rel="shortcut icon" href="<?php echo BASE_URL; ?>/assets/images/favicon.ico">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="<?php echo BASE_URL; ?>/assets/feane/css/bootstrap.css" />
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
@@ -51,10 +51,10 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
 
     <style>
         /* Petits ajustements propres à FiaJou3 */
-        .food_section .box .price-tag { color: #ffbe33; font-weight: 700; }
+        .food_section .box .price-tag { color: #B88618; font-weight: 700; }
         .food_section .box .categorie-tag {
             display: inline-block; font-size: 0.72rem; text-transform: uppercase;
-            letter-spacing: 0.05em; color: #8a5a00; background: #fff4dd;
+            letter-spacing: 0.05em; color: #7a5810; background: #f4ecd8;
             border-radius: 20px; padding: 2px 10px; margin-bottom: 6px;
         }
         .menu-empty-state {
@@ -65,20 +65,69 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
         .partner_section .box a.btn1 {
             display: inline-block; margin-top: 10px;
         }
+        .logo-mark { display: inline-flex; align-items: center; justify-content: center; }
+        .logo-mark svg { display: block; width: 100%; height: 100%; }
+        .logo-mark img { display: block; width: 100%; height: 100%; object-fit: contain; }
+        .footer_detail .footer-logo { display: inline-flex; align-items: center; gap: 10px; }
+
+        /* ---------- Hero sans photo (charte : Noir Charbon + Or Tajine) ---------- */
+        .hero_area--branded { background: #171717; }
+
+        .hero_pattern {
+            position: absolute; inset: 0; opacity: 0.06; pointer-events: none;
+        }
+
+        .hero_glow {
+            position: absolute; inset: 0; pointer-events: none;
+            background: radial-gradient(circle at 78% 30%, rgba(184,134,24,0.30) 0%, rgba(184,134,24,0) 55%);
+        }
+
+        .slider_section--static { padding: 70px 0 90px; }
+        .slider_section--static .detail-box { margin-bottom: 0; }
+
+        .hero-eyebrow {
+            display: inline-block; color: #B88618; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1.2px; font-size: 0.82rem;
+            margin-bottom: 16px;
+        }
+
+        .hero_visual { display: flex; align-items: center; justify-content: center; }
+
+        .hero_icon {
+            width: 260px; height: 260px; max-width: 70vw; color: #F8F5EF;
+            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.35));
+        }
+
+        .hero_icon svg { display: block; width: 100%; height: 100%; }
+        .hero_icon img { display: block; width: 100%; height: 100%; object-fit: contain; }
+
+        @media (max-width: 767px) {
+            .hero_visual { margin-top: 30px; }
+            .hero_icon { width: 190px; height: 190px; }
+        }
     </style>
 </head>
 
 <body>
 
-    <div class="hero_area">
-        <div class="bg-box">
-            <img src="<?php echo $photoTajine; ?>" alt="Plat maison FiaJou3">
+    <div class="hero_area hero_area--branded">
+        <div class="hero_pattern" aria-hidden="true">
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <pattern id="fjDiamonds" x="0" y="0" width="64" height="64" patternUnits="userSpaceOnUse">
+                        <rect x="28" y="28" width="8" height="8" fill="#B88618" transform="rotate(45 32 32)"/>
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#fjDiamonds)"/>
+            </svg>
         </div>
+        <div class="hero_glow" aria-hidden="true"></div>
         <!-- header -->
         <header class="header_section">
             <div class="container">
                 <nav class="navbar navbar-expand-lg custom_nav-container">
-                    <a class="navbar-brand" href="<?php echo BASE_URL; ?>/index.php?route=accueil">
+                    <a class="navbar-brand" href="<?php echo BASE_URL; ?>/index.php?route=accueil" style="display:inline-flex;align-items:center;gap:10px;">
+                        <span class="logo-mark" style="width:34px;height:34px;color:#ffffff;flex-shrink:0;"><?php $logoSurFondSombre = true; include ROOT_PATH . '/assets/inc/logo.php'; ?></span>
                         <span><?php echo htmlspecialchars(APP_NAME); ?></span>
                     </a>
 
@@ -113,81 +162,32 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
         </header>
         <!-- end header -->
 
-        <!-- slider -->
-        <section class="slider_section">
-            <div id="customCarousel1" class="carousel slide" data-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-md-7 col-lg-6">
-                                    <div class="detail-box">
-                                        <h1>Des repas faits maison, livrés chez vous</h1>
-                                        <p>
-                                            Commandez des plats préparés avec soin par des cuisiniers locaux
-                                            et recevez-les chauds directement à votre porte, en quelques clics.
-                                        </p>
-                                        <div class="btn-box">
-                                            <a href="<?php echo BASE_URL; ?>/index.php?route=inscription" class="btn1">
-                                                Commencer à commander
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
+        <!-- hero (sans photo, 100% charte graphique) -->
+        <section class="slider_section slider_section--static">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-7 col-lg-6">
+                        <div class="detail-box">
+                            <span class="hero-eyebrow">Repas marocain chaud, livré à l'heure</span>
+                            <h1>Des repas faits maison, livrés chez vous</h1>
+                            <p>
+                                Commandez des plats préparés avec soin par des cuisiniers locaux
+                                et recevez-les chauds directement à votre porte, en quelques clics.
+                            </p>
+                            <div class="btn-box">
+                                <a href="<?php echo BASE_URL; ?>/index.php?route=inscription" class="btn1">
+                                    Commencer à commander
+                                </a>
                             </div>
                         </div>
                     </div>
-                    <div class="carousel-item">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-md-7 col-lg-6">
-                                    <div class="detail-box">
-                                        <h1>La cuisine locale à portée de clic</h1>
-                                        <p>
-                                            Un couscous du vendredi, un tajine mijoté, une recette de famille :
-                                            découvrez chaque semaine un nouveau menu fait maison.
-                                        </p>
-                                        <div class="btn-box">
-                                            <a href="<?php echo BASE_URL; ?>/index.php?route=inscription" class="btn1">
-                                                Commencer à commander
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="col-md-5 col-lg-6 hero_visual">
+                        <div class="hero_icon"><?php $logoSurFondSombre = true; include ROOT_PATH . '/assets/inc/logo.php'; ?></div>
                     </div>
-                    <div class="carousel-item">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-md-7 col-lg-6">
-                                    <div class="detail-box">
-                                        <h1>Commandez, on s'occupe du reste</h1>
-                                        <p>
-                                            Nos livreurs partenaires vous apportent vos plats rapidement,
-                                            où que vous soyez dans votre zone de livraison.
-                                        </p>
-                                        <div class="btn-box">
-                                            <a href="<?php echo BASE_URL; ?>/index.php?route=inscription" class="btn1">
-                                                Commencer à commander
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="container">
-                    <ol class="carousel-indicators">
-                        <li data-target="#customCarousel1" data-slide-to="0" class="active"></li>
-                        <li data-target="#customCarousel1" data-slide-to="1"></li>
-                        <li data-target="#customCarousel1" data-slide-to="2"></li>
-                    </ol>
                 </div>
             </div>
         </section>
-        <!-- end slider -->
+        <!-- end hero -->
     </div>
 
     <!-- offer section -->
@@ -332,7 +332,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             <div class="row">
                 <div class="col-md-6">
                     <div class="box">
-                        <i class="fa fa-cutlery fa-3x" aria-hidden="true" style="color:#ffbe33;"></i>
+                        <i class="fa fa-cutlery fa-3x" aria-hidden="true" style="color:#B88618;"></i>
                         <h5>Devenir cuisinier partenaire</h5>
                         <p>Partagez vos recettes faites maison et vendez vos plats à de nouveaux clients chaque semaine.</p>
                         <a href="<?php echo BASE_URL; ?>/index.php?route=inscription" class="btn1">Je m'inscris</a>
@@ -340,7 +340,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                 </div>
                 <div class="col-md-6">
                     <div class="box">
-                        <i class="fa fa-motorcycle fa-3x" aria-hidden="true" style="color:#ffbe33;"></i>
+                        <i class="fa fa-motorcycle fa-3x" aria-hidden="true" style="color:#B88618;"></i>
                         <h5>Devenir livreur partenaire</h5>
                         <p>Livrez les commandes dans votre zone et organisez vos tournées selon vos disponibilités.</p>
                         <a href="<?php echo BASE_URL; ?>/index.php?route=inscription" class="btn1">Je m'inscris</a>

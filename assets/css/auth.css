@@ -6,14 +6,16 @@
 */
 
 :root {
-    --gold: #ffbe33;
-    --gold-dark: #8a5a00;
-    --gold-hover: #e69c00;
-    --dark: #222831;
-    --dark-2: #171b21;
-    --border: #e6e7ea;
+    --gold: #B88618;
+    --gold-dark: #7a5810;
+    --gold-hover: #976e14;
+    --dark: #171717;
+    --dark-2: #0e0e0e;
+    --cream: #F8F5EF;
+    --muted: #706B62;
+    --border: #e8e2d3;
     --font-body: 'Open Sans', Arial, sans-serif;
-    --font-display: 'Dancing Script', cursive;
+    --font-display: 'Poppins', 'Open Sans', sans-serif;
 }
 
 * {
@@ -29,7 +31,7 @@ html, body {
 
 body {
     font-family: var(--font-body);
-    background: #ffffff;
+    background: var(--cream);
     min-height: 100vh;
     width: 100vw;
     overflow-x: hidden;
@@ -48,7 +50,7 @@ body::before {
     right: -10%;
     width: 45vw;
     height: 45vw;
-    background: radial-gradient(circle, rgba(255, 190, 51, 0.10) 0%, rgba(255, 190, 51, 0) 70%);
+    background: radial-gradient(circle, rgba(184, 134, 24, 0.12) 0%, rgba(184, 134, 24, 0) 70%);
     pointer-events: none;
     z-index: 0;
 }
@@ -65,8 +67,8 @@ html[dir="rtl"] body::before {
     right: 20px;
     z-index: 10;
     display: flex;
-    background: #f4f5f6;
-    border: 1px solid #e6e7ea;
+    background: #ffffff;
+    border: 1px solid var(--border);
     border-radius: 999px;
     padding: 4px;
 }
@@ -74,7 +76,7 @@ html[dir="rtl"] body::before {
 .lang-switcher button {
     border: none;
     background: transparent;
-    color: #9a9a9a;
+    color: var(--muted);
     font-family: var(--font-body);
     font-weight: 600;
     font-size: 0.8rem;
@@ -86,7 +88,7 @@ html[dir="rtl"] body::before {
 
 .lang-switcher button.active {
     background: var(--gold);
-    color: #fff;
+    color: var(--dark);
 }
 
 .lang-switcher button:not(.active):hover {
@@ -120,9 +122,9 @@ html[dir="rtl"] .lang-switcher button {
     border-radius: 20px;
     border: none;
     box-shadow:
-        0 4px 10px rgba(255, 190, 51, 0.10),
-        0 15px 40px rgba(34, 40, 49, 0.08),
-        0 2px 60px rgba(255, 190, 51, 0.06);
+        0 4px 10px rgba(184, 134, 24, 0.10),
+        0 15px 40px rgba(23, 23, 23, 0.08),
+        0 2px 60px rgba(184, 134, 24, 0.06);
     overflow: hidden;
     width: 100%;
     max-width: 440px;
@@ -152,14 +154,15 @@ html[dir="rtl"] .lang-switcher button {
 .login-title {
     font-family: var(--font-display);
     color: var(--dark);
-    font-weight: 700;
-    font-size: 2.1rem;
+    font-weight: 800;
+    font-size: 1.9rem;
+    letter-spacing: 0.3px;
     text-align: center;
     margin-bottom: 6px;
 }
 
 .login-subtitle {
-    color: #8a8a8a;
+    color: var(--muted);
     text-align: center;
     font-size: 0.9rem;
     line-height: 1.4;
@@ -182,7 +185,7 @@ html[dir="rtl"] .lang-switcher button {
 
 .form-control:focus {
     border-color: var(--gold);
-    box-shadow: 0 0 0 0.2rem rgba(255, 190, 51, 0.25);
+    box-shadow: 0 0 0 0.2rem rgba(184, 134, 24, 0.22);
 }
 
 .btn-gold {
@@ -200,7 +203,7 @@ html[dir="rtl"] .lang-switcher button {
     background: var(--gold-hover);
     color: var(--dark);
     transform: translateY(-1px);
-    box-shadow: 0 8px 18px rgba(230, 156, 0, 0.35);
+    box-shadow: 0 8px 18px rgba(151, 110, 20, 0.35);
 }
 
 .divider-diamond {
