@@ -157,12 +157,13 @@ class PlatModele
     }
 
     /**
-     * Enregistre l'image uploadee d'un plat dans /uploads et retourne son nom de fichier.
+     * Enregistre l'image uploadee d'un plat dans /uploads et retourne son nom
+     * de fichier genere, ou '' si aucun fichier n'a ete envoye.
+     * Delegue a UploadModele (nom genere, verif du type reel, taille max).
      */
     public function enregistrerImage(array $fichier): string
     {
-        $nomFichier = basename($fichier['name']);
-        move_uploaded_file($fichier['tmp_name'], UPLOADS_PATH . '/' . $nomFichier);
-        return $nomFichier;
+        require_once __DIR__ . '/UploadModele.php';
+        return UploadModele::enregistrer($fichier) ?? '';
     }
 }

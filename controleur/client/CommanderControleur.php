@@ -11,6 +11,8 @@ require_once ROOT_PATH . '/modele/ZoneModele.php';
 require_once ROOT_PATH . '/modele/CommandeModele.php';
 require_once ROOT_PATH . '/modele/HistoriqueModele.php';
 require_once ROOT_PATH . '/modele/NotificationModele.php';
+require_once ROOT_PATH . '/modele/MenuSemaineModele.php';
+require_once ROOT_PATH . '/modele/UtilisateurModele.php';
 
 $panierModele = new PanierModele();
 
@@ -23,6 +25,9 @@ $erreurs = $panierModele->valider();
 $zoneModele = new ZoneModele();
 $zones = $zoneModele->getToutes();
 $total = $panierModele->getTotal();
+$menuSemaineModele = new MenuSemaineModele();
+$utilisateurModele = new UtilisateurModele();
+$profil = $utilisateurModele->getProfilComplet((int) $_SESSION['user_id']);
 
 if (isset($_POST['commander'])) {
     $dateLivraison = $_POST['date_livraison'] ?? '';
@@ -31,25 +36,15 @@ if (isset($_POST['commander'])) {
 
     $validationErreurs = [];
 
-    if (empty($dateLivraison)) {
-        $validationErreurs[] = "La date de livraison est obligatoire.";
-    } elseif ($dateLivraison < date('Y-m-d')) {
-        $validationErreurs[] = "La date de livraison ne peut pas être dans le passé.";
+    [$dateOk, $dateErreur] = $menuSemaineModele->dateLivraisonValide($dateLivraison);
+    if (!$dateOk) {
+        $validationErreurs[] = $dateErreur;
     }
 
     if (empty($heureLivraison)) {
         $validationErreurs[] = "L'heure de livraison est obligatoire.";
-    }
-
-    if ($dateLivraison === date('Y-m-d')) {
-        $heureActuelle = date('H:i');
-        if ($heureLivraison <= $heureActuelle) {
-            $validationErreurs[] = "L'heure de livraison doit être dans le futur pour une commande aujourd'hui.";
-        }
-    }
-
-    if ($dateLivraison === date('Y-m-d', strtotime('+1 day')) && $heureLivraison < '10:00') {
-        $validationErreurs[] = "Les commandes pour demain doivent être passées avant 10h.";
+    } elseif (!preg_match('/^([01]\d|2[0-3]):[0-5]\d$/', $heureLivraison)) {
+        $validationErreurs[] = "L'heure de livraison est invalide.";
     }
 
     if ($zoneId <= 0) {
@@ -59,6 +54,12 @@ if (isset($_POST['commander'])) {
     $contenuBrut = $panierModele->getContenuBrut();
     if (empty($contenuBrut)) {
         $validationErreurs[] = "Votre panier est vide.";
+    }
+
+    $platsDuJour = $dateOk ? $menuSemaineModele->getPlatsPourDate($dateLivraison) : [];
+    $idsDuJour = [];
+    foreach ($platsDuJour as $platDuJour) {
+        $idsDuJour[] = (int) $platDuJour['id'];
     }
 
     $platModele = new PlatModele();
@@ -72,6 +73,22 @@ if (isset($_POST['commander'])) {
             $validationErreurs[] = "Quantité invalide pour \"{$plat['nom']}\".";
         } elseif ($quantite > 20) {
             $validationErreurs[] = "Quantité maximale de 20 par plat pour \"{$plat['nom']}\".";
+        } elseif (!in_array((int) $platId, $idsDuJour, true)) {
+            $validationErreurs[] = "Le plat \"{$plat['nom']}\" n'est pas au menu de la semaine pour la date de livraison choisie.";
+        }
+    }
+
+    $pause = null;
+    $pauseDebut = $_POST['pause_debut'] ?? '';
+    $pauseFin = $_POST['pause_fin'] ?? '';
+    if ($pauseDebut !== '' && $pauseFin !== '') {
+        if (!preg_match('/^([01]\d|2[0-3]):[0-5]\d$/', $pauseDebut) ||
+            !preg_match('/^([01]\d|2[0-3]):[0-5]\d$/', $pauseFin)) {
+            $validationErreurs[] = "Les heures de pause sont invalides.";
+        } elseif ($pauseDebut >= $pauseFin) {
+            $validationErreurs[] = "L'heure de début de pause doit précéder l'heure de fin.";
+        } else {
+            $pause = $pauseDebut . '-' . $pauseFin;
         }
     }
 
@@ -79,8 +96,7 @@ if (isset($_POST['commander'])) {
         $erreurs = array_merge($erreurs, $validationErreurs);
     } else {
         $commandeModele = new CommandeModele();
-        $priority = isset($_POST['priority']) ? 1 : 0;
-        $pause = !empty($_POST['pause']) ? trim($_POST['pause']) : null;
+        $priority = !empty($_POST['priority']) ? 1 : 0;
 
         $orderId = $commandeModele->creerDepuisPanier(
             (int) $_SESSION['user_id'],

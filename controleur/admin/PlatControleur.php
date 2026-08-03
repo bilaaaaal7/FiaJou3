@@ -8,6 +8,7 @@ exiger_role(ROLE_ADMIN);
 
 require_once ROOT_PATH . '/modele/PlatModele.php';
 require_once ROOT_PATH . '/modele/CategorieModele.php';
+require_once ROOT_PATH . '/modele/UploadModele.php';
 
 $platModele = new PlatModele();
 $categorieModele = new CategorieModele();
@@ -28,25 +29,28 @@ if (isset($_POST['ajouter'])) {
     $prix = $_POST['prix'];
     $disponible = $_POST['disponible'];
 
-    $ancienne_image = $_POST['ancienne_image'];
+    $ancienne_image = $_POST['ancienne_image'] ?? "";
 
-    if ($_FILES['image']['name'] != "") {
-        $image = $platModele->enregistrerImage($_FILES['image']);
-    } else {
-        $image = $ancienne_image;
+    try {
+        $image = UploadModele::enregistrer($_FILES['image'] ?? []) ?? $ancienne_image;
+    } catch (RuntimeException $e) {
+        $error = $e->getMessage();
     }
 
-    $platModele->creer([
-        'category_id' => $category_id,
-        'nom' => $nom,
-        'description' => $description,
-        'prix' => $prix,
-        'image' => $image,
-        'disponible' => $disponible,
-    ]);
+    if (empty($error)) {
+        $platModele->creer([
+            'category_id' => $category_id,
+            'nom' => $nom,
+            'description' => $description,
+            'prix' => $prix,
+            'image' => $image,
+            'disponible' => $disponible,
+        ]);
+        journaliser_audit('plat.creer', 'nom="' . $nom . '" prix=' . $prix);
 
-    header('Location: ' . BASE_URL . '/index.php?route=admin/plats');
-    exit;
+        header('Location: ' . BASE_URL . '/index.php?route=admin/plats');
+        exit;
+    }
 }
 
 if (isset($_POST['modifier'])) {
@@ -57,19 +61,35 @@ if (isset($_POST['modifier'])) {
     $prix = $_POST['prix'];
     $disponible = $_POST['disponible'];
 
-    $image = $platModele->enregistrerImage($_FILES['image']);
+    $plat = $platModele->getParId($id);
+    $ancienneImage = $plat['image'] ?? "";
 
-    $platModele->mettreAJour($id, [
-        'category_id' => $category_id,
-        'nom' => $nom,
-        'description' => $description,
-        'prix' => $prix,
-        'image' => $image,
-        'disponible' => $disponible,
-    ]);
+    try {
+        $nouvelleImage = UploadModele::enregistrer($_FILES['image'] ?? []);
+    } catch (RuntimeException $e) {
+        $error = $e->getMessage();
+    }
 
-    header('Location: ' . BASE_URL . '/index.php?route=admin/plats');
-    exit;
+    if (empty($error)) {
+        $image = $nouvelleImage ?? $ancienneImage;
+
+        if ($nouvelleImage !== null && $ancienneImage !== "") {
+            UploadModele::supprimer($ancienneImage);
+        }
+
+        $platModele->mettreAJour($id, [
+            'category_id' => $category_id,
+            'nom' => $nom,
+            'description' => $description,
+            'prix' => $prix,
+            'image' => $image,
+            'disponible' => $disponible,
+        ]);
+        journaliser_audit('plat.modifier', 'id=' . $id . ' nom="' . $nom . '" prix=' . $prix . ' disponible=' . $disponible);
+
+        header('Location: ' . BASE_URL . '/index.php?route=admin/plats');
+        exit;
+    }
 }
 
 if (isset($_GET['supprimer'])) {
@@ -78,6 +98,7 @@ if (isset($_GET['supprimer'])) {
     if (!$succes) {
         $error = "Impossible de supprimer ce plat : il fait partie de commandes existantes. Vous pouvez le rendre indisponible à la place.";
     } else {
+        journaliser_audit('plat.supprimer', 'id=' . (int) $_GET['supprimer']);
         header('Location: ' . BASE_URL . '/index.php?route=admin/plats');
         exit;
     }

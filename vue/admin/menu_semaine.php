@@ -7,15 +7,38 @@ require ROOT_PATH . '/assets/inc/navbar.php';
 
 <h1>Menu de la semaine</h1>
 
+<?php
+$erreursAdmin = [
+    'nom'            => 'Le nom du menu est obligatoire.',
+    'dates'          => 'La date de début doit être antérieure à la date de fin.',
+    'chevauchement'  => 'Un menu non archivé couvre déjà cette période. Choisissez une autre semaine.',
+    'jour'           => 'Ce jour comporte déjà un plat. Un seul plat par jour est autorisé.',
+    'duplicat'       => 'Ce produit figure déjà dans ce menu. Un produit ne peut apparaître qu\'un seul jour.',
+];
+if (isset($_GET['erreur']) && isset($erreursAdmin[$_GET['erreur']])): ?>
+    <div class="alert alert-danger py-2" role="alert"><?php echo htmlspecialchars($erreursAdmin[$_GET['erreur']]); ?></div>
+<?php endif; ?>
+
 <div class="panel">
     <h2>Créer un menu</h2>
-    <form method="POST" action="<?php echo BASE_URL; ?>/index.php?route=admin/menu-semaine" style="display:flex; gap:10px; align-items:end;">
-        <div class="form-group" style="flex:1;">
+    <form method="POST" action="<?php echo BASE_URL; ?>/index.php?route=admin/menu-semaine" style="display:flex; gap:10px; align-items:end; flex-wrap:wrap;">
+        <div class="form-group" style="flex:1; min-width:200px;">
             <label>Nom du menu</label>
             <input type="text" name="nom" placeholder="Ex: Menu semaine 30" required>
         </div>
+        <div class="form-group">
+            <label>Début de semaine</label>
+            <input type="date" name="week_start">
+        </div>
+        <div class="form-group">
+            <label>Fin de semaine</label>
+            <input type="date" name="week_end">
+        </div>
         <button type="submit" name="creer" class="btn btn-gold">Créer</button>
     </form>
+    <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 8px;">
+        La période sert à savoir quel menu est actif pour chaque date de livraison (lundi à vendredi).
+    </p>
 </div>
 
 <div class="panel">
@@ -26,6 +49,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
                 <tr>
                     <th>ID</th>
                     <th>Nom</th>
+                    <th>Semaine</th>
                     <th>Date création</th>
                     <th>Statut</th>
                     <th>Actions</th>
@@ -36,6 +60,9 @@ require ROOT_PATH . '/assets/inc/navbar.php';
                 <tr>
                     <td><?php echo $m['id']; ?></td>
                     <td><?php echo htmlspecialchars($m['nom']); ?></td>
+                    <td>
+                        <?php echo $m['week_start'] ? htmlspecialchars($m['week_start']) . ' → ' . htmlspecialchars($m['week_end']) : '<em>Non définie</em>'; ?>
+                    </td>
                     <td><?php echo $m['date_creation']; ?></td>
                     <td>
                         <?php
@@ -59,7 +86,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
                 </tr>
             <?php endforeach; ?>
             <?php if (empty($menus)): ?>
-                <tr><td colspan="5" class="empty-state">Aucun menu créé.</td></tr>
+                <tr><td colspan="6" class="empty-state">Aucun menu créé.</td></tr>
             <?php endif; ?>
             </tbody>
         </table>
@@ -68,7 +95,13 @@ require ROOT_PATH . '/assets/inc/navbar.php';
 
 <?php if ($menuActuel): ?>
 <div class="panel">
-    <h2>Modifier : <?php echo htmlspecialchars($menuActuel['nom']); ?></h2>
+    <h2>Modifier : <?php echo htmlspecialchars($menuActuel['nom']); ?>
+        <?php if ($menuActuel['week_start']): ?>
+            <span style="font-weight:400; color:var(--text-muted); font-size:0.9rem;">
+                — <?php echo htmlspecialchars($menuActuel['week_start']); ?> → <?php echo htmlspecialchars($menuActuel['week_end']); ?>
+            </span>
+        <?php endif; ?>
+    </h2>
 
     <div style="margin-bottom:20px;">
         <h3>Ajouter un plat</h3>
@@ -77,7 +110,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
             <div class="form-group">
                 <label>Jour</label>
                 <select name="jour" required>
-                    <?php foreach (['lundi','mardi','mercredi','jeudi','vendredi','samedi','dimanche'] as $j): ?>
+                    <?php foreach (JOURS_LIVRAISON as $j): ?>
                         <option value="<?php echo $j; ?>"><?php echo ucfirst($j); ?></option>
                     <?php endforeach; ?>
                 </select>
@@ -92,6 +125,9 @@ require ROOT_PATH . '/assets/inc/navbar.php';
             </div>
             <button type="submit" name="ajouter_item" class="btn btn-gold">Ajouter</button>
         </form>
+        <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 6px;">
+            Un seul plat par jour (lundi à vendredi) et chaque produit ne peut apparaître qu'un seul jour.
+        </p>
     </div>
 
     <?php $jours = ['lundi','mardi','mercredi','jeudi','vendredi','samedi','dimanche']; ?>

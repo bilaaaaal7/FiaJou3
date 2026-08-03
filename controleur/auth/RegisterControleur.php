@@ -5,11 +5,17 @@
  */
 
 require_once ROOT_PATH . '/modele/UtilisateurModele.php';
+require_once ROOT_PATH . '/modele/RateLimiterModele.php';
 
 $error = "";
 $success = "";
+$limiteur = new RateLimiterModele('inscription');
+$blocageRestant = $limiteur->tempsRestantBlocage();
 
 if (isset($_POST['register'])) {
+    if (!$limiteur->peutTenter()) {
+        $error = "Trop de tentatives. Réessayez dans " . ceil($blocageRestant / 60) . " minute(s).";
+    } else {
     $prenom = trim($_POST['prenom']);
     $nom = trim($_POST['nom']);
     $telephone = trim($_POST['telephone']);
@@ -44,8 +50,10 @@ if (isset($_POST['register'])) {
                 'password' => $password,
             ]);
 
+            $limiteur->reinitialiser();
             $success = "Compte créé avec succès. Vous pouvez vous connecter.";
         }
+    }
     }
 }
 

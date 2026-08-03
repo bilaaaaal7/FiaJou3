@@ -31,10 +31,26 @@ require ROOT_PATH . '/assets/inc/navbar.php';
         ];
         ?>
 
+        <?php if (isset($_GET['erreur']) && in_array($_GET['erreur'], ['horsmenu', 'fermee', 'indisponible'], true)): ?>
+            <div class="alert alert-danger py-2" role="alert">
+                <?php echo $_GET['erreur'] === 'fermee'
+                    ? 'Les commandes pour cette date sont clôturées (limite ' . HEURE_LIMITE_COMMANDE . ' la veille).'
+                    : ($_GET['erreur'] === 'horsmenu'
+                        ? 'Ce plat ne fait pas partie du menu de la semaine publié.'
+                        : 'Ce plat n\'est plus disponible ou la quantité maximale (20) est atteinte.'); ?>
+            </div>
+        <?php endif; ?>
+
         <?php foreach ($joursAffichage as $cle => $label): ?>
             <?php if (!empty($itemsParJour[$cle])): ?>
             <div class="panel">
-                <h2><?php echo $label; ?></h2>
+                <h2><?php echo $label; ?>
+                    <?php if (isset($datesParJour[$cle])): ?>
+                        <span style="font-weight:400; color:var(--text-muted); font-size:0.85rem;">
+                            — livraison le <?php echo date('d/m/Y', strtotime($datesParJour[$cle])); ?>
+                        </span>
+                    <?php endif; ?>
+                </h2>
                 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
                     <?php foreach ($itemsParJour[$cle] as $item): ?>
                     <div style="background: #fff; border: 1px solid var(--border); border-radius: 12px; overflow: hidden;">
@@ -51,11 +67,13 @@ require ROOT_PATH . '/assets/inc/navbar.php';
                             <div style="margin-top: 8px; font-weight: 700; color: var(--gold-dark);">
                                 <?php echo number_format((float) $item['prix'], 2, ',', ' '); ?> DH
                             </div>
-                            <?php if ($item['disponible']): ?>
-                                <a href="<?php echo BASE_URL; ?>/index.php?route=client&ajouter=<?php echo (int) $item['product_id']; ?>"
+                            <?php if ($item['disponible'] && !empty($datesParJour[$cle]) && $ouvertParJour[$cle]): ?>
+                                <a href="<?php echo BASE_URL; ?>/index.php?route=client&ajouter=<?php echo (int) $item['product_id']; ?>&date=<?php echo $datesParJour[$cle]; ?>"
                                    class="btn btn-gold btn-sm btn-block" style="margin-top: 8px;">Ajouter au panier</a>
                             <?php else: ?>
-                                <span class="badge-status st-annulee" style="margin-top: 8px; display: inline-block;">Indisponible</span>
+                                <span class="badge-status st-annulee" style="margin-top: 8px; display: inline-block;">
+                                    <?php echo ($ouvertParJour[$cle] ?? true) ? 'Indisponible' : 'Commandes clôturées'; ?>
+                                </span>
                             <?php endif; ?>
                         </div>
                     </div>

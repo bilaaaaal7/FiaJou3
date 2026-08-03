@@ -1,0 +1,5 @@
+[2026-08-03 18:09:12] user=2 email=admin@test.com role=admin action=connexion.reussie details="email=admin@test.com" ip=::1
+[2026-08-03 18:09:58] user=2 email=admin@test.com role=admin action=connexion.reussie details="email=admin@test.com" ip=::1
+[2026-08-03 18:10:39] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-03 18:13:45] user=5 email=ismailsghir107@gmail.com role=admin action=commande.statut details="id=3 nouveau_statut=prete" ip=::1
+[2026-08-03 18:17:25] user=5 email=elbbilal00@gmail.com role=admin action=connexion.reussie details="email=elbbilal00@gmail.com" ip=127.0.0.1

@@ -310,7 +310,11 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             <div class="row">
                 <div class="col-md-6">
                     <div class="img-box">
+<<<<<<< HEAD
                         <img src="<?php echo BASE_URL; ?>/uploads/about-img.png" alt="À propos de <?php echo htmlspecialchars(APP_NAME); ?>">
+=======
+                        <img src="<?php echo BASE_URL; ?>/uploads/taj.png" alt="À propos de <?php echo htmlspecialchars(APP_NAME); ?>">
+>>>>>>> a248b96b5b6991e846b092f7ae1bc06940314f43
                     </div>
                 </div>
                 <div class="col-md-6">

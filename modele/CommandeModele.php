@@ -5,6 +5,7 @@
  */
 
 require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/HistoriqueModele.php';
 require_once __DIR__ . '/PlatModele.php';
 require_once __DIR__ . '/ZoneModele.php';
 
@@ -212,6 +213,78 @@ class CommandeModele
         $stmt->execute([$driverId, $orderId]);
     }
 
+    /**
+     * Une commande est accessible par un cuisinier si elle ne lui est pas
+     * encore assignée (file commune) ou si elle lui est assignée.
+     */
+    public function estAccessibleParCuisinier(array $commande, int $cookId): bool
+    {
+        return empty($commande['assigned_cook_id']) || (int) $commande['assigned_cook_id'] === $cookId;
+    }
+
+    /**
+     * Une commande est accessible par un livreur si elle lui est assignée.
+     */
+    public function estAccessibleParLivreur(array $commande, int $driverId): bool
+    {
+        return (int) $commande['assigned_driver_id'] === $driverId;
+    }
+
+    /**
+     * Change le statut d'une commande avec contrôle d'accès et validation de
+     * la transition selon le rôle de l'utilisateur connecté.
+     *
+     * Retourne ['succes' => bool, 'erreur' => string, 'commande' => array|[]].
+     */
+    public function changerStatutParRole(int $orderId, string $nouveauStatut, string $role, int $userId, string $commentaire = ''): array
+    {
+        $commande = $this->getParId($orderId);
+        if (!$commande) {
+            return ['succes' => false, 'erreur' => 'Commande introuvable.', 'commande' => []];
+        }
+
+        if ($role === ROLE_CUISINIER && !$this->estAccessibleParCuisinier($commande, $userId)) {
+            return ['succes' => false, 'erreur' => "Vous n'avez pas accès à cette commande.", 'commande' => $commande];
+        }
+        if ($role === ROLE_LIVREUR && !$this->estAccessibleParLivreur($commande, $userId)) {
+            return ['succes' => false, 'erreur' => "Vous n'avez pas accès à cette commande.", 'commande' => $commande];
+        }
+
+        $transitionsAutorisees = [
+            ROLE_CUISINIER => [
+                'en_attente'     => ['en_preparation'],
+                'confirmee'      => ['en_preparation'],
+                'en_preparation' => ['prete'],
+            ],
+            ROLE_LIVREUR => [
+                'prete'        => ['en_livraison'],
+                'en_livraison' => ['livree'],
+            ],
+        ];
+
+        $statutActuel = $commande['statut'];
+        $transitionAutorisee = isset($transitionsAutorisees[$role][$statutActuel])
+            && in_array($nouveauStatut, $transitionsAutorisees[$role][$statutActuel], true);
+
+        if (!$transitionAutorisee) {
+            return ['succes' => false, 'erreur' => 'Transition de statut non autorisée.', 'commande' => $commande];
+        }
+
+        // Un cuisinier qui démarre une commande non assignée la prend en charge.
+        if ($role === ROLE_CUISINIER && empty($commande['assigned_cook_id'])) {
+            $this->affecterCuisinier($orderId, $userId);
+            $commande['assigned_cook_id'] = $userId;
+        }
+
+        $this->mettreAJourStatut($orderId, $nouveauStatut);
+        $commande['statut'] = $nouveauStatut;
+
+        $historiqueModele = new HistoriqueModele();
+        $historiqueModele->ajouter($orderId, $statutActuel, $nouveauStatut, $commentaire ?: null, $userId);
+
+        return ['succes' => true, 'commande' => $commande];
+    }
+
     public function getCuisiniersDisponibles(): array
     {
         $stmt = $this->pdo->query(
@@ -329,6 +402,45 @@ class CommandeModele
              ORDER BY orders.id DESC"
         );
         return $stmt->fetchAll();
+    }
+
+    /**
+     * Statistiques des N derniers jours : nombre de commandes et chiffre
+     * d'affaires (hors commandes annulées) par jour, y compris les jours sans
+     * commande.
+     *
+     * @return array [['date' => 'Y-m-d', 'label' => 'j/M', 'nb' => int, 'ca' => float], ...]
+     */
+    public function statistiquesParJour(int $jours = 7): array
+    {
+        $dateDebut = date('Y-m-d', strtotime('-' . ($jours - 1) . ' days'));
+
+        $stmt = $this->pdo->prepare(
+            "SELECT DATE(created_at) AS jour,
+                    COUNT(*) AS nb,
+                    COALESCE(SUM(CASE WHEN statut <> 'annulee' THEN total ELSE 0 END), 0) AS ca
+             FROM orders
+             WHERE created_at >= ?
+             GROUP BY DATE(created_at)"
+        );
+        $stmt->execute([$dateDebut . ' 00:00:00']);
+        $parJour = [];
+        foreach ($stmt->fetchAll() as $ligne) {
+            $parJour[$ligne['jour']] = $ligne;
+        }
+
+        $resultat = [];
+        for ($i = $jours - 1; $i >= 0; $i--) {
+            $date = date('Y-m-d', strtotime("-$i days"));
+            $ligne = $parJour[$date] ?? ['nb' => 0, 'ca' => 0];
+            $resultat[] = [
+                'date'  => $date,
+                'label' => date('j/M', strtotime($date)),
+                'nb'    => (int) $ligne['nb'],
+                'ca'    => (float) $ligne['ca'],
+            ];
+        }
+        return $resultat;
     }
 
     /**

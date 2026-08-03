@@ -11,15 +11,17 @@ $driverId = (int) $_SESSION['user_id'];
 
 if (isset($_POST['demarrerLivraison'])) {
     $id = (int) $_POST['id'];
-    $commande = $commandeModele->getParId($id);
-    $ancienStatut = $commande ? $commande['statut'] : null;
-    $commandeModele->mettreAJourStatut($id, 'en_livraison');
-    $historiqueModele->ajouter($id, $ancienStatut, 'en_livraison', 'Livraison démarrée', $driverId);
+    $resultat = $commandeModele->changerStatutParRole($id, 'en_livraison', ROLE_LIVREUR, $driverId, 'Livraison démarrée');
 
-    if ($commande) {
-        $notifModele = new NotificationModele();
-        $notifModele->creer($commande['user_id'], 'Commande #' . $id . ' en livraison', 'Votre commande #' . $id . ' est en route vers vous.');
+    if (!$resultat['succes']) {
+        rediriger_avec_erreur('livreur', $resultat['erreur']);
     }
+
+    (new NotificationModele())->creer(
+        $resultat['commande']['user_id'],
+        'Commande #' . $id . ' en livraison',
+        'Votre commande #' . $id . ' est en route vers vous.'
+    );
 
     header('Location: ' . BASE_URL . '/index.php?route=livreur');
     exit;
@@ -28,15 +30,17 @@ if (isset($_POST['demarrerLivraison'])) {
 if (isset($_POST['confirmerLivraison'])) {
     $id = (int) $_POST['id'];
     $commentaire = trim($_POST['commentaire'] ?? '');
-    $commande = $commandeModele->getParId($id);
-    $ancienStatut = $commande ? $commande['statut'] : null;
-    $commandeModele->mettreAJourStatut($id, 'livree');
-    $historiqueModele->ajouter($id, $ancienStatut, 'livree', $commentaire ?: 'Livrée', $driverId);
+    $resultat = $commandeModele->changerStatutParRole($id, 'livree', ROLE_LIVREUR, $driverId, $commentaire ?: 'Livrée');
 
-    if ($commande) {
-        $notifModele = new NotificationModele();
-        $notifModele->creer($commande['user_id'], 'Commande #' . $id . ' livrée', 'Votre commande #' . $id . ' a été livrée avec succès.');
+    if (!$resultat['succes']) {
+        rediriger_avec_erreur('livreur', $resultat['erreur']);
     }
+
+    (new NotificationModele())->creer(
+        $resultat['commande']['user_id'],
+        'Commande #' . $id . ' livrée',
+        'Votre commande #' . $id . ' a été livrée avec succès.'
+    );
 
     header('Location: ' . BASE_URL . '/index.php?route=livreur');
     exit;
@@ -47,7 +51,10 @@ if (isset($_POST['signalerProbleme'])) {
     $commentaire = trim($_POST['commentaire_probleme'] ?? '');
     if (!empty($commentaire)) {
         $commande = $commandeModele->getParId($id);
-        $statutActuel = $commande ? $commande['statut'] : 'en_livraison';
+        if (!$commande || !$commandeModele->estAccessibleParLivreur($commande, $driverId)) {
+            rediriger_avec_erreur('livreur', "Vous n'avez pas accès à cette commande.");
+        }
+        $statutActuel = $commande['statut'];
         $historiqueModele->ajouter($id, $statutActuel, $statutActuel, 'Problème signalé : ' . $commentaire, $driverId);
     }
     header('Location: ' . BASE_URL . '/index.php?route=livreur');

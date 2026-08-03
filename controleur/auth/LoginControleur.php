@@ -5,33 +5,48 @@
  */
 
 require_once ROOT_PATH . '/modele/UtilisateurModele.php';
+require_once ROOT_PATH . '/modele/RateLimiterModele.php';
 
 $error = "";
+$limiteur = new RateLimiterModele('connexion');
+$blocageRestant = $limiteur->tempsRestantBlocage();
 
 if (isset($_POST['login'])) {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-
-    $utilisateurModele = new UtilisateurModele();
-    $user = $utilisateurModele->findByEmail($email);
-
-    if (!$user) {
-        $error = "Cet email n'existe pas.";
-    } elseif (!$user['actif']) {
-        $error = "Votre compte a été désactivé. Contactez l'administrateur.";
-    } elseif (!password_verify($password, $user['password'])) {
-        $error = "Mot de passe incorrect.";
+    if (!$limiteur->peutTenter()) {
+        $error = "Trop de tentatives échouées. Réessayez dans " . ceil($blocageRestant / 60) . " minute(s).";
     } else {
-        $profile = $utilisateurModele->findProfileByUserId($user['id']);
+        $email = $_POST['email'];
+        $password = $_POST['password'];
 
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['prenom']  = $profile['prenom'];
-        $_SESSION['role']    = $profile['role'];
+        $utilisateurModele = new UtilisateurModele();
+        $user = $utilisateurModele->findByEmail($email);
 
-        $route = route_par_defaut_pour_role($profile['role']);
+        if (!$user) {
+            $limiteur->enregistrerEchec();
+            $error = "Cet email n'existe pas.";
+        } elseif (!$user['actif']) {
+            $error = "Votre compte a été désactivé. Contactez l'administrateur.";
+        } elseif (!password_verify($password, $user['password'])) {
+            $limiteur->enregistrerEchec();
+            $error = "Mot de passe incorrect.";
+        } else {
+            $limiteur->reinitialiser();
+            $profile = $utilisateurModele->findProfileByUserId($user['id']);
 
-        header('Location: ' . BASE_URL . '/index.php?route=' . $route);
-        exit;
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['prenom']  = $profile['prenom'];
+            $_SESSION['role']    = $profile['role'];
+            $_SESSION['email']   = $email;
+
+            if ($profile['role'] === ROLE_ADMIN) {
+                journaliser_audit('connexion.reussie', 'email="' . $email . '"');
+            }
+
+            $route = route_par_defaut_pour_role($profile['role']);
+
+            header('Location: ' . BASE_URL . '/index.php?route=' . $route);
+            exit;
+        }
     }
 }
 

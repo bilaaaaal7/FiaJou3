@@ -27,6 +27,7 @@ if (isset($_POST['modifierStatut'])) {
     $statut = $_POST['statut'];
 
     $commandeModele->mettreAJourStatut($id, $statut);
+    journaliser_audit('commande.statut', 'id=' . $id . ' nouveau_statut="' . $statut . '"');
 
     header('Location: ' . BASE_URL . '/index.php?route=admin/commandes');
     exit;

@@ -43,6 +43,7 @@ if (isset($_GET['supprimer'])) {
     if (!$succes) {
         $error = "Impossible de supprimer cet utilisateur : il a des commandes ou données associées. Vous pouvez le désactiver à la place.";
     } else {
+        journaliser_audit('utilisateur.supprimer', 'id=' . (int) $_GET['supprimer']);
         header('Location: ' . BASE_URL . '/index.php?route=admin/utilisateurs');
         exit;
     }
@@ -60,6 +61,7 @@ if (isset($_POST['modifier'])) {
         'ville' => $_POST['ville'],
         'role' => $_POST['role'],
     ]);
+    journaliser_audit('utilisateur.modifier', 'id=' . $id . ' role="' . $_POST['role'] . '" email="' . $_POST['email'] . '"');
 
     header('Location: ' . BASE_URL . '/index.php?route=admin/utilisateurs');
     exit;

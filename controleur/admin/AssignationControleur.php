@@ -23,6 +23,7 @@ if (isset($_POST['assigner'])) {
     if ($commande) {
         $notifModele->creer($commande['user_id'], 'Commande #' . $orderId . ' assignée', 'Votre commande #' . $orderId . ' est en cours de traitement.');
     }
+    journaliser_audit('commande.assigner', 'order_id=' . $orderId . ' cook_id=' . ($_POST['cook_id'] ?? '-') . ' driver_id=' . ($_POST['driver_id'] ?? '-'));
 
     header('Location: ' . BASE_URL . '/index.php?route=admin/assignation');
     exit;

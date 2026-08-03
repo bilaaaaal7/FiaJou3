@@ -1,0 +1,127 @@
+<?php
+/**
+ * Mini-panier latéral (cahier des charges : panier visible dès l'ajout).
+ * Rendu pour les clients uniquement ; s'ouvre automatiquement quand la page
+ * est chargée avec ?panier=1 (après un ajout au panier).
+ */
+
+if (!est_connecte() || utilisateur_role() !== ROLE_CLIENT) {
+    return;
+}
+
+require_once ROOT_PATH . '/modele/PanierModele.php';
+
+$mpPanier = new PanierModele();
+$mpDetails = $mpPanier->getDetails();
+$mpArticles = $mpDetails['articles'];
+$mpTotal = $mpDetails['total'];
+$mpDate = $mpPanier->getDate();
+$mpNb = $mpPanier->nombreArticles();
+$mpOuvert = isset($_GET['panier']) && $_GET['panier'] === '1';
+?>
+<style>
+    .mp-toggle {
+        position: fixed; right: 18px; bottom: 18px; z-index: 2050;
+        background: var(--gold, #B88618); color: #fff; border: none; border-radius: 999px;
+        padding: 12px 18px; font-weight: 700; box-shadow: 0 8px 22px rgba(0,0,0,0.28);
+        cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem;
+    }
+    .mp-drawer {
+        position: fixed; top: 0; right: 0; bottom: 0; width: 340px; max-width: 88vw;
+        background: #F8F5EF; color: #171717; z-index: 2100;
+        transform: translateX(102%); transition: transform 0.28s ease;
+        display: flex; flex-direction: column; box-shadow: -12px 0 30px rgba(0,0,0,0.22);
+    }
+    .mp-drawer.open { transform: translateX(0); }
+    .mp-head {
+        padding: 16px 18px; background: #171717; color: #F8F5EF;
+        display: flex; align-items: center; justify-content: space-between; font-weight: 700;
+    }
+    .mp-close {
+        background: none; border: none; color: #F8F5EF; font-size: 1.5rem; line-height: 1; cursor: pointer;
+    }
+    .mp-date {
+        padding: 10px 18px; font-size: 0.8rem; color: #706862;
+        border-bottom: 1px solid #e5dfd2; background: #fff;
+    }
+    .mp-body { flex: 1; overflow-y: auto; padding: 8px 18px; }
+    .mp-item {
+        display: flex; justify-content: space-between; gap: 10px;
+        padding: 10px 0; border-bottom: 1px dashed #e5dfd2; font-size: 0.9rem;
+    }
+    .mp-item .mp-qty { color: #B88618; font-weight: 700; white-space: nowrap; }
+    .mp-empty { color: #706862; text-align: center; padding: 40px 10px; }
+    .mp-foot {
+        padding: 14px 18px; background: #fff; border-top: 1px solid #e5dfd2;
+    }
+    .mp-total { display: flex; justify-content: space-between; font-weight: 700; font-size: 1.05rem; margin-bottom: 12px; }
+    .mp-actions { display: flex; gap: 8px; }
+    .mp-actions a {
+        flex: 1; text-align: center; padding: 10px 8px; border-radius: 8px;
+        font-weight: 600; text-decoration: none; font-size: 0.85rem;
+    }
+    .mp-actions .mp-link { border: 1px solid #B88618; color: #B88618; }
+    .mp-actions .mp-cta { background: #B88618; color: #fff; }
+    .mp-overlay {
+        position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 2050;
+        opacity: 0; pointer-events: none; transition: opacity 0.28s ease;
+    }
+    .mp-overlay.show { opacity: 1; pointer-events: auto; }
+</style>
+
+<button type="button" id="mp-toggle" class="mp-toggle" onclick="mpOuvrir()">
+    Panier (<?php echo (int) $mpNb; ?>)
+</button>
+
+<div id="mp-overlay" class="mp-overlay" onclick="mpFermer()"></div>
+
+<aside id="mp-drawer" class="mp-drawer<?php echo $mpOuvert ? ' open' : ''; ?>" aria-label="Mini panier">
+    <div class="mp-head">
+        <span>Mon panier</span>
+        <button type="button" class="mp-close" onclick="mpFermer()" aria-label="Fermer">&times;</button>
+    </div>
+
+    <?php if ($mpDate): ?>
+        <div class="mp-date">Livraison le <?php echo htmlspecialchars(date('d/m/Y', strtotime($mpDate))); ?></div>
+    <?php endif; ?>
+
+    <div class="mp-body">
+        <?php if (empty($mpArticles)): ?>
+            <div class="mp-empty">Votre panier est vide.</div>
+        <?php else: ?>
+            <?php foreach ($mpArticles as $mpArticle): ?>
+                <div class="mp-item">
+                    <span><?php echo htmlspecialchars($mpArticle['nom']); ?></span>
+                    <span class="mp-qty"><?php echo (int) $mpArticle['quantite']; ?> × <?php echo number_format((float) $mpArticle['prix'], 2, ',', ' '); ?> DH</span>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
+
+    <div class="mp-foot">
+        <div class="mp-total">
+            <span>Total</span>
+            <span><?php echo number_format((float) $mpTotal, 2, ',', ' '); ?> DH</span>
+        </div>
+        <div class="mp-actions">
+            <a class="mp-link" href="<?php echo BASE_URL; ?>/index.php?route=client/panier">Voir le panier</a>
+            <?php if (!empty($mpArticles)): ?>
+                <a class="mp-cta" href="<?php echo BASE_URL; ?>/index.php?route=client/commander">Commander</a>
+            <?php endif; ?>
+        </div>
+    </div>
+</aside>
+
+<script>
+    function mpOuvrir() {
+        document.getElementById('mp-drawer').classList.add('open');
+        document.getElementById('mp-overlay').classList.add('show');
+    }
+    function mpFermer() {
+        document.getElementById('mp-drawer').classList.remove('open');
+        document.getElementById('mp-overlay').classList.remove('show');
+    }
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') { mpFermer(); }
+    });
+</script>

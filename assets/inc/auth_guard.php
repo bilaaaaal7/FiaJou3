@@ -62,3 +62,14 @@ function exiger_role(string|array $rolesAutorises): void
         exit;
     }
 }
+
+/**
+ * Redirige vers une route interne en attachant un message d'erreur (?erreur=).
+ * Utilisé par les contrôleurs pour signaler un échec (accès refusé, statut
+ * invalide...) tout en préservant le formulaire de la page de destination.
+ */
+function rediriger_avec_erreur(string $route, string $message): void
+{
+    header('Location: ' . BASE_URL . '/index.php?route=' . ltrim($route, '/') . '&erreur=' . urlencode($message));
+    exit;
+}
