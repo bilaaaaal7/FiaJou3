@@ -10,4 +10,6 @@ $driverId = (int) $_SESSION['user_id'];
 
 $commandesLivrees = $commandeModele->getParLivreurEtStatut($driverId, 'livree');
 
+$activite = $historiqueModele->getParUser($driverId);
+
 require ROOT_PATH . '/vue/livreur/historique.php';

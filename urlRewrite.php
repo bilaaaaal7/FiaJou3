@@ -290,6 +290,14 @@ function dispatch(): void
             require ROOT_PATH . '/controleur/cuisinier/HistoriqueControleur.php';
             return;
 
+        case 'cuisinier/detail-commande':
+            reset_meta();
+            $_SESSION['pr_title'] = 'Détail de la commande - ' . APP_NAME;
+            $_SESSION['meta_description'] = 'Consultez le détail et la chronologie d\'une commande à préparer sur ' . APP_NAME . '.';
+            $_SESSION['meta_keywords'] = 'détail commande cuisinier, ' . APP_NAME;
+            require ROOT_PATH . '/controleur/cuisinier/DetailCommandeControleur.php';
+            return;
+
         /* =========================
            ESPACE LIVREUR
            (protégé par exiger_role(ROLE_LIVREUR))
@@ -309,6 +317,14 @@ function dispatch(): void
             $_SESSION['meta_description'] = 'Consultez l\'historique de vos livraisons effectuées sur ' . APP_NAME . '.';
             $_SESSION['meta_keywords'] = 'historique livreur, ' . APP_NAME;
             require ROOT_PATH . '/controleur/livreur/HistoriqueControleur.php';
+            return;
+
+        case 'livreur/detail-commande':
+            reset_meta();
+            $_SESSION['pr_title'] = 'Détail de la commande - ' . APP_NAME;
+            $_SESSION['meta_description'] = 'Consultez le détail et la chronologie d\'une livraison sur ' . APP_NAME . '.';
+            $_SESSION['meta_keywords'] = 'détail commande livreur, ' . APP_NAME;
+            require ROOT_PATH . '/controleur/livreur/DetailCommandeControleur.php';
             return;
 
         /* =========================

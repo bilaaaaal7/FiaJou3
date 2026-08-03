@@ -28,4 +28,6 @@ $commandesLivrees = array_filter($commandesLivrees, function($c) {
     return in_array($c['statut'], ['livree', 'prete', 'en_livraison']);
 });
 
+$activite = $historiqueModele->getParUser($cookId);
+
 require ROOT_PATH . '/vue/cuisinier/historique.php';

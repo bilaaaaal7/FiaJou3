@@ -70,6 +70,16 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
         .logo-mark img { display: block; width: 100%; height: 100%; object-fit: contain; }
         .footer_detail .footer-logo { display: inline-flex; align-items: center; gap: 10px; }
 
+        /* ---------- Header fixe (reste visible au scroll) ---------- */
+        .header_section {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 999;
+            background: #171717;
+        }
+
         /* ---------- Hero sans photo (charte : Noir Charbon + Or Tajine) ---------- */
         .hero_area--branded { background: #171717; }
 
@@ -79,14 +89,14 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
 
         .hero_glow {
             position: absolute; inset: 0; pointer-events: none;
-            background: radial-gradient(circle at 78% 30%, rgba(184,134,24,0.30) 0%, rgba(184,134,24,0) 55%);
+            background: radial-gradient(circle at 78% 30%, #c38d194d 0%, rgba(184,134,24,0) 55%);
         }
 
         .slider_section--static { padding: 70px 0 90px; }
         .slider_section--static .detail-box { margin-bottom: 0; }
 
         .hero-eyebrow {
-            display: inline-block; color: #B88618; font-weight: 700;
+            display: inline-block; color: #c38d194d; font-weight: 700;
             text-transform: uppercase; letter-spacing: 1.2px; font-size: 0.82rem;
             margin-bottom: 16px;
         }
@@ -115,7 +125,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                     <pattern id="fjDiamonds" x="0" y="0" width="64" height="64" patternUnits="userSpaceOnUse">
-                        <rect x="28" y="28" width="8" height="8" fill="#B88618" transform="rotate(45 32 32)"/>
+                        <rect x="28" y="28" width="8" height="8" fill="#9d7214" transform="rotate(45 32 32)"/>
                     </pattern>
                 </defs>
                 <rect width="100%" height="100%" fill="url(#fjDiamonds)"/>
@@ -300,7 +310,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             <div class="row">
                 <div class="col-md-6">
                     <div class="img-box">
-                        <img src="<?php echo BASE_URL; ?>/assets/feane/images/about-img.png" alt="À propos de <?php echo htmlspecialchars(APP_NAME); ?>">
+                        <img src="<?php echo BASE_URL; ?>/uploads/about-img.png" alt="À propos de <?php echo htmlspecialchars(APP_NAME); ?>">
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -455,6 +465,32 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
     <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
     <script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/feane/js/custom.js"></script>
+
+    <script>
+        // Le header est en position fixed : on compense sa hauteur réelle
+        // (variable selon la largeur d'écran / l'ouverture du menu mobile)
+        // par un padding-top sur .hero_area pour ne pas masquer le contenu.
+        (function () {
+            var header = document.querySelector('.header_section');
+            var hero = document.querySelector('.hero_area');
+            if (!header || !hero) return;
+
+            function ajusterEspaceHeader() {
+                hero.style.paddingTop = header.offsetHeight + 'px';
+            }
+
+            ajusterEspaceHeader();
+            window.addEventListener('resize', ajusterEspaceHeader);
+            window.addEventListener('load', ajusterEspaceHeader);
+
+            // Le menu mobile (Bootstrap collapse) change la hauteur du header
+            // quand il s'ouvre/se ferme : on réajuste dans ces cas aussi.
+            var menuMobile = document.getElementById('navbarSupportedContent');
+            if (menuMobile && window.jQuery) {
+                jQuery(menuMobile).on('shown.bs.collapse hidden.bs.collapse', ajusterEspaceHeader);
+            }
+        })();
+    </script>
 
 </body>
 </html>

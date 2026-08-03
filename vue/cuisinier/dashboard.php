@@ -59,6 +59,7 @@ require ROOT_PATH . '/assets/inc/quick_access.php';
             <input type="hidden" name="nouveau_statut" value="en_preparation">
             <input type="text" name="commentaire" placeholder="Remarque..." style="border:1px solid var(--border); border-radius:6px; padding:4px 8px; font-size:0.82rem; width:160px;">
             <button type="submit" name="avancerStatut" class="btn btn-gold btn-sm">Commencer la préparation</button>
+            <a href="<?php echo BASE_URL; ?>/index.php?route=cuisinier/detail-commande&id=<?php echo (int) $c['id']; ?>" class="btn btn-outline btn-sm">Voir</a>
         </form>
     </div>
     <?php endforeach; ?>
@@ -98,6 +99,7 @@ require ROOT_PATH . '/assets/inc/quick_access.php';
             <input type="hidden" name="nouveau_statut" value="prete">
             <input type="text" name="commentaire" placeholder="Remarque..." style="border:1px solid var(--border); border-radius:6px; padding:4px 8px; font-size:0.82rem; width:160px;">
             <button type="submit" name="avancerStatut" class="btn btn-gold btn-sm">Marquer prête</button>
+            <a href="<?php echo BASE_URL; ?>/index.php?route=cuisinier/detail-commande&id=<?php echo (int) $c['id']; ?>" class="btn btn-outline btn-sm">Voir</a>
         </form>
     </div>
     <?php endforeach; ?>

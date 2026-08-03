@@ -18,6 +18,11 @@ if (isset($_POST['avancerStatut'])) {
     $ancienStatut = $commande ? $commande['statut'] : null;
 
     $commandeModele->mettreAJourStatut($id, $nouveauStatut);
+
+    if ($nouveauStatut === 'en_preparation') {
+        $commandeModele->affecterCuisinier($id, $cookId);
+    }
+
     $historiqueModele->ajouter($id, $ancienStatut, $nouveauStatut, $commentaire ?: null, $cookId);
 
     if ($commande) {
@@ -40,6 +45,11 @@ $commandesEnPreparation = array_values(array_filter(
     $commandeModele->getParStatut('en_preparation'),
     fn($c) => (int) $c['assigned_cook_id'] === $cookId
 ));
+
+usort($commandesEnAttente, fn($a, $b) => [$b['priority'] ?? 0, $a['date_livraison'], $a['heure_livraison']]
+    <=> [$a['priority'] ?? 0, $b['date_livraison'], $b['heure_livraison']]);
+usort($commandesEnPreparation, fn($a, $b) => [$b['priority'] ?? 0, $a['date_livraison'], $a['heure_livraison']]
+    <=> [$a['priority'] ?? 0, $b['date_livraison'], $b['heure_livraison']]);
 $quantites = $commandeModele->quantitesAProduire();
 $nbAPreparer = count($commandesEnAttente);
 $nbEnPreparation = count($commandesEnPreparation);
