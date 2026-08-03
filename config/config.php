@@ -30,6 +30,12 @@ define('ROLE_CLIENT', 'client');
 define('ROLE_CUISINIER', 'cook');
 define('ROLE_LIVREUR', 'driver');
 
+// Heure limite de commande pour une livraison le lendemain (cahier des charges).
+define('HEURE_LIMITE_COMMANDE', '21:00');
+
+// Jours de livraison autorisés (lundi à vendredi), dans l'ordre.
+define('JOURS_LIVRAISON', ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi']);
+
 // Statuts possibles d'une commande (doivent correspondre à l'ENUM de la BDD)
 define('STATUTS_COMMANDE', [
     'en_attente'    => 'En attente',

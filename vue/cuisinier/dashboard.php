@@ -33,7 +33,7 @@ require ROOT_PATH . '/assets/inc/quick_access.php';
     <div style="border:1px solid var(--border); border-radius:10px; padding:16px; margin-bottom:12px; background:#fff;">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
             <div>
-                <strong>#<?php echo $c['id']; ?></strong> &mdash;
+                <strong><a href="<?php echo BASE_URL; ?>/index.php?route=cuisinier/commande&id=<?php echo (int) $c['id']; ?>" style="color:var(--gold-dark); text-decoration:none;">#<?php echo $c['id']; ?></a></strong> &mdash;
                 <?php echo htmlspecialchars($c['prenom'] . ' ' . $c['nom']); ?>
             </div>
             <div>
@@ -72,7 +72,7 @@ require ROOT_PATH . '/assets/inc/quick_access.php';
     <div style="border:1px solid var(--border); border-radius:10px; padding:16px; margin-bottom:12px; background:#fff;">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
             <div>
-                <strong>#<?php echo $c['id']; ?></strong> &mdash;
+                <strong><a href="<?php echo BASE_URL; ?>/index.php?route=cuisinier/commande&id=<?php echo (int) $c['id']; ?>" style="color:var(--gold-dark); text-decoration:none;">#<?php echo $c['id']; ?></a></strong> &mdash;
                 <?php echo htmlspecialchars($c['prenom'] . ' ' . $c['nom']); ?>
             </div>
             <div>

@@ -16,7 +16,15 @@ class PanierModele
         }
     }
 
-    public function ajouter(int $platId): bool
+    /**
+     * Ajoute un plat au panier, restreint au menu de la semaine (cahier des charges).
+     *
+     * @param int      $platId
+     * @param string|null $date Date de livraison souhaitée (Y-m-d). Déduite du menu si absente.
+     *
+     * @return string 'ok' | 'indisponible' | 'horsmenu' | 'quantite_max' | 'fermee'
+     */
+    public function ajouter(int $platId, ?string $date = null): string
     {
         $this->initialiser();
 
@@ -24,12 +32,42 @@ class PanierModele
         $plat = $platModele->getParId($platId);
 
         if (!$plat || !$plat['disponible']) {
-            return false;
+            return 'indisponible';
         }
 
         $quantiteActuelle = $_SESSION['panier'][$platId] ?? 0;
         if ($quantiteActuelle >= 20) {
-            return false;
+            return 'quantite_max';
+        }
+
+        require_once __DIR__ . '/MenuSemaineModele.php';
+        $menuModele = new MenuSemaineModele();
+
+        if (!$menuModele->estPlatAuMenu($platId)) {
+            return 'horsmenu';
+        }
+
+        if ($date === null) {
+            $date = $menuModele->getDateCommandePourPlat($platId);
+        }
+        if ($date === null) {
+            return 'horsmenu';
+        }
+
+        [$dateOk, ] = $menuModele->dateLivraisonValide($date);
+        if (!$dateOk) {
+            return 'fermee';
+        }
+
+        $present = false;
+        foreach ($menuModele->getPlatsPourDate($date) as $platDuJour) {
+            if ((int) $platDuJour['id'] === $platId) {
+                $present = true;
+                break;
+            }
+        }
+        if (!$present) {
+            return 'horsmenu';
         }
 
         if (isset($_SESSION['panier'][$platId])) {
@@ -37,7 +75,8 @@ class PanierModele
         } else {
             $_SESSION['panier'][$platId] = 1;
         }
-        return true;
+        $_SESSION['panier_date'] = $date;
+        return 'ok';
     }
 
     public function augmenter(int $platId): bool
@@ -76,6 +115,24 @@ class PanierModele
     public function vider(): void
     {
         unset($_SESSION['panier']);
+        unset($_SESSION['panier_date']);
+    }
+
+    /**
+     * Date de livraison enregistrée pour le panier (Y-m-d), si définie.
+     */
+    public function getDate(): ?string
+    {
+        return $_SESSION['panier_date'] ?? null;
+    }
+
+    public function setDate(?string $date): void
+    {
+        if ($date !== null && $date !== '') {
+            $_SESSION['panier_date'] = $date;
+        } else {
+            unset($_SESSION['panier_date']);
+        }
     }
 
     public function estVide(): bool
@@ -143,7 +200,9 @@ class PanierModele
     }
 
     /**
-     * Valide le panier (vérifie disponibilité et quantités).
+     * Valide le panier (disponibilité, quantités, conformité au menu de la
+     * semaine et à la date de livraison choisie). Les articles invalides sont
+     * retirés du panier.
      */
     public function valider(): array
     {
@@ -158,6 +217,24 @@ class PanierModele
                     unset($_SESSION['panier'][$id]);
                 } elseif (!$plat['disponible']) {
                     $erreurs[] = "Le plat \"{$plat['nom']}\" n'est plus disponible.";
+                    unset($_SESSION['panier'][$id]);
+                }
+            }
+        }
+
+        $date = $this->getDate();
+        if ($date !== null && !empty($_SESSION['panier'])) {
+            require_once __DIR__ . '/MenuSemaineModele.php';
+            $menuModele = new MenuSemaineModele();
+            $idsDuJour = [];
+            foreach ($menuModele->getPlatsPourDate($date) as $plat) {
+                $idsDuJour[] = (int) $plat['id'];
+            }
+            foreach ($_SESSION['panier'] as $id => $quantite) {
+                if (!in_array((int) $id, $idsDuJour, true)) {
+                    $plat = $platModele->getParId((int) $id);
+                    $erreurs[] = ($plat ? 'Le plat "' . $plat['nom'] . '"' : "Le plat #$id") .
+                        ' n\'est pas au menu de la semaine pour la date de livraison choisie.';
                     unset($_SESSION['panier'][$id]);
                 }
             }

@@ -61,6 +61,7 @@ require ROOT_PATH . '/assets/inc/quick_access.php';
                     <td><?php echo $c['date_livraison'] . ' ' . $c['heure_livraison']; ?></td>
                     <td><?php echo number_format($c['total'], 2); ?> DH</td>
                     <td>
+                        <a href="<?php echo BASE_URL; ?>/index.php?route=livreur/commande&id=<?php echo (int) $c['id']; ?>" class="btn btn-outline btn-sm">Détail</a>
                         <form method="POST" action="<?php echo BASE_URL; ?>/index.php?route=livreur" style="display:inline;">
                             <input type="hidden" name="id" value="<?php echo $c['id']; ?>">
                             <button type="submit" name="demarrerLivraison" class="btn btn-gold btn-sm">Démarrer</button>
@@ -106,6 +107,7 @@ require ROOT_PATH . '/assets/inc/quick_access.php';
                     <td><?php echo number_format($c['total'], 2); ?> DH</td>
                     <td><?php echo $c['priority'] ? '<span class="badge-status st-en_attente">Urgent</span>' : '-'; ?></td>
                     <td class="actions-cell" style="flex-direction:column; gap:4px;">
+                        <a href="<?php echo BASE_URL; ?>/index.php?route=livreur/commande&id=<?php echo (int) $c['id']; ?>" class="btn btn-outline btn-sm">Détail</a>
                         <form method="POST" action="<?php echo BASE_URL; ?>/index.php?route=livreur" style="display:inline;">
                             <input type="hidden" name="id" value="<?php echo $c['id']; ?>">
                             <input type="text" name="commentaire" placeholder="Remarque..." style="border:1px solid var(--border); border-radius:6px; padding:4px 8px; font-size:0.82rem; width:120px;">

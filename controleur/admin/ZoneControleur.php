@@ -14,6 +14,7 @@ if (isset($_POST['ajouter'])) {
         $erreur = "Veuillez remplir tous les champs correctement.";
     } else {
         $zoneModele->creer($nom, $prix);
+        journaliser_audit('zone.creer', 'nom="' . $nom . '" prix=' . $prix);
         header('Location: ' . BASE_URL . '/index.php?route=admin/zones');
         exit;
     }
@@ -27,6 +28,7 @@ if (isset($_POST['modifier'])) {
         $erreur = "Veuillez remplir tous les champs correctement.";
     } else {
         $zoneModele->mettreAJour($id, $nom, $prix);
+        journaliser_audit('zone.modifier', 'id=' . $id . ' nom="' . $nom . '" prix=' . $prix);
         header('Location: ' . BASE_URL . '/index.php?route=admin/zones');
         exit;
     }
@@ -37,6 +39,7 @@ if (isset($_GET['supprimer'])) {
     if (!$succes) {
         $erreur = "Impossible de supprimer cette zone : elle est utilisée par des commandes existantes.";
     } else {
+        journaliser_audit('zone.supprimer', 'id=' . (int) $_GET['supprimer']);
         header('Location: ' . BASE_URL . '/index.php?route=admin/zones');
         exit;
     }

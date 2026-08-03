@@ -11,7 +11,7 @@ RewriteEngine On
 # session/rôle. Ils restent dans le dépôt mais ne doivent plus jamais
 # être accessibles directement.
 # ------------------------------------------------------------------
-RewriteRule ^(config|modele|controleur|vue|admin|auth|client|cuisinier|livreur|includes)(/|$) - [F,L]
+RewriteRule ^(config|modele|controleur|vue|admin|auth|client|cuisinier|livreur|includes|logs)(/|$) - [F,L]
 
 # ------------------------------------------------------------------
 # Routage propre : toute requête qui ne correspond pas à un fichier ou

@@ -12,6 +12,13 @@ require ROOT_PATH . '/assets/inc/navbar.php';
     <?php if (isset($_GET['erreur']) && $_GET['erreur'] === 'indisponible'): ?>
         <div class="alert alert-danger py-2" role="alert" style="margin-top: 12px;">Ce plat n'est plus disponible ou la quantité maximale (20) est atteinte.</div>
     <?php endif; ?>
+    <?php if (isset($_GET['erreur']) && in_array($_GET['erreur'], ['horsmenu', 'fermee'], true)): ?>
+        <div class="alert alert-danger py-2" role="alert" style="margin-top: 12px;">
+            <?php echo $_GET['erreur'] === 'fermee'
+                ? 'Les commandes pour cette date sont clôturées (limite ' . HEURE_LIMITE_COMMANDE . ' la veille).'
+                : 'Ce plat ne fait pas partie du menu de la semaine publié : il est disponible uniquement en consultation.'; ?>
+        </div>
+    <?php endif; ?>
 
     <div class="panel" style="margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start;">
         <img src="<?php echo UPLOADS_URL; ?>/<?php echo htmlspecialchars($plat['image']); ?>"
@@ -43,11 +50,15 @@ require ROOT_PATH . '/assets/inc/navbar.php';
                 <?php endif; ?>
             </div>
 
-            <?php if ($plat['disponible']): ?>
-                <a href="<?php echo BASE_URL; ?>/index.php?route=client&ajouter=<?php echo $plat['id']; ?>"
+            <?php if ($plat['disponible'] && $dateCommande): ?>
+                <a href="<?php echo BASE_URL; ?>/index.php?route=client&ajouter=<?php echo $plat['id']; ?>&date=<?php echo $dateCommande; ?>"
                    class="btn btn-gold" style="padding: 10px 24px;">
-                    Ajouter au panier
+                    Ajouter au panier (livraison le <?php echo date('d/m/Y', strtotime($dateCommande)); ?>)
                 </a>
+            <?php elseif ($plat['disponible']): ?>
+                <span class="btn btn-outline" style="padding: 10px 24px; opacity: 0.7; cursor: not-allowed;">
+                    Consultation uniquement — hors menu de la semaine
+                </span>
             <?php else: ?>
                 <span class="btn btn-outline" style="padding: 10px 24px; opacity: 0.6; cursor: not-allowed;">
                     Indisponible pour le moment

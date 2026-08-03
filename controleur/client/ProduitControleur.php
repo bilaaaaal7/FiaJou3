@@ -9,10 +9,12 @@ exiger_role(ROLE_CLIENT);
 require_once ROOT_PATH . '/modele/PlatModele.php';
 require_once ROOT_PATH . '/modele/CategorieModele.php';
 require_once ROOT_PATH . '/modele/PanierModele.php';
+require_once ROOT_PATH . '/modele/MenuSemaineModele.php';
 
 $platModele = new PlatModele();
 $categorieModele = new CategorieModele();
 $panierModele = new PanierModele();
+$menuSemaineModele = new MenuSemaineModele();
 
 $platId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 $plat = $platId > 0 ? $platModele->getParId($platId) : false;
@@ -25,5 +27,6 @@ if (!$plat) {
 
 $categorie = $categorieModele->getParId((int) $plat['category_id']);
 $nombreArticles = $panierModele->nombreArticles();
+$dateCommande = $menuSemaineModele->getDateCommandePourPlat($platId);
 
 require ROOT_PATH . '/vue/client/produit.php';

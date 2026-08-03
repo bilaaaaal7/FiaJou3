@@ -2,31 +2,29 @@
 exiger_role(ROLE_CUISINIER);
 
 require_once ROOT_PATH . '/modele/CommandeModele.php';
-require_once ROOT_PATH . '/modele/HistoriqueModele.php';
 require_once ROOT_PATH . '/modele/NotificationModele.php';
 
 $commandeModele = new CommandeModele();
-$historiqueModele = new HistoriqueModele();
 $cookId = (int) $_SESSION['user_id'];
 
 if (isset($_POST['avancerStatut'])) {
     $id = (int) $_POST['id'];
-    $nouveauStatut = $_POST['nouveau_statut'];
+    $nouveauStatut = trim($_POST['nouveau_statut'] ?? '');
     $commentaire = trim($_POST['commentaire'] ?? '');
 
-    $commande = $commandeModele->getParId($id);
-    $ancienStatut = $commande ? $commande['statut'] : null;
+    $resultat = $commandeModele->changerStatutParRole($id, $nouveauStatut, ROLE_CUISINIER, $cookId, $commentaire);
 
-    $commandeModele->mettreAJourStatut($id, $nouveauStatut);
-    $historiqueModele->ajouter($id, $ancienStatut, $nouveauStatut, $commentaire ?: null, $cookId);
-
-    if ($commande) {
-        require_once ROOT_PATH . '/modele/NotificationModele.php';
-        $notifModele = new NotificationModele();
-        $labels = ['en_preparation' => 'en préparation', 'prete' => 'prête'];
-        $label = $labels[$nouveauStatut] ?? $nouveauStatut;
-        $notifModele->creer($commande['user_id'], 'Commande #' . $id, 'Votre commande #' . $id . ' est ' . $label . '.');
+    if (!$resultat['succes']) {
+        rediriger_avec_erreur('cuisinier', $resultat['erreur']);
     }
+
+    $labels = ['en_preparation' => 'en préparation', 'prete' => 'prête'];
+    $label = $labels[$nouveauStatut] ?? $nouveauStatut;
+    (new NotificationModele())->creer(
+        $resultat['commande']['user_id'],
+        'Commande #' . $id,
+        'Votre commande #' . $id . ' est ' . $label . '.'
+    );
 
     header('Location: ' . BASE_URL . '/index.php?route=cuisinier');
     exit;

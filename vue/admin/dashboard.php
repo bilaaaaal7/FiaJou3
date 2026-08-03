@@ -80,6 +80,53 @@ require ROOT_PATH . '/assets/inc/quick_access.php';
     </div>
 </div>
 
+<?php
+$maxNb = max(1, max(array_column($stats7Jours, 'nb')));
+$maxCa = max(1, max(array_column($stats7Jours, 'ca')));
+?>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-bottom: 22px;">
+    <div class="panel">
+        <h2>Commandes — 7 derniers jours</h2>
+        <div style="display: flex; align-items: flex-end; gap: 10px; height: 200px; padding: 10px 4px 0;">
+            <?php foreach ($stats7Jours as $stat): ?>
+                <?php
+                $hauteur = round(($stat['nb'] / $maxNb) * 100);
+                $jourCourant = $stat['date'] === date('Y-m-d');
+                ?>
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                    <span style="font-size: 0.78rem; font-weight: 700; color: var(--gold-dark);"><?php echo $stat['nb']; ?></span>
+                    <div title="<?php echo $stat['date']; ?>"
+                         style="width: 100%; max-width: 46px; height: <?php echo $hauteur; ?>%; min-height: 4px;
+                                background: <?php echo $jourCourant ? 'var(--gold)' : '#D8C79B'; ?>;
+                                border-radius: 6px 6px 0 0;"></div>
+                    <span style="font-size: 0.72rem; color: var(--text-muted);"><?php echo htmlspecialchars($stat['label']); ?></span>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h2>Chiffre d'affaires — 7 derniers jours</h2>
+        <div style="display: flex; align-items: flex-end; gap: 10px; height: 200px; padding: 10px 4px 0;">
+            <?php foreach ($stats7Jours as $stat): ?>
+                <?php
+                $hauteur = round(($stat['ca'] / $maxCa) * 100);
+                $jourCourant = $stat['date'] === date('Y-m-d');
+                ?>
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                    <span style="font-size: 0.78rem; font-weight: 700; color: var(--gold-dark);"><?php echo $stat['ca'] > 0 ? number_format($stat['ca'], 0, ',', ' ') : ''; ?></span>
+                    <div title="<?php echo $stat['date'] . ' : ' . number_format($stat['ca'], 2, ',', ' ') . ' DH'; ?>"
+                         style="width: 100%; max-width: 46px; height: <?php echo $hauteur; ?>%; min-height: 4px;
+                                background: <?php echo $jourCourant ? 'var(--gold-dark)' : '#B9A06B'; ?>;
+                                border-radius: 6px 6px 0 0;"></div>
+                    <span style="font-size: 0.72rem; color: var(--text-muted);"><?php echo htmlspecialchars($stat['label']); ?></span>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>
+
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 22px;">
     <div class="panel">
         <h2>Commandes du jour</h2>

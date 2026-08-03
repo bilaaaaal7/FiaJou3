@@ -26,6 +26,7 @@ if (isset($_POST['ajouter'])) {
                 'prenom' => $prenom, 'nom' => $nom, 'email' => $email,
                 'telephone' => $telephone, 'password' => $password,
             ], ROLE_LIVREUR);
+            journaliser_audit('livreur.creer', 'email="' . $email . '"');
             header('Location: ' . BASE_URL . '/index.php?route=admin/livreurs');
             exit;
         }
@@ -40,18 +41,21 @@ if (isset($_POST['modifier'])) {
         'adresse' => $_POST['adresse'] ?? '', 'ville' => $_POST['ville'] ?? '',
         'role' => ROLE_LIVREUR,
     ]);
+    journaliser_audit('livreur.modifier', 'id=' . $id . ' email="' . $_POST['email'] . '"');
     header('Location: ' . BASE_URL . '/index.php?route=admin/livreurs');
     exit;
 }
 
 if (isset($_GET['activer'])) {
     $utilisateurModele->setActif((int) $_GET['activer'], true);
+    journaliser_audit('livreur.activer', 'id=' . (int) $_GET['activer']);
     header('Location: ' . BASE_URL . '/index.php?route=admin/livreurs');
     exit;
 }
 
 if (isset($_GET['desactiver'])) {
     $utilisateurModele->setActif((int) $_GET['desactiver'], false);
+    journaliser_audit('livreur.desactiver', 'id=' . (int) $_GET['desactiver']);
     header('Location: ' . BASE_URL . '/index.php?route=admin/livreurs');
     exit;
 }

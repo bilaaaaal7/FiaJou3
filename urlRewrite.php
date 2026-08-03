@@ -282,6 +282,14 @@ function dispatch(): void
             require ROOT_PATH . '/controleur/cuisinier/DashboardControleur.php';
             return;
 
+        case 'cuisinier/commande':
+            reset_meta();
+            $_SESSION['pr_title'] = 'Commande cuisinier - ' . APP_NAME;
+            $_SESSION['meta_description'] = 'Consultez une commande et faites évoluer son statut de préparation sur ' . APP_NAME . '.';
+            $_SESSION['meta_keywords'] = 'commande, cuisinier, préparation, ' . APP_NAME;
+            require ROOT_PATH . '/controleur/cuisinier/CommandeControleur.php';
+            return;
+
         case 'cuisinier/historique':
             reset_meta();
             $_SESSION['pr_title'] = 'Historique cuisinier - ' . APP_NAME;
@@ -301,6 +309,14 @@ function dispatch(): void
             $_SESSION['meta_description'] = 'Suivez et gérez vos livraisons en cours sur ' . APP_NAME . '.';
             $_SESSION['meta_keywords'] = 'espace livreur, livraisons, ' . APP_NAME;
             require ROOT_PATH . '/controleur/livreur/DashboardControleur.php';
+            return;
+
+        case 'livreur/commande':
+            reset_meta();
+            $_SESSION['pr_title'] = 'Livraison livreur - ' . APP_NAME;
+            $_SESSION['meta_description'] = 'Consultez une livraison et confirmez sa remise sur ' . APP_NAME . '.';
+            $_SESSION['meta_keywords'] = 'livraison, livreur, ' . APP_NAME;
+            require ROOT_PATH . '/controleur/livreur/CommandeControleur.php';
             return;
 
         case 'livreur/historique':

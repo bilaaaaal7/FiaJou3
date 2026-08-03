@@ -24,5 +24,6 @@ $commandesEnLivraison = $commandeModele->compterParStatut('en_livraison');
 $commandesLivrees = $commandeModele->compterParStatut('livree');
 $commandesAujourdHui = $commandeModele->commandesDuJour();
 $produitsPopulaires = $commandeModele->produitsPlusCommandes(5);
+$stats7Jours = $commandeModele->statistiquesParJour(7);
 
 require ROOT_PATH . '/vue/admin/dashboard.php';

@@ -53,3 +53,4 @@ if (est_connecte() && !headers_sent()) {
     <?php endforeach; ?>
 </head>
 <body class="<?php echo htmlspecialchars($bodyClass); ?>">
+<?php require ROOT_PATH . '/assets/inc/mini_panier.php'; ?>
