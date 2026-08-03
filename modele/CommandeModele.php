@@ -581,6 +581,51 @@ class CommandeModele
     }
 
     /**
+     * Prochaines livraisons (pour le dashboard admin).
+     */
+    public function prochainesLivraisons(int $limit = 8): array
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT orders.id, orders.date_livraison, orders.heure_livraison,
+                    orders.total, orders.statut, orders.priority, orders.pause,
+                    profiles.prenom, profiles.nom, profiles.telephone,
+                    dz.nom AS zone_nom
+             FROM orders
+             INNER JOIN users ON orders.user_id = users.id
+             INNER JOIN profiles ON users.id = profiles.user_id
+             LEFT JOIN delivery_zones dz ON orders.zone_id = dz.id
+             WHERE orders.date_livraison >= CURDATE()
+               AND orders.statut NOT IN ('livree', 'annulee')
+             ORDER BY orders.date_livraison ASC, orders.heure_livraison ASC
+             LIMIT " . (int) $limit
+        );
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * Commandes en retard : livraison prévue aujourd'hui ou avant, toujours
+     * en préparation ou prêtes après l'heure souhaitée (pour le dashboard admin).
+     */
+    public function commandesEnRetard(): array
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT orders.id, orders.date_livraison, orders.heure_livraison,
+                    orders.statut, orders.priority,
+                    profiles.prenom, profiles.nom
+             FROM orders
+             INNER JOIN users ON orders.user_id = users.id
+             INNER JOIN profiles ON users.id = profiles.user_id
+             WHERE orders.statut IN ('en_preparation', 'prete')
+               AND (orders.date_livraison < CURDATE()
+                    OR (orders.date_livraison = CURDATE() AND orders.heure_livraison < CURTIME()))
+             ORDER BY orders.date_livraison ASC, orders.heure_livraison ASC"
+        );
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    /**
      * Statistiques pour le dashboard client.
      */
     public function statsClient(int $userId): array

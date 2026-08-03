@@ -14,8 +14,19 @@ require ROOT_PATH . '/assets/inc/navbar.php';
 
     <?php if (!empty($commandes)): ?>
     <div class="panel">
+        <div class="filter-bar">
+            <div class="form-group">
+                <label>Filtrer</label>
+                <select id="filterMesCommandes" onchange="filtrerMesCommandes()">
+                    <option value="toutes">Toutes</option>
+                    <option value="en_cours">En cours</option>
+                    <option value="livrees">Livrées</option>
+                    <option value="annulees">Annulées</option>
+                </select>
+            </div>
+        </div>
         <div class="table-wrap">
-            <table class="data-table">
+            <table class="data-table" id="tableMesCommandes">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -30,7 +41,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
                 </thead>
                 <tbody>
                 <?php foreach ($commandes as $commande): ?>
-                    <tr>
+                    <tr data-statut="<?php echo htmlspecialchars($commande['statut']); ?>">
                         <td><?php echo (int) $commande['id']; ?></td>
                         <td><?php echo htmlspecialchars($commande['date_commande']); ?></td>
                         <td><?php echo htmlspecialchars($commande['date_livraison']); ?></td>
@@ -52,6 +63,23 @@ require ROOT_PATH . '/assets/inc/navbar.php';
             </table>
         </div>
     </div>
+
+    <script>
+    function filtrerMesCommandes() {
+        var filtre = document.getElementById('filterMesCommandes').value;
+        var enCours = ['en_attente', 'confirmee', 'en_preparation', 'prete', 'en_livraison'];
+        var lignes = document.querySelectorAll('#tableMesCommandes tbody tr');
+        lignes.forEach(function(ligne) {
+            var statut = ligne.getAttribute('data-statut');
+            var visible = filtre === 'toutes'
+                || (filtre === 'en_cours' && enCours.indexOf(statut) !== -1)
+                || (filtre === 'livrees' && statut === 'livree')
+                || (filtre === 'annulees' && statut === 'annulee');
+            ligne.style.display = visible ? '' : 'none';
+        });
+    }
+    </script>
+
     <?php else: ?>
     <div class="panel">
         <div class="empty-state">
