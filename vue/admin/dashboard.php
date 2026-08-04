@@ -3,80 +3,143 @@ $pageTitle = "Dashboard Admin - " . APP_NAME;
 $extraCss = ['admin.css'];
 require ROOT_PATH . '/assets/inc/header.php';
 require ROOT_PATH . '/assets/inc/navbar.php';
+
+$joursFr = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
+$moisFr = [1 => 'janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+$dateBienvenue = ucfirst($joursFr[(int) date('w')]) . ' ' . date('j') . ' ' . $moisFr[(int) date('n')] . ' ' . date('Y');
+$prenomAdmin = trim((string) ($_SESSION['prenom'] ?? 'Administrateur'));
 ?>
 
-<h1>Tableau de bord administrateur</h1>
+<div class="welcome-card">
+    <div class="welcome-text">
+        <h1>Bonjour, <?php echo htmlspecialchars($prenomAdmin); ?></h1>
+        <p class="welcome-date">
+            <i data-lucide="calendar" aria-hidden="true"></i>
+            <span><?php echo htmlspecialchars($dateBienvenue); ?></span>
+        </p>
+    </div>
+    <div class="welcome-actions">
+        <?php if (!$menuActif): ?>
+            <a href="<?php echo BASE_URL; ?>/index.php?route=admin/menu-semaine" class="btn btn-gold">
+                <i data-lucide="calendar-plus" aria-hidden="true"></i> Publier le menu de la semaine
+            </a>
+        <?php else: ?>
+            <a href="<?php echo BASE_URL; ?>/index.php?route=admin/commandes" class="btn btn-gold">
+                <i data-lucide="shopping-bag" aria-hidden="true"></i> Voir les commandes
+            </a>
+        <?php endif; ?>
+    </div>
+</div>
 
 <?php
 $quickAccessItems = [
-    ['icon' => '🍽️', 'label' => 'Produits',          'route' => 'admin/plats'],
-    ['icon' => '🏷️', 'label' => 'Catégories',         'route' => 'admin/categories'],
-    ['icon' => '📦', 'label' => 'Commandes',          'route' => 'admin/commandes'],
-    ['icon' => '🚚', 'label' => 'Affectations',       'route' => 'admin/assignation'],
-    ['icon' => '👥', 'label' => 'Clients',            'route' => 'admin/utilisateurs'],
-    ['icon' => '👨‍🍳', 'label' => 'Cuisiniers',         'route' => 'admin/cuisiniers'],
-    ['icon' => '🛵', 'label' => 'Livreurs',           'route' => 'admin/livreurs'],
-    ['icon' => '📍', 'label' => 'Zones de livraison', 'route' => 'admin/zones'],
-    ['icon' => '📅', 'label' => 'Menu de la semaine', 'route' => 'admin/menu-semaine'],
+    ['icon' => 'utensils',         'label' => 'Produits',          'route' => 'admin/plats'],
+    ['icon' => 'tags',             'label' => 'Catégories',        'route' => 'admin/categories'],
+    ['icon' => 'shopping-bag',     'label' => 'Commandes',         'route' => 'admin/commandes'],
+    ['icon' => 'arrow-right-left', 'label' => 'Affectations',      'route' => 'admin/assignation'],
+    ['icon' => 'users',            'label' => 'Clients',           'route' => 'admin/utilisateurs'],
+    ['icon' => 'chef-hat',         'label' => 'Cuisiniers',        'route' => 'admin/cuisiniers'],
+    ['icon' => 'bike',             'label' => 'Livreurs',          'route' => 'admin/livreurs'],
+    ['icon' => 'map-pin',          'label' => 'Zones de livraison','route' => 'admin/zones'],
+    ['icon' => 'calendar-days',    'label' => 'Menu de la semaine','route' => 'admin/menu-semaine'],
 ];
 require ROOT_PATH . '/assets/inc/quick_access.php';
 ?>
 
 <div class="kpi-grid">
-    <div class="kpi-card gold">
-        <div class="kpi-label">Chiffre d'affaires</div>
-        <div class="kpi-value"><?php echo number_format($chiffreAffaires, 2, ',', ' '); ?> DH</div>
+    <div class="kpi-card kpi-card-icon gold">
+        <span class="kpi-icon"><i data-lucide="wallet" aria-hidden="true"></i></span>
+        <div class="kpi-body">
+            <div class="kpi-label">Chiffre d'affaires</div>
+            <div class="kpi-value"><?php echo number_format($chiffreAffaires, 2, ',', ' '); ?> DH</div>
+        </div>
     </div>
-    <div class="kpi-card">
-        <div class="kpi-label">Commandes totales</div>
-        <div class="kpi-value"><?php echo $nbOrders; ?></div>
+    <div class="kpi-card kpi-card-icon">
+        <span class="kpi-icon"><i data-lucide="shopping-bag" aria-hidden="true"></i></span>
+        <div class="kpi-body">
+            <div class="kpi-label">Commandes totales</div>
+            <div class="kpi-value"><?php echo $nbOrders; ?></div>
+        </div>
     </div>
-    <div class="kpi-card">
-        <div class="kpi-label">Commandes aujourd'hui</div>
-        <div class="kpi-value"><?php echo count($commandesAujourdHui); ?></div>
+    <div class="kpi-card kpi-card-icon">
+        <span class="kpi-icon"><i data-lucide="calendar-clock" aria-hidden="true"></i></span>
+        <div class="kpi-body">
+            <div class="kpi-label">Commandes aujourd'hui</div>
+            <div class="kpi-value"><?php echo count($commandesAujourdHui); ?></div>
+        </div>
     </div>
-    <div class="kpi-card">
-        <div class="kpi-label">Clients</div>
-        <div class="kpi-value"><?php echo $nbClients; ?></div>
+    <div class="kpi-card kpi-card-icon">
+        <span class="kpi-icon"><i data-lucide="users" aria-hidden="true"></i></span>
+        <div class="kpi-body">
+            <div class="kpi-label">Clients</div>
+            <div class="kpi-value"><?php echo $nbClients; ?></div>
+        </div>
     </div>
-    <div class="kpi-card">
-        <div class="kpi-label">Cuisiniers</div>
-        <div class="kpi-value"><?php echo $nbCuisiniers; ?></div>
+    <div class="kpi-card kpi-card-icon">
+        <span class="kpi-icon"><i data-lucide="chef-hat" aria-hidden="true"></i></span>
+        <div class="kpi-body">
+            <div class="kpi-label">Cuisiniers</div>
+            <div class="kpi-value"><?php echo $nbCuisiniers; ?></div>
+        </div>
     </div>
-    <div class="kpi-card">
-        <div class="kpi-label">Livreurs</div>
-        <div class="kpi-value"><?php echo $nbLivreurs; ?></div>
+    <div class="kpi-card kpi-card-icon">
+        <span class="kpi-icon"><i data-lucide="bike" aria-hidden="true"></i></span>
+        <div class="kpi-body">
+            <div class="kpi-label">Livreurs</div>
+            <div class="kpi-value"><?php echo $nbLivreurs; ?></div>
+        </div>
     </div>
-    <div class="kpi-card">
-        <div class="kpi-label">Plats</div>
-        <div class="kpi-value"><?php echo $nbPlats; ?></div>
+    <div class="kpi-card kpi-card-icon">
+        <span class="kpi-icon"><i data-lucide="utensils" aria-hidden="true"></i></span>
+        <div class="kpi-body">
+            <div class="kpi-label">Plats</div>
+            <div class="kpi-value"><?php echo $nbPlats; ?></div>
+        </div>
     </div>
-    <div class="kpi-card">
-        <div class="kpi-label">Catégories</div>
-        <div class="kpi-value"><?php echo $nbCategories; ?></div>
+    <div class="kpi-card kpi-card-icon">
+        <span class="kpi-icon"><i data-lucide="tags" aria-hidden="true"></i></span>
+        <div class="kpi-body">
+            <div class="kpi-label">Catégories</div>
+            <div class="kpi-value"><?php echo $nbCategories; ?></div>
+        </div>
     </div>
-    <div class="kpi-card">
-        <div class="kpi-label">Zones</div>
-        <div class="kpi-value"><?php echo $nbZones; ?></div>
+    <div class="kpi-card kpi-card-icon">
+        <span class="kpi-icon"><i data-lucide="map-pin" aria-hidden="true"></i></span>
+        <div class="kpi-body">
+            <div class="kpi-label">Zones</div>
+            <div class="kpi-value"><?php echo $nbZones; ?></div>
+        </div>
     </div>
 </div>
 
-<div class="kpi-grid" style="margin-bottom: 24px;">
-    <div class="kpi-card" style="border-left: 4px solid #6b5b3a;">
-        <div class="kpi-label">En attente</div>
-        <div class="kpi-value" style="color: #6b5b3a;"><?php echo $commandesEnAttente; ?></div>
+<div class="kpi-grid">
+    <div class="kpi-card kpi-card-icon" style="--kpi-accent:#6b5b3a;">
+        <span class="kpi-icon"><i data-lucide="clock" aria-hidden="true"></i></span>
+        <div class="kpi-body">
+            <div class="kpi-label">En attente</div>
+            <div class="kpi-value"><?php echo $commandesEnAttente; ?></div>
+        </div>
     </div>
-    <div class="kpi-card" style="border-left: 4px solid #9a6c11;">
-        <div class="kpi-label">En préparation</div>
-        <div class="kpi-value" style="color: #9a6c11;"><?php echo $commandesEnPreparation; ?></div>
+    <div class="kpi-card kpi-card-icon" style="--kpi-accent:#9a6c11;">
+        <span class="kpi-icon"><i data-lucide="cooking-pot" aria-hidden="true"></i></span>
+        <div class="kpi-body">
+            <div class="kpi-label">En préparation</div>
+            <div class="kpi-value"><?php echo $commandesEnPreparation; ?></div>
+        </div>
     </div>
-    <div class="kpi-card" style="border-left: 4px solid #5732a6;">
-        <div class="kpi-label">En livraison</div>
-        <div class="kpi-value" style="color: #5732a6;"><?php echo $commandesEnLivraison; ?></div>
+    <div class="kpi-card kpi-card-icon" style="--kpi-accent:#5732a6;">
+        <span class="kpi-icon"><i data-lucide="truck" aria-hidden="true"></i></span>
+        <div class="kpi-body">
+            <div class="kpi-label">En livraison</div>
+            <div class="kpi-value"><?php echo $commandesEnLivraison; ?></div>
+        </div>
     </div>
-    <div class="kpi-card" style="border-left: 4px solid #226b2e;">
-        <div class="kpi-label">Livrées</div>
-        <div class="kpi-value" style="color: #226b2e;"><?php echo $commandesLivrees; ?></div>
+    <div class="kpi-card kpi-card-icon" style="--kpi-accent:#226b2e;">
+        <span class="kpi-icon"><i data-lucide="package-check" aria-hidden="true"></i></span>
+        <div class="kpi-body">
+            <div class="kpi-label">Livrées</div>
+            <div class="kpi-value"><?php echo $commandesLivrees; ?></div>
+        </div>
     </div>
 </div>
 
@@ -88,8 +151,10 @@ require ROOT_PATH . '/assets/inc/quick_access.php';
     <?php $alertes[] = 'Commande #' . $retard['id'] . ' (' . htmlspecialchars($retard['prenom'] . ' ' . $retard['nom']) . ') en retard — livraison prévue le ' . $retard['date_livraison'] . ' à ' . $retard['heure_livraison'] . '. Prévoyez le rattrapage.'; ?>
 <?php endforeach; ?>
 <?php if (!empty($alertes)): ?>
-<div class="panel" style="border-left: 4px solid #c0392b; margin-bottom: 22px;">
-    <h2>Alertes opérationnelles</h2>
+<div class="panel alert-panel">
+    <h2 class="alert-title">
+        <i data-lucide="triangle-alert" aria-hidden="true"></i> Alertes opérationnelles
+    </h2>
     <ul style="margin:0; padding-left:20px;">
         <?php foreach ($alertes as $alerte): ?>
             <li style="margin-bottom:6px;"><?php echo $alerte; ?></li>
@@ -103,7 +168,7 @@ $maxNb = max(1, max(array_column($stats7Jours, 'nb')));
 $maxCa = max(1, max(array_column($stats7Jours, 'ca')));
 ?>
 
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-bottom: 22px;">
+<div class="grid-2">
     <div class="panel">
         <h2>Commandes — 7 derniers jours</h2>
         <div style="display: flex; align-items: flex-end; gap: 10px; height: 200px; padding: 10px 4px 0;">
@@ -145,7 +210,7 @@ $maxCa = max(1, max(array_column($stats7Jours, 'ca')));
     </div>
 </div>
 
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 22px;">
+<div class="grid-2">
     <div class="panel">
         <h2>Commandes du jour</h2>
         <?php if (!empty($commandesAujourdHui)): ?>
@@ -208,7 +273,7 @@ $couleursStatuts = [
 ];
 ?>
 
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 22px;">
+<div class="grid-2">
     <div class="panel">
         <h2>Répartition par statut</h2>
         <?php if ($totalCommandesTousStatuts > 0): ?>

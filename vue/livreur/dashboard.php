@@ -9,8 +9,8 @@ require ROOT_PATH . '/assets/inc/navbar.php';
 
 <?php
 $quickAccessItems = [
-    ['icon' => '🛵', 'label' => 'Livraisons du jour', 'route' => 'livreur'],
-    ['icon' => '🕒', 'label' => 'Historique',         'route' => 'livreur/historique'],
+    ['icon' => 'truck',   'label' => 'Livraisons du jour', 'route' => 'livreur'],
+    ['icon' => 'history', 'label' => 'Historique',         'route' => 'livreur/historique'],
 ];
 require ROOT_PATH . '/assets/inc/quick_access.php';
 ?>

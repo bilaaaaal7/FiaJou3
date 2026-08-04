@@ -13,12 +13,12 @@ require ROOT_PATH . '/assets/inc/navbar.php';
 
     <?php
     $quickAccessItems = [
-        ['icon' => '🍽️', 'label' => 'Menu',            'route' => 'client'],
-        ['icon' => '📅', 'label' => 'Menu de la semaine', 'route' => 'client/menu-semaine'],
-        ['icon' => '🛒', 'label' => 'Panier',           'route' => 'client/panier'],
-        ['icon' => '📦', 'label' => 'Mes commandes',    'route' => 'client/mes-commandes'],
-        ['icon' => '👤', 'label' => 'Profil',           'route' => 'client/profil'],
-        ['icon' => '🔔', 'label' => 'Notifications',    'route' => 'client/notifications'],
+        ['icon' => 'utensils-crossed', 'label' => 'Menu',               'route' => 'client'],
+        ['icon' => 'calendar-days',    'label' => 'Menu de la semaine', 'route' => 'client/menu-semaine'],
+        ['icon' => 'shopping-cart',    'label' => 'Panier',             'route' => 'client/panier'],
+        ['icon' => 'package',          'label' => 'Mes commandes',      'route' => 'client/mes-commandes'],
+        ['icon' => 'user',             'label' => 'Profil',             'route' => 'client/profil'],
+        ['icon' => 'bell',             'label' => 'Notifications',      'route' => 'client/notifications'],
     ];
     require ROOT_PATH . '/assets/inc/quick_access.php';
     ?>

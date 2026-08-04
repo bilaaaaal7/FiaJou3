@@ -12,9 +12,13 @@ $extraJs = $extraJs ?? [];
 </div>
 <?php endif; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
     <?php foreach ($extraJs as $js): ?>
     <script src="<?php echo BASE_URL; ?>/assets/js/<?php echo htmlspecialchars($js); ?>"></script>
     <?php endforeach; ?>
+    <script>
+        if (window.lucide) { lucide.createIcons(); }
+    </script>
     <script>
         document.addEventListener('click', function (e) {
             var el = e.target.closest('[data-confirm]');

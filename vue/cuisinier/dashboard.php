@@ -13,8 +13,8 @@ require ROOT_PATH . '/assets/inc/navbar.php';
 
 <?php
 $quickAccessItems = [
-    ['icon' => '👨‍🍳', 'label' => 'Commandes à préparer', 'route' => 'cuisinier'],
-    ['icon' => '🕒', 'label' => 'Historique',            'route' => 'cuisinier/historique'],
+    ['icon' => 'cooking-pot', 'label' => 'Commandes à préparer', 'route' => 'cuisinier'],
+    ['icon' => 'history',     'label' => 'Historique',           'route' => 'cuisinier/historique'],
 ];
 require ROOT_PATH . '/assets/inc/quick_access.php';
 ?>
