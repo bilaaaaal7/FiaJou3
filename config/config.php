@@ -33,8 +33,18 @@ define('ROLE_LIVREUR', 'driver');
 // Heure limite de commande pour une livraison le lendemain (cahier des charges).
 define('HEURE_LIMITE_COMMANDE', '21:00');
 
-// Jours de livraison autorisés (lundi à vendredi), dans l'ordre.
-define('JOURS_LIVRAISON', ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi']);
+// Jours composant le menu hebdomadaire : un plat spécifique est configuré
+// pour chacun de ces jours par l'administrateur (règle actuelle : un seul plat
+// par jour). Le samedi n'en fait pas partie : c'est un jour de "menu libre".
+define('JOURS_MENU', ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'dimanche']);
+
+// Samedi : jour de "menu libre". Aucun plat spécifique n'est configuré ;
+// tous les plats présents dans le menu hebdomadaire sont commandables.
+define('JOUR_MENU_LIBRE', 'samedi');
+
+// Jours de livraison autorisés, dans l'ordre (7j/7 : le samedi est un jour
+// de menu libre et le dimanche dispose de son propre menu).
+define('JOURS_LIVRAISON', ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche']);
 
 // Statuts possibles d'une commande (doivent correspondre à l'ENUM de la BDD)
 define('STATUTS_COMMANDE', [

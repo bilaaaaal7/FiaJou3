@@ -216,6 +216,9 @@ class MenuSemaineModele
 
     /**
      * Plats commandables pour une date de livraison (jour du menu publié couvrant cette date).
+     *
+     * Le samedi (jour de "menu libre") n'a pas de plat spécifique : tous les
+     * plats présents dans le menu hebdomadaire sont alors commandables.
      */
     public function getPlatsPourDate(string $date): array
     {
@@ -227,10 +230,18 @@ class MenuSemaineModele
         if ($jour === null) {
             return [];
         }
-        $stmt = $this->pdo->prepare(
-            "SELECT * FROM weekly_menu_items WHERE weekly_menu_id = ? AND jour = ?"
-        );
-        $stmt->execute([$menu['id'], $jour]);
+
+        if ($jour === JOUR_MENU_LIBRE) {
+            $stmt = $this->pdo->prepare(
+                "SELECT * FROM weekly_menu_items WHERE weekly_menu_id = ?"
+            );
+            $stmt->execute([$menu['id']]);
+        } else {
+            $stmt = $this->pdo->prepare(
+                "SELECT * FROM weekly_menu_items WHERE weekly_menu_id = ? AND jour = ?"
+            );
+            $stmt->execute([$menu['id'], $jour]);
+        }
         $items = $stmt->fetchAll();
         if (empty($items)) {
             return [];
@@ -238,10 +249,12 @@ class MenuSemaineModele
         require_once __DIR__ . '/PlatModele.php';
         $platModele = new PlatModele();
         $plats = [];
+        $vus = [];
         foreach ($items as $item) {
             $plat = $platModele->getParId((int) $item['product_id']);
-            if ($plat && $plat['disponible']) {
+            if ($plat && $plat['disponible'] && !isset($vus[$plat['id']])) {
                 $plats[] = $plat;
+                $vus[$plat['id']] = true;
             }
         }
         return $plats;
@@ -282,7 +295,12 @@ class MenuSemaineModele
     }
 
     /**
-     * Première date de livraison commandable pour un plat (jour du menu actif où il figure).
+     * Première date de livraison commandable pour un plat.
+     *
+     * Les jours où le plat figure au menu du week sont candidats, auxquels
+     * s'ajoute le samedi (jour de menu libre : tous les plats du menu de la
+     * semaine sont commandables). La date la plus proche encore ouverte à la
+     * commande est renvoyée.
      */
     public function getDateCommandePourPlat(int $platId): ?string
     {
@@ -295,18 +313,34 @@ class MenuSemaineModele
         );
         $stmt->execute([$menu['id'], $platId]);
         $jours = $stmt->fetchAll();
+        if (empty($jours)) {
+            return null;
+        }
+
+        $candidats = [];
         foreach ($jours as $row) {
-            $date = $this->prochaineDatePourJour((string) $row['jour']);
-            if ($date !== null && $this->dateLivraisonValide($date)[0]) {
-                return $date;
+            $candidats[] = (string) $row['jour'];
+        }
+        // Samedi : menu libre, tous les plats de la semaine sont commandables.
+        $candidats[] = JOUR_MENU_LIBRE;
+
+        $meilleureDate = null;
+        foreach (array_unique($candidats) as $jour) {
+            $date = $this->prochaineDatePourJour($jour);
+            if ($date === null || !$this->dateLivraisonValide($date)[0]) {
+                continue;
+            }
+            if ($meilleureDate === null || $date < $meilleureDate) {
+                $meilleureDate = $date;
             }
         }
-        return null;
+        return $meilleureDate;
     }
 
     /**
      * Valide une date de livraison selon le cahier des charges :
-     * - jour ouvré (lundi à vendredi),
+     * - jour livré (7j/7 : le samedi est un jour de menu libre, le dimanche
+     *   dispose de son propre menu),
      * - couverte par un menu publié avec un plat commandable ce jour-là,
      * - commande pour D à passer avant D-1 21h00.
      *
@@ -321,8 +355,8 @@ class MenuSemaineModele
             return [false, 'La date de livraison ne peut pas être dans le passé.'];
         }
         $jour = self::jourFrPourDate($date);
-        if ($jour === null || in_array($jour, ['samedi', 'dimanche'], true)) {
-            return [false, 'Aucune livraison le week-end. Choisissez un jour de la semaine (lundi à vendredi).'];
+        if ($jour === null) {
+            return [false, 'La date de livraison est invalide.'];
         }
         $plats = $this->getPlatsPourDate($date);
         if (empty($plats)) {
@@ -336,7 +370,15 @@ class MenuSemaineModele
     }
 
     /**
-     * Nom du jour en français à partir d'une date 'Y-m-d', ou null pour un week-end.
+     * Le jour donné est-il un jour de "menu libre" (samedi) ?
+     */
+    public static function estJourMenuLibre(string $jourFr): bool
+    {
+        return $jourFr === JOUR_MENU_LIBRE;
+    }
+
+    /**
+     * Nom du jour en français à partir d'une date 'Y-m-d', ou null si invalide.
      */
     public static function jourFrPourDate(string $date): ?string
     {

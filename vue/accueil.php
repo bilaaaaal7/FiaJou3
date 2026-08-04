@@ -17,6 +17,7 @@ $jourLabels = [
     'mercredi'  => 'Mercredi',
     'jeudi'     => 'Jeudi',
     'vendredi'  => 'Vendredi',
+    'dimanche'  => 'Dimanche',
 ];
 
 // Quelques photos maison pour illustrer le hero et les mises en avant
@@ -59,6 +60,10 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
         }
         .menu-empty-state {
             text-align: center; color: #fff; opacity: 0.75; padding: 40px 20px;
+        }
+        .menu-samedi-note {
+            text-align: center; color: #c38d19; font-weight: 600; font-size: 0.9rem;
+            margin-bottom: 20px; letter-spacing: 0.02em;
         }
         .partner_section .box { text-align: center; padding: 30px 20px; }
         .partner_section .box h5 { margin: 14px 0 10px; }
@@ -258,13 +263,18 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                             <li data-filter=".<?php echo $jourKey; ?>"><?php echo $jourLabel; ?></li>
                         <?php endif; ?>
                     <?php endforeach; ?>
+                    <li data-filter=".samedi">Samedi · Menu libre</li>
                 </ul>
+
+                <p class="menu-samedi-note">
+                    Le samedi, le menu est libre : tous les plats de la semaine sont commandables.
+                </p>
 
                 <div class="filters-content">
                     <div class="row grid">
                         <?php foreach ($jourLabels as $jourKey => $jourLabel): ?>
                             <?php foreach (($itemsParJour[$jourKey] ?? []) as $item): ?>
-                                <div class="col-sm-6 col-lg-4 all <?php echo $jourKey; ?>">
+                                <div class="col-sm-6 col-lg-4 all samedi <?php echo $jourKey; ?>">
                                     <div class="box">
                                         <div>
                                             <div class="img-box">
@@ -310,11 +320,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             <div class="row">
                 <div class="col-md-6">
                     <div class="img-box">
-<<<<<<< HEAD
-                        <img src="<?php echo BASE_URL; ?>/uploads/about-img.png" alt="À propos de <?php echo htmlspecialchars(APP_NAME); ?>">
-=======
                         <img src="<?php echo BASE_URL; ?>/uploads/taj.png" alt="À propos de <?php echo htmlspecialchars(APP_NAME); ?>">
->>>>>>> a248b96b5b6991e846b092f7ae1bc06940314f43
                     </div>
                 </div>
                 <div class="col-md-6">

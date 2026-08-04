@@ -15,5 +15,15 @@ $extraJs = $extraJs ?? [];
     <?php foreach ($extraJs as $js): ?>
     <script src="<?php echo BASE_URL; ?>/assets/js/<?php echo htmlspecialchars($js); ?>"></script>
     <?php endforeach; ?>
+    <script>
+        document.addEventListener('click', function (e) {
+            var el = e.target.closest('[data-confirm]');
+            if (!el) { return; }
+            var message = el.getAttribute('data-confirm');
+            if (message && !window.confirm(message)) {
+                e.preventDefault();
+            }
+        });
+    </script>
 </body>
 </html>

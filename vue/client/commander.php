@@ -55,8 +55,9 @@ $priorityDefaut = isset($_POST['priority']) && !empty($_POST['priority']);
     <div class="panel">
         <form method="POST" action="<?php echo BASE_URL; ?>/index.php?route=client/commander">
             <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0;">
-                Livraison du lundi au vendredi. Pour être livré un jour J, commandez au plus tard la veille à
-                <?php echo HEURE_LIMITE_COMMANDE; ?>.
+                Livraison 7j/7. Pour être livré un jour J, commandez au plus tard la veille à
+                <?php echo HEURE_LIMITE_COMMANDE; ?>. Le samedi, le menu est libre :
+                tous les plats de la semaine sont commandables.
             </p>
             <div class="form-grid">
                 <div class="form-group">

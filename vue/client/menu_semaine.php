@@ -26,7 +26,6 @@ require ROOT_PATH . '/assets/inc/navbar.php';
             'mercredi' => 'Mercredi',
             'jeudi'    => 'Jeudi',
             'vendredi' => 'Vendredi',
-            'samedi'   => 'Samedi',
             'dimanche' => 'Dimanche',
         ];
         ?>
@@ -82,6 +81,39 @@ require ROOT_PATH . '/assets/inc/navbar.php';
             </div>
             <?php endif; ?>
         <?php endforeach; ?>
+
+        <div class="panel" style="border: 2px solid var(--gold);">
+            <h2 style="color: var(--gold-dark);">Samedi — Menu libre</h2>
+            <p style="color: var(--text-muted); margin-top: -8px;">
+                Aucun menu spécifique le samedi : choisissez librement parmi tous les plats de la semaine.
+            </p>
+            <?php if (!empty($itemsSamedi)): ?>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
+                    <?php foreach ($itemsSamedi as $item): ?>
+                    <div style="background: var(--gold-light); border: 1px solid var(--border); border-radius: 12px; padding: 12px;">
+                        <div style="font-weight: 600; font-size: 0.95rem;"><?php echo htmlspecialchars($item['plat_nom']); ?></div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">
+                            <?php echo htmlspecialchars($item['categorie']); ?>
+                        </div>
+                        <div style="margin-top: 8px; font-weight: 700; color: var(--gold-dark);">
+                            <?php echo number_format((float) $item['prix'], 2, ',', ' '); ?> DH
+                        </div>
+                        <?php if ($item['disponible'] && !empty($datesParJour[JOUR_MENU_LIBRE]) && $ouvertParJour[JOUR_MENU_LIBRE]): ?>
+                            <a href="<?php echo BASE_URL; ?>/index.php?route=client&ajouter=<?php echo (int) $item['product_id']; ?>&date=<?php echo $datesParJour[JOUR_MENU_LIBRE]; ?>"
+                               class="btn btn-gold btn-sm btn-block" style="margin-top: 8px;"
+                               title="Livraison le samedi <?php echo date('d/m/Y', strtotime($datesParJour[JOUR_MENU_LIBRE])); ?>">Ajouter au panier</a>
+                        <?php else: ?>
+                            <span class="badge-status st-annulee" style="margin-top: 8px; display: inline-block;">
+                                <?php echo ($ouvertParJour[JOUR_MENU_LIBRE] ?? true) ? 'Indisponible' : 'Commandes clôturées'; ?>
+                            </span>
+                        <?php endif; ?>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php else: ?>
+                <p style="color:var(--text-muted); padding:10px 0;">Aucun plat dans le menu de la semaine pour le moment.</p>
+            <?php endif; ?>
+        </div>
 
     <?php else: ?>
         <div class="panel">

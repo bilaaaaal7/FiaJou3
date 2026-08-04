@@ -37,7 +37,7 @@ if (isset($_GET['erreur']) && isset($erreursAdmin[$_GET['erreur']])): ?>
         <button type="submit" name="creer" class="btn btn-gold">Créer</button>
     </form>
     <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 8px;">
-        La période sert à savoir quel menu est actif pour chaque date de livraison (lundi à vendredi).
+        La période sert à savoir quel menu est actif pour chaque date de livraison (7j/7).
     </p>
 </div>
 
@@ -110,7 +110,7 @@ if (isset($_GET['erreur']) && isset($erreursAdmin[$_GET['erreur']])): ?>
             <div class="form-group">
                 <label>Jour</label>
                 <select name="jour" required>
-                    <?php foreach (JOURS_LIVRAISON as $j): ?>
+                    <?php foreach (JOURS_MENU as $j): ?>
                         <option value="<?php echo $j; ?>"><?php echo ucfirst($j); ?></option>
                     <?php endforeach; ?>
                 </select>
@@ -126,12 +126,13 @@ if (isset($_GET['erreur']) && isset($erreursAdmin[$_GET['erreur']])): ?>
             <button type="submit" name="ajouter_item" class="btn btn-gold">Ajouter</button>
         </form>
         <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 6px;">
-            Un seul plat par jour (lundi à vendredi) et chaque produit ne peut apparaître qu'un seul jour.
+            Un seul plat par jour (<?php echo implode(', ', array_map('ucfirst', JOURS_MENU)); ?>)
+            et chaque produit ne peut apparaître qu'un seul jour. Le samedi est un jour de menu libre :
+            aucun plat spécifique, tous les plats de la semaine y sont commandables.
         </p>
     </div>
 
-    <?php $jours = ['lundi','mardi','mercredi','jeudi','vendredi','samedi','dimanche']; ?>
-    <?php foreach ($jours as $jour): ?>
+    <?php foreach (JOURS_MENU as $jour): ?>
         <h3><?php echo ucfirst($jour); ?></h3>
         <?php if (!empty($itemsParJour[$jour])): ?>
         <div class="table-wrap">
@@ -158,6 +159,13 @@ if (isset($_GET['erreur']) && isset($erreursAdmin[$_GET['erreur']])): ?>
             <p style="color:var(--text-muted); padding:10px 0;">Aucun plat pour ce jour.</p>
         <?php endif; ?>
     <?php endforeach; ?>
+
+    <h3><?php echo ucfirst(JOUR_MENU_LIBRE); ?> — Menu libre</h3>
+    <p style="color:var(--text-muted); padding:10px 0;">
+        Le samedi ne comporte aucun plat spécifique : il n'est pas configurable.
+        Tous les plats du menu de la semaine (<?php echo implode(', ', array_map('ucfirst', JOURS_MENU)); ?>)
+        y sont proposés à la commande.
+    </p>
 </div>
 <?php endif; ?>
 

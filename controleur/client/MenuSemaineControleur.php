@@ -24,4 +24,13 @@ foreach (JOURS_LIVRAISON as $jour) {
     [$ouvertParJour[$jour]] = $date ? $menuSemaineModele->dateLivraisonValide($date) : [false];
 }
 
+$itemsSamedi = [];
+if ($menu) {
+    foreach (JOURS_MENU as $jour) {
+        foreach (($itemsParJour[$jour] ?? []) as $item) {
+            $itemsSamedi[$item['product_id']] = $item;
+        }
+    }
+}
+
 require ROOT_PATH . '/vue/client/menu_semaine.php';

@@ -7,6 +7,10 @@ require ROOT_PATH . '/assets/inc/navbar.php';
 
 <h1>Espace cuisinier</h1>
 
+<?php if (isset($_GET['erreur']) && $_GET['erreur'] !== ''): ?>
+    <div class="alert alert-danger py-2" role="alert"><?php echo htmlspecialchars($_GET['erreur']); ?></div>
+<?php endif; ?>
+
 <?php
 $quickAccessItems = [
     ['icon' => '👨‍🍳', 'label' => 'Commandes à préparer', 'route' => 'cuisinier'],

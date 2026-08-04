@@ -12,7 +12,7 @@ $messagesErreur = [
 ];
 $jourLabel = [
     'lundi' => 'Lundi', 'mardi' => 'Mardi', 'mercredi' => 'Mercredi',
-    'jeudi' => 'Jeudi', 'vendredi' => 'Vendredi',
+    'jeudi' => 'Jeudi', 'vendredi' => 'Vendredi', 'dimanche' => 'Dimanche',
 ];
 ?>
 
@@ -36,10 +36,11 @@ $jourLabel = [
     <div class="panel" style="border: 2px solid var(--gold);">
         <h2 style="color: var(--gold-dark);">Menu de la semaine — <?php echo htmlspecialchars($menu['nom']); ?></h2>
         <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 16px;">
-            Commandez avant <?php echo HEURE_LIMITE_COMMANDE; ?> pour une livraison le lendemain (lundi à vendredi).
+            Commandez avant <?php echo HEURE_LIMITE_COMMANDE; ?> pour une livraison le lendemain (7j/7).
+            Le samedi, le menu est libre : tous les plats de la semaine sont commandables.
         </p>
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
-            <?php foreach (JOURS_LIVRAISON as $jour): ?>
+            <?php foreach (JOURS_MENU as $jour): ?>
                 <?php if (empty($itemsParJour[$jour])): continue; endif; ?>
                 <?php
                 $dateJour = $menuSemaineModele->prochaineDatePourJour($jour);
@@ -68,6 +69,50 @@ $jourLabel = [
                 </div>
             <?php endforeach; ?>
         </div>
+
+        <?php
+        $itemsSamedi = [];
+        foreach (JOURS_MENU as $jour) {
+            foreach (($itemsParJour[$jour] ?? []) as $item) {
+                $itemsSamedi[$item['product_id']] = $item;
+            }
+        }
+        $dateSamedi = $menuSemaineModele->prochaineDatePourJour(JOUR_MENU_LIBRE);
+        [$samediOuvert] = $dateSamedi ? $menuSemaineModele->dateLivraisonValide($dateSamedi) : [false];
+        ?>
+        <?php if (!empty($itemsSamedi)): ?>
+        <div style="margin-top: 16px; background: var(--gold); border-radius: 12px; padding: 16px; color: var(--dark);">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
+                <div style="font-weight: 700; font-size: 1.05rem;">Samedi — Menu libre</div>
+                <?php if ($samediOuvert): ?>
+                    <div style="font-size: 0.82rem; font-weight: 600;">
+                        Livraison le <?php echo date('d/m/Y', strtotime($dateSamedi)); ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+            <p style="font-size: 0.82rem; margin: 0 0 10px; opacity: 0.85;">
+                Aucun menu spécifique le samedi : choisissez librement parmi tous les plats de la semaine.
+            </p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px;">
+                <?php foreach ($itemsSamedi as $item): ?>
+                    <div style="background: #fff; border-radius: 10px; padding: 10px; display: flex; align-items: center; gap: 8px;">
+                        <div style="flex: 1; min-width: 0;">
+                            <div style="font-weight: 600; font-size: 0.88rem;"><?php echo htmlspecialchars($item['plat_nom']); ?></div>
+                            <div style="font-size: 0.78rem; color: var(--text-muted);">
+                                <?php echo htmlspecialchars($item['categorie'] ?? ''); ?> · <?php echo number_format((float) $item['prix'], 2, ',', ' '); ?> DH
+                            </div>
+                        </div>
+                        <?php if ($item['disponible'] && $samediOuvert): ?>
+                            <a href="<?php echo BASE_URL; ?>/index.php?route=client&ajouter=<?php echo (int) $item['product_id']; ?>&date=<?php echo $dateSamedi; ?>"
+                               class="btn btn-sm" style="background: var(--dark); color: var(--cream); border: none;" title="Livraison le samedi <?php echo date('d/m/Y', strtotime($dateSamedi)); ?>">+</a>
+                        <?php else: ?>
+                            <span class="badge-status st-annulee">Indisponible</span>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <?php endif; ?>
     </div>
     <?php endif; ?>
 
