@@ -80,6 +80,24 @@ require ROOT_PATH . '/assets/inc/quick_access.php';
     </div>
 </div>
 
+<?php $alertes = []; ?>
+<?php if (!$menuActif): ?>
+    <?php $alertes[] = 'Aucun menu hebdomadaire publié pour la semaine en cours. Publiez un menu depuis l\'espace « Menu de la semaine ».'; ?>
+<?php endif; ?>
+<?php foreach ($commandesEnRetard as $retard): ?>
+    <?php $alertes[] = 'Commande #' . $retard['id'] . ' (' . htmlspecialchars($retard['prenom'] . ' ' . $retard['nom']) . ') en retard — livraison prévue le ' . $retard['date_livraison'] . ' à ' . $retard['heure_livraison'] . '. Prévoyez le rattrapage.'; ?>
+<?php endforeach; ?>
+<?php if (!empty($alertes)): ?>
+<div class="panel" style="border-left: 4px solid #c0392b; margin-bottom: 22px;">
+    <h2>Alertes opérationnelles</h2>
+    <ul style="margin:0; padding-left:20px;">
+        <?php foreach ($alertes as $alerte): ?>
+            <li style="margin-bottom:6px;"><?php echo $alerte; ?></li>
+        <?php endforeach; ?>
+    </ul>
+</div>
+<?php endif; ?>
+
 <?php
 $maxNb = max(1, max(array_column($stats7Jours, 'nb')));
 $maxCa = max(1, max(array_column($stats7Jours, 'ca')));
@@ -174,6 +192,72 @@ $maxCa = max(1, max(array_column($stats7Jours, 'ca')));
         </div>
         <?php else: ?>
             <div class="empty-state">Aucune donnée disponible.</div>
+        <?php endif; ?>
+    </div>
+</div>
+
+<?php
+$couleursStatuts = [
+    'en_attente'     => '#6b5b3a',
+    'confirmee'      => '#8a6d1f',
+    'en_preparation' => '#9a6c11',
+    'prete'          => '#b88618',
+    'en_livraison'   => '#5732a6',
+    'livree'         => '#226b2e',
+    'annulee'        => '#c0392b',
+];
+?>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 22px;">
+    <div class="panel">
+        <h2>Répartition par statut</h2>
+        <?php if ($totalCommandesTousStatuts > 0): ?>
+            <div style="display:flex; height:26px; border-radius:8px; overflow:hidden; margin-bottom:14px;">
+                <?php foreach ($statutRepartition as $cle => $nb): ?>
+                    <?php if ($nb > 0): ?>
+                        <div style="width: <?php echo round($nb / $totalCommandesTousStatuts * 100, 2); ?>%; background: <?php echo $couleursStatuts[$cle] ?? '#999'; ?>;"
+                             title="<?php echo STATUTS_COMMANDE[$cle] . ' : ' . $nb; ?>"></div>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
+            <div style="display:flex; flex-wrap:wrap; gap:10px;">
+                <?php foreach ($statutRepartition as $cle => $nb): ?>
+                    <?php if ($nb > 0): ?>
+                        <span style="display:inline-flex; align-items:center; gap:6px; font-size:0.78rem;">
+                            <span style="width:10px; height:10px; border-radius:3px; background: <?php echo $couleursStatuts[$cle] ?? '#999'; ?>; display:inline-block;"></span>
+                            <?php echo STATUTS_COMMANDE[$cle]; ?> : <strong><?php echo $nb; ?></strong>
+                        </span>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
+        <?php else: ?>
+            <div class="empty-state">Aucune commande.</div>
+        <?php endif; ?>
+    </div>
+
+    <div class="panel">
+        <h2>Prochaines livraisons</h2>
+        <?php if (!empty($prochainesLivraisons)): ?>
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr><th>#</th><th>Client</th><th>Livraison</th><th>Zone</th><th>Priorité</th></tr>
+                </thead>
+                <tbody>
+                <?php foreach ($prochainesLivraisons as $pl): ?>
+                    <tr>
+                        <td><?php echo $pl['id']; ?></td>
+                        <td><?php echo htmlspecialchars($pl['prenom'] . ' ' . $pl['nom']); ?></td>
+                        <td><?php echo $pl['date_livraison'] . ' ' . $pl['heure_livraison']; ?></td>
+                        <td><?php echo htmlspecialchars($pl['zone_nom'] ?? '-'); ?></td>
+                        <td><?php echo $pl['priority'] ? '<span class="badge-status st-en_attente">Urgent</span>' : '-'; ?></td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <?php else: ?>
+            <div class="empty-state">Aucune livraison à venir.</div>
         <?php endif; ?>
     </div>
 </div>
