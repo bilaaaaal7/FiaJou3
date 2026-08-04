@@ -53,4 +53,29 @@ foreach ($allCommandes as $cmd) {
     $itemsParCommande[$cmd['id']] = $commandeModele->getItems($cmd['id']);
 }
 
+// Statistiques du cuisinier (commandes qui le concernent, aujourd'hui)
+$commandesAujourdHui = $commandeModele->commandesAPreparerAujourdHui($cookId);
+$nbCommandesAujourdHui = count($commandesAujourdHui);
+$commandesPassees = $commandeModele->getParCuisinier($cookId);
+$nbPreteesHistorique = count(array_filter(
+    $commandesPassees,
+    fn($c) => in_array($c['statut'], ['prete', 'en_livraison', 'livree'])
+));
+
+// État des commandes du jour (répartition)
+$repartitionJour = ['en_attente' => 0, 'confirmee' => 0, 'en_preparation' => 0, 'prete' => 0];
+foreach ($commandesAujourdHui as $c) {
+    if (isset($repartitionJour[$c['statut']])) {
+        $repartitionJour[$c['statut']]++;
+    }
+}
+
+// Notifications + activité récente
+require_once ROOT_PATH . '/modele/HistoriqueModele.php';
+$historiqueModele = new HistoriqueModele();
+$activiteRecente = $historiqueModele->getParUser($cookId, 5);
+$notifications = (new NotificationModele())->getParUser($cookId);
+$notificationsRecentes = array_slice($notifications, 0, 5);
+$nbNotifsNonLues = (new NotificationModele())->compterNonLues($cookId);
+
 require ROOT_PATH . '/vue/cuisinier/dashboard.php';

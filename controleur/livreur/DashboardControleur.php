@@ -80,4 +80,27 @@ foreach ($commandesLivreesAujourdHui as $cmd) {
     $itemsLivrees[$cmd['id']] = $commandeModele->getItems($cmd['id']);
 }
 
+// Statistiques personnelles (sur tout l'historique de livraisons du livreur)
+$commandesHistorique = $commandeModele->getParLivreur($driverId);
+$commandesLivreesTotal = array_values(array_filter(
+    $commandesHistorique,
+    fn($c) => $c['statut'] === 'livree'
+));
+$totalLivraisons = count($commandesLivreesTotal);
+$totalCA = array_sum(array_map(fn($c) => (float) $c['total'], $commandesLivreesTotal));
+$totalEnCours = $nbAPretee + $nbEnLivraison;
+
+// Répartition des statuts du jour (pour le mini-rapport)
+$repartitionJour = [
+    'prete'        => $nbAPretee,
+    'en_livraison' => $nbEnLivraison,
+    'livree'       => $nbLivrees,
+];
+
+// Activité récente + notifications
+$activiteRecente = $historiqueModele->getParUser($driverId, 5);
+$notifications = (new NotificationModele())->getParUser($driverId);
+$notificationsRecentes = array_slice($notifications, 0, 5);
+$nbNotifsNonLues = (new NotificationModele())->compterNonLues($driverId);
+
 require ROOT_PATH . '/vue/livreur/dashboard.php';

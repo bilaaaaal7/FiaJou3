@@ -1,41 +1,251 @@
 /*
   Styles globaux de l'application (chargés en premier par header.php,
-  avant les feuilles spécifiques par page comme admin.css / auth.css).
+  avant les feuilles spécifiques comme admin.css / auth.css).
+
   Palette et typographie alignées sur la Charte Graphique officielle FiaJou3
   (Noir Charbon #171717 / Or Tajine #B88618 / Crème Chaud #F8F5EF /
   Gris Datte #706B62), typo Poppins (FR, gras, espacée) + Open Sans (texte
   courant) + Tajawal (arabe).
+
+  SYSTÈME DE THÈME GLOBAL (Light / Dark) :
+  --------------------------------
+  Ce fichier est la SOURCE UNIQUE des jetons sémantiques. Le mode clair est
+  le défaut (:root) — fond BLANC, surfaces blanches, texte noir, bordures
+  légères, accents de la charte (Or Tajine). Le mode sombre ([data-theme="dark"],
+  posé sur <html> par theme.js) utilise des dérivés très sombres de la charte :
+  fond gris très foncé, cartes foncées, texte clair, or adapté.
+
+  Tous les composants (sidebar, cartes, tableaux, formulaires, boutons,
+  modals, menus, inputs, notifications) consomment ces jetons : changer de
+  thème bascule l'ensemble de l'application sans aucun « mélange ».
 */
 
+/* ============================ JETONS LIGHT ============================ */
 :root {
+    /* Accents charte (identiques dans les deux modes) */
     --gold: #B88618;
-    --gold-dark: #7a5810;
     --gold-hover: #976e14;
-    --gold-light: #f4ecd8;
     --dark: #171717;
     --dark-2: #0e0e0e;
     --cream: #F8F5EF;
-    --muted: #706B62;
-    --border: #e8e2d3;
+    --danger: #c0392b;
+    --success: #2e7d32;
+
     --font-body: 'Open Sans', Arial, sans-serif;
     --font-display: 'Poppins', 'Open Sans', sans-serif;
+
+    /* Jetons sémantiques — MODE CLAIR : fond blanc, cartes blanches,
+       texte noir, bordures légères. */
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --surface-2: #ffffff;
+    --surface-3: #f4f4f6;
+    --text: #171717;
+    --text-soft: #4c4840;
+    --text-muted: #706B62;
+    --muted: #706B62;
+    --border: #e8e2d3;
+    --border-soft: #e4dfd3;
+    --input-bg: #ffffff;
+    --cell-border: #ecebe7;
+    --table-hover: #f7f6f2;
+    --gold-light: #f4ecd8;
+    --gold-dark: #7a5810;
+    --shadow-sm: 0 2px 10px rgba(23, 23, 23, 0.06);
+    --shadow-md: 0 8px 22px rgba(23, 23, 23, 0.12);
+    --mix-base: #ffffff;
+    --sidebar-hover: rgba(23, 23, 23, 0.05);
+    --sidebar-muted: #8d877c;
+    --on-gold: #171717;
+
+    color-scheme: light;
 }
+
+/* ============================ JETONS DARK ============================ */
+[data-theme="dark"] {
+    --bg: #0f0f13;
+    --surface: #18181e;
+    --surface-2: #121217;
+    --surface-3: #202027;
+    --text: #f2efe8;
+    --text-soft: #c8c2b6;
+    --text-muted: #a49d92;
+    --muted: #a49d92;
+    --border: #2c2c34;
+    --border-soft: #2b2b32;
+    --input-bg: #1d1d24;
+    --cell-border: #26262e;
+    --table-hover: #1b1b21;
+    --gold-light: #3a3120;
+    --gold-dark: #e0b14d;
+    --gold-hover: #a67a1a;
+    --danger: #f08a7a;
+    --success: #7cc983;
+    --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.40);
+    --shadow-md: 0 8px 22px rgba(0, 0, 0, 0.50);
+    --mix-base: #18181e;
+    --sidebar-hover: rgba(255, 255, 255, 0.05);
+    --sidebar-muted: #9b9488;
+    --on-gold: #171717;
+
+    color-scheme: dark;
+}
+
+/* ============================ BASE ============================ */
+* { box-sizing: border-box; }
 
 body {
     font-family: var(--font-body);
-    background: var(--cream);
-    color: var(--dark);
+    background: var(--bg);
+    color: var(--text);
     margin: 0;
+    min-height: 100vh;
+    transition: background-color .25s ease, color .25s ease;
 }
 
-h1, h2, h3 { color: var(--dark); }
+a { text-decoration: none; color: inherit; }
+a:hover { color: inherit; }
+
+h1, h2, h3, h4, h5, h6 { color: var(--text); }
 
 .brand-font { font-family: var(--font-display); }
 
-/* ---------- Marque FiaJou3 (icône tajine + vapeur + horloge) ---------- */
+::selection { background: var(--gold); color: var(--on-gold); }
+
+::placeholder { color: var(--text-muted); opacity: 1; }
+
+/* Barre de défilement cohérente avec le thème */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ============================ CHAMPS DE SAISIE GLOBAUX ============================
+   S'applique à tous les formulaires (dashboards, auth, modals Bootstrap). */
+input,
+select,
+textarea,
+.form-control,
+.form-select {
+    border: 1px solid var(--border-soft);
+    background-color: var(--input-bg);
+    color: var(--text);
+    transition: background-color .25s ease, border-color .18s ease, box-shadow .18s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+.form-control:focus,
+.form-select:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(184, 134, 24, 0.25);
+    background-color: var(--input-bg);
+    color: var(--text);
+}
+
+input[disabled],
+select[disabled],
+textarea[disabled],
+.form-control:disabled,
+.form-select:disabled {
+    background-color: var(--surface-3);
+    color: var(--text-muted);
+    opacity: .8;
+}
+
+/* ============================ ADAPTATEUR BOOTSTRAP ============================
+   Bootstrap est chargé sur toutes les pages (modals, dropdowns, alerts,
+   menus déroulants). Ces règles alignent ses composants sur les jetons. */
+.modal-content,
+.modal-header,
+.modal-footer,
+.dropdown-menu {
+    background-color: var(--surface);
+    border-color: var(--border-soft);
+    color: var(--text);
+}
+
+.modal-header,
+.modal-footer { border-color: var(--border-soft); }
+
+.modal-title,
+.dropdown-item { color: var(--text); }
+
+.modal-body { color: var(--text); }
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+    background-color: var(--surface-3);
+    color: var(--text);
+}
+
+.dropdown-divider { border-color: var(--border-soft); }
+
+.btn-close { filter: none; }
+[data-theme="dark"] .btn-close { filter: invert(1) grayscale(1) brightness(2); }
+
+.alert { background-color: var(--surface); border-color: var(--border-soft); color: var(--text); }
+
+/* Cartes Bootstrap */
+.card {
+    background-color: var(--surface);
+    border-color: var(--border-soft);
+    color: var(--text);
+}
+
+.text-muted { color: var(--text-muted) !important; }
+
+hr { border-color: var(--border-soft); }
+
+/* ============================ MARQUE FiaJou3 ============================
+   logo.php émet les DEUX variantes (noir pour fond clair, blanc pour fond
+   sombre). La bonne est affichée en pur CSS selon data-theme : aucun JS,
+   aucun flash au changement de thème. */
 .logo-mark { display: inline-flex; align-items: center; justify-content: center; }
 .logo-mark svg { display: block; width: 100%; height: 100%; }
 .logo-mark img { display: block; width: 100%; height: 100%; object-fit: contain; }
+
+/* Les règles ci-dessous utilisent !important pour garantir la bascule même
+   si un conteneur (logo-mark, hero_icon...) impose display:block sur img. */
+.logo-theme-dark { display: none !important; }
+[data-theme="dark"] .logo-theme-light { display: none !important; }
+[data-theme="dark"] .logo-theme-dark { display: block !important; }
+
+/* ============================ BOUTON DE THÈME ============================ */
+.theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 11px;
+    border: 1px solid var(--border-soft);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: background .2s ease, border-color .2s ease, color .2s ease, transform .15s ease;
+    flex-shrink: 0;
+}
+
+.theme-toggle svg { width: 18px; height: 18px; }
+
+.theme-toggle:hover {
+    border-color: var(--gold);
+    color: var(--gold-dark);
+    background: var(--gold-light);
+    transform: translateY(-1px);
+}
+
+.theme-toggle:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+.theme-toggle [data-theme-icon="moon"] { display: none; }
+[data-theme="dark"] .theme-toggle [data-theme-icon="moon"] { display: inline-flex; }
+[data-theme="dark"] .theme-toggle [data-theme-icon="sun"] { display: none; }
 
 /* ---------- Navbar publique (accueil) ---------- */
 .fiajou-navbar {
@@ -72,8 +282,6 @@ h1, h2, h3 { color: var(--dark); }
     color: var(--gold);
 }
 
-/* Outline button variant used inside the dark navbar needs light text/border,
-   since the default .btn-outline (admin.css) is tuned for light backgrounds. */
 .fiajou-navbar .btn-outline {
     color: #ffffff;
     border-color: rgba(255,255,255,0.4);

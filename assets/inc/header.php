@@ -29,6 +29,14 @@ if (est_connecte() && !headers_sent()) {
 <!DOCTYPE html>
 <html lang="fr" dir="ltr">
 <head>
+    <script>
+        (function () {
+            var t = null;
+            try { t = localStorage.getItem('fiajou3-theme'); } catch (e) { /* ignore */ }
+            if (t !== 'dark') { t = 'light'; }
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title id="pageTitle"><?php echo htmlspecialchars($pageTitle); ?></title>

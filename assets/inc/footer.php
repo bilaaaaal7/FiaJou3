@@ -13,6 +13,7 @@ $extraJs = $extraJs ?? [];
 <?php endif; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="<?php echo BASE_URL; ?>/assets/js/theme.js"></script>
     <?php foreach ($extraJs as $js): ?>
     <script src="<?php echo BASE_URL; ?>/assets/js/<?php echo htmlspecialchars($js); ?>"></script>
     <?php endforeach; ?>

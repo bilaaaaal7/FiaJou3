@@ -33,33 +33,33 @@ if (strpos($mpRetour, 'client') !== 0) {
     }
     .mp-drawer {
         position: fixed; top: 0; right: 0; bottom: 0; width: 340px; max-width: 88vw;
-        background: #F8F5EF; color: #171717; z-index: 2100;
+        background: var(--surface); color: var(--text); z-index: 2100;
         transform: translateX(102%); transition: transform 0.28s ease;
         display: flex; flex-direction: column; box-shadow: -12px 0 30px rgba(0,0,0,0.22);
     }
     .mp-drawer.open { transform: translateX(0); }
     .mp-head {
-        padding: 16px 18px; background: #171717; color: #F8F5EF;
+        padding: 16px 18px; background: var(--dark); color: var(--cream);
         display: flex; align-items: center; justify-content: space-between; font-weight: 700;
     }
     .mp-close {
-        background: none; border: none; color: #F8F5EF; font-size: 1.5rem; line-height: 1; cursor: pointer;
+        background: none; border: none; color: var(--cream); font-size: 1.5rem; line-height: 1; cursor: pointer;
     }
     .mp-date {
-        padding: 10px 18px; font-size: 0.8rem; color: #706862;
-        border-bottom: 1px solid #e5dfd2; background: #fff;
+        padding: 10px 18px; font-size: 0.8rem; color: var(--text-muted);
+        border-bottom: 1px solid var(--border-soft); background: var(--surface);
     }
     .mp-body { flex: 1; overflow-y: auto; padding: 8px 18px; }
     .mp-item {
         display: flex; gap: 10px; align-items: center;
-        padding: 10px 0; border-bottom: 1px dashed #e5dfd2; font-size: 0.9rem;
+        padding: 10px 0; border-bottom: 1px dashed var(--border-soft); font-size: 0.9rem;
     }
     .mp-item img {
         width: 46px; height: 46px; object-fit: cover; border-radius: 8px; flex-shrink: 0;
     }
     .mp-item .mp-info { flex: 1; min-width: 0; }
     .mp-item .mp-nom { font-weight: 600; line-height: 1.25; }
-    .mp-item .mp-prix { color: #706862; font-size: 0.8rem; }
+    .mp-item .mp-prix { color: var(--text-muted); font-size: 0.8rem; }
     .mp-item .mp-ctrl {
         display: inline-flex; align-items: center; gap: 2px; margin-top: 4px;
     }
@@ -67,13 +67,13 @@ if (strpos($mpRetour, 'client') !== 0) {
         display: inline-flex; align-items: center; justify-content: center;
         width: 22px; height: 22px; border-radius: 6px; text-decoration: none;
         font-weight: 700; font-size: 0.85rem; line-height: 1;
-        border: 1px solid #B88618; color: #B88618; background: #fff;
+        border: 1px solid var(--gold); color: var(--gold-dark); background: var(--surface);
     }
-    .mp-item .mp-ctrl a.mp-del { border-color: #c0392b; color: #c0392b; }
-    .mp-item .mp-qty { padding: 0 6px; font-weight: 700; color: #171717; }
-    .mp-empty { color: #706862; text-align: center; padding: 40px 10px; }
+    .mp-item .mp-ctrl a.mp-del { border-color: var(--danger); color: var(--danger); }
+    .mp-item .mp-qty { padding: 0 6px; font-weight: 700; color: var(--text); }
+    .mp-empty { color: var(--text-muted); text-align: center; padding: 40px 10px; }
     .mp-foot {
-        padding: 14px 18px; background: #fff; border-top: 1px solid #e5dfd2;
+        padding: 14px 18px; background: var(--surface); border-top: 1px solid var(--border-soft);
     }
     .mp-total { display: flex; justify-content: space-between; font-weight: 700; font-size: 1.05rem; margin-bottom: 12px; }
     .mp-actions { display: flex; gap: 8px; }
@@ -81,8 +81,8 @@ if (strpos($mpRetour, 'client') !== 0) {
         flex: 1; text-align: center; padding: 10px 8px; border-radius: 8px;
         font-weight: 600; text-decoration: none; font-size: 0.85rem;
     }
-    .mp-actions .mp-link { border: 1px solid #B88618; color: #B88618; }
-    .mp-actions .mp-cta { background: #B88618; color: #fff; }
+    .mp-actions .mp-link { border: 1px solid var(--gold); color: var(--gold-dark); }
+    .mp-actions .mp-cta { background: var(--gold); color: #fff; }
     .mp-overlay {
         position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 2050;
         opacity: 0; pointer-events: none; transition: opacity 0.28s ease;
@@ -139,7 +139,7 @@ if (strpos($mpRetour, 'client') !== 0) {
                 <a class="mp-cta" href="<?php echo BASE_URL; ?>/index.php?route=client/commander">Valider la commande</a>
             <?php endif; ?>
         </div>
-        <button type="button" onclick="mpFermer()" style="width:100%; background:none; border:none; color:#706862; font-size:0.85rem; text-decoration:underline; cursor:pointer; padding:4px;">
+        <button type="button" onclick="mpFermer()" style="width:100%; background:none; border:none; color:var(--text-muted); font-size:0.85rem; text-decoration:underline; cursor:pointer; padding:4px;">
             Continuer mes achats
         </button>
     </div>

@@ -52,7 +52,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
                 </h2>
                 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
                     <?php foreach ($itemsParJour[$cle] as $item): ?>
-                    <div style="background: #fff; border: 1px solid var(--border); border-radius: 12px; overflow: hidden;">
+                    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden;">
                         <img src="<?php echo UPLOADS_URL; ?>/<?php echo htmlspecialchars($item['image']); ?>"
                              alt="<?php echo htmlspecialchars($item['plat_nom']); ?>"
                              style="width: 100%; height: 140px; object-fit: cover;">

@@ -11,10 +11,12 @@ require ROOT_PATH . '/assets/inc/header.php';
         <button type="button" data-lang="ar" onclick="setLang('ar')">العربية</button>
     </div>
 
+    <div class="theme-toggle-fixed"><?php require ROOT_PATH . '/assets/inc/theme_toggle.php'; ?></div>
+
     <div class="page-wrap">
         <div class="auth-card auth-card--wide">
             <div class="logo-wrap">
-                <span class="logo-mark" style="width:64px;height:64px;color:#171717;margin:0 auto;"><?php include ROOT_PATH . '/assets/inc/logo.php'; ?></span>
+                <span class="logo-mark" style="width:64px;height:64px;color:var(--text);margin:0 auto;"><?php include ROOT_PATH . '/assets/inc/logo.php'; ?></span>
             </div>
 
             <div class="card-body-custom">

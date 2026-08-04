@@ -1,0 +1,33 @@
+[2026-08-04 12:08:39] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-04 12:09:07] user=5 email=ismailsghir107@gmail.com role=admin action=plat.supprimer details="id=29" ip=::1
+[2026-08-04 12:09:11] user=5 email=ismailsghir107@gmail.com role=admin action=plat.supprimer details="id=28" ip=::1
+[2026-08-04 12:09:14] user=5 email=ismailsghir107@gmail.com role=admin action=plat.supprimer details="id=26" ip=::1
+[2026-08-04 12:09:18] user=5 email=ismailsghir107@gmail.com role=admin action=plat.supprimer details="id=27" ip=::1
+[2026-08-04 12:09:22] user=5 email=ismailsghir107@gmail.com role=admin action=plat.supprimer details="id=19" ip=::1
+[2026-08-04 12:09:26] user=5 email=ismailsghir107@gmail.com role=admin action=plat.supprimer details="id=18" ip=::1
+[2026-08-04 12:09:34] user=5 email=ismailsghir107@gmail.com role=admin action=plat.supprimer details="id=16" ip=::1
+[2026-08-04 12:09:38] user=5 email=ismailsghir107@gmail.com role=admin action=plat.supprimer details="id=17" ip=::1
+[2026-08-04 12:09:43] user=5 email=ismailsghir107@gmail.com role=admin action=plat.supprimer details="id=23" ip=::1
+[2026-08-04 12:09:49] user=5 email=ismailsghir107@gmail.com role=admin action=plat.supprimer details="id=22" ip=::1
+[2026-08-04 12:09:57] user=5 email=ismailsghir107@gmail.com role=admin action=plat.supprimer details="id=21" ip=::1
+[2026-08-04 12:10:01] user=5 email=ismailsghir107@gmail.com role=admin action=plat.supprimer details="id=20" ip=::1
+[2026-08-04 12:37:21] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-04 12:45:43] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-04 12:46:04] user=5 email=ismailsghir107@gmail.com role=admin action=zone.modifier details="id=1 nom=medina prix=10" ip=::1
+[2026-08-04 12:46:40] user=5 email=ismailsghir107@gmail.com role=admin action=zone.creer details="nom=Mehamid prix=15" ip=::1
+[2026-08-04 12:46:48] user=5 email=ismailsghir107@gmail.com role=admin action=zone.modifier details="id=1 nom=medina prix=5" ip=::1
+[2026-08-04 12:46:54] user=5 email=ismailsghir107@gmail.com role=admin action=zone.modifier details="id=2 nom=Gueliz prix=5" ip=::1
+[2026-08-04 12:47:07] user=5 email=ismailsghir107@gmail.com role=admin action=zone.creer details="nom=massira prix=10" ip=::1
+[2026-08-04 14:19:08] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-04 14:27:32] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-04 14:44:10] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-04 14:50:27] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-04 14:54:27] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-04 15:06:43] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-04 15:11:17] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-04 15:20:35] user=12 email=tempreview@fiajou3.test role=admin action=connexion.reussie details="email=tempreview@fiajou3.test" ip=::1
+[2026-08-04 15:21:25] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-04 15:23:44] user=12 email=tempreview@fiajou3.test role=admin action=connexion.reussie details="email=tempreview@fiajou3.test" ip=::1
+[2026-08-04 15:26:08] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-04 17:03:28] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-04 17:06:26] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1

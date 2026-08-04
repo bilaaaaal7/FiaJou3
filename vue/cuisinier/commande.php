@@ -127,7 +127,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
                 <h2>Chronologie du statut</h2>
                 <?php if (!empty($historique)): ?>
                     <?php foreach ($historique as $event): ?>
-                    <div style="padding: 12px 0; border-bottom: 1px solid #f0ece2;">
+                    <div style="padding: 12px 0; border-bottom: 1px solid var(--border-soft);">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
                             <span class="badge-status st-<?php echo htmlspecialchars($event['nouveau_statut']); ?>">
                                 <?php echo STATUTS_COMMANDE[$event['nouveau_statut']] ?? $event['nouveau_statut']; ?>

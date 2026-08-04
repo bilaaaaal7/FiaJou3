@@ -30,6 +30,14 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
 <!DOCTYPE html>
 <html lang="fr" dir="ltr">
 <head>
+    <script>
+        (function () {
+            var t = null;
+            try { t = localStorage.getItem('fiajou3-theme'); } catch (e) { /* ignore */ }
+            if (t !== 'dark') { t = 'light'; }
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -85,6 +93,29 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             background: #171717;
         }
 
+        /* ---------- Logo : le header et le hero sont sombres dans les DEUX thèmes ;
+           la variante claire (texte Noir Charbon) y serait illisible,
+           on force donc la variante blanche (le template peut forcer display
+           sur l'image, d'où !important pour une bascule fiable) ---------- */
+        .logo-theme-light { display: none !important; }
+        .logo-theme-dark { display: block !important; }
+
+        /* ---------- Bouton de basculement de thème (header) ---------- */
+        .header_section .theme-toggle {
+            width: 42px;
+            height: 42px;
+            background: transparent;
+            border-color: rgba(255, 255, 255, 0.35);
+            color: #f5f5f5;
+            margin-right: 8px;
+            border-radius: 50%;
+        }
+        .header_section .theme-toggle:hover {
+            background: rgba(184, 134, 24, 0.22);
+            border-color: var(--gold, #B88618);
+            color: #ffffff;
+        }
+
         /* ---------- Hero sans photo (charte : Noir Charbon + Or Tajine) ---------- */
         .hero_area--branded { background: #171717; }
 
@@ -120,6 +151,33 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             .hero_visual { margin-top: 30px; }
             .hero_icon { width: 190px; height: 190px; }
         }
+
+        /* ---------- Transitions de couleurs entre thèmes (aucun effet sur le layout) ---------- */
+        body, .header_section, .hero_area--branded, .food_section .box,
+        .about_section, .client_section .box .detail-box, .footer_section {
+            transition: background-color .25s ease, color .25s ease;
+        }
+
+        /* ---------- Mode clair : design d'origine du template (header, hero,
+           cartes plats, À propos, clients et footer déjà sombres / or).
+           Seules corrections purement colorimétriques pour rester lisibles ---------- */
+        [data-theme="light"] .menu-empty-state { color: #8a8478; }
+
+        /* ---------- Mode sombre : variante plus sombre, mêmes composants, mêmes positions ---------- */
+        [data-theme="dark"] body { background: #0f0f13; }
+        [data-theme="dark"] .heading_container h2 { color: #f2efe8; }
+        [data-theme="dark"] .heading_container p { color: #b9b2a6; }
+        [data-theme="dark"] .food_section .filters_menu li { color: #e8e4dc; }
+        [data-theme="dark"] .food_section .filters_menu li.active { background: #B88618; color: #ffffff; }
+        [data-theme="dark"] .food_section .box {
+            background: linear-gradient(to bottom, #232329 25px, #18181e 25px);
+        }
+        [data-theme="dark"] .food_section .box .img-box { background: #232329; }
+        [data-theme="dark"] .food_section .box .categorie-tag { color: #e0b14d; background: #3a3120; }
+        [data-theme="dark"] .partner_section .box h5 { color: #f2efe8; }
+        [data-theme="dark"] .partner_section .box p { color: #b9b2a6; }
+        [data-theme="dark"] .menu-empty-state { color: #cfc9be; }
+        [data-theme="dark"] .menu-samedi-note { color: #e0b14d; }
     </style>
 </head>
 
@@ -142,7 +200,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             <div class="container">
                 <nav class="navbar navbar-expand-lg custom_nav-container">
                     <a class="navbar-brand" href="<?php echo BASE_URL; ?>/index.php?route=accueil" style="display:inline-flex;align-items:center;gap:10px;">
-                        <span class="logo-mark" style="width:34px;height:34px;color:#ffffff;flex-shrink:0;"><?php $logoSurFondSombre = true; include ROOT_PATH . '/assets/inc/logo.php'; ?></span>
+                        <span class="logo-mark" style="width:34px;height:34px;flex-shrink:0;"><?php include ROOT_PATH . '/assets/inc/logo.php'; ?></span>
                         <span><?php echo htmlspecialchars(APP_NAME); ?></span>
                     </a>
 
@@ -166,7 +224,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                             </li>
                         </ul>
                         <div class="user_option">
-
+                            <?php $themeToggleClass = 'header-theme-toggle'; require ROOT_PATH . '/assets/inc/theme_toggle.php'; ?>
                             <a href="<?php echo BASE_URL; ?>/index.php?route=inscription" class="order_online">
                                 Commander
                             </a>
@@ -197,7 +255,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                         </div>
                     </div>
                     <div class="col-md-5 col-lg-6 hero_visual">
-                        <div class="hero_icon"><?php $logoSurFondSombre = true; include ROOT_PATH . '/assets/inc/logo.php'; ?></div>
+                        <div class="hero_icon"><?php include ROOT_PATH . '/assets/inc/logo.php'; ?></div>
                     </div>
                 </div>
             </div>
@@ -475,6 +533,9 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
     <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
     <script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/feane/js/custom.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="<?php echo BASE_URL; ?>/assets/js/theme.js"></script>
+    <script>if (window.lucide) { lucide.createIcons(); }</script>
 
     <script>
         // Le header est en position fixed : on compense sa hauteur réelle

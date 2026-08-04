@@ -31,7 +31,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
                     <td><?php echo htmlspecialchars($a['client_prenom'] . ' ' . $a['client_nom']); ?></td>
                     <td>
                         <?php if ($a['ancien_statut'] === $a['nouveau_statut']): ?>
-                            <span style="color:#8a8a8a;">Remarque ajoutée</span>
+                            <span style="color:var(--text-muted);">Remarque ajoutée</span>
                         <?php else: ?>
                             <span class="badge-status st-<?php echo htmlspecialchars($a['nouveau_statut']); ?>">
                                 <?php echo STATUTS_COMMANDE[$a['nouveau_statut']] ?? $a['nouveau_statut']; ?>

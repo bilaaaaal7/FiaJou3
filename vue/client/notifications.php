@@ -30,7 +30,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
                         <?php echo htmlspecialchars($n['titre']); ?>
                     </div>
                     <div style="color:var(--text-muted); font-size:0.9rem; margin-bottom:4px;"><?php echo htmlspecialchars($n['message']); ?></div>
-                    <div style="color:#aaa; font-size:0.8rem;"><?php echo $n['date_notification']; ?></div>
+                    <div style="color:var(--text-muted); font-size:0.8rem;"><?php echo $n['date_notification']; ?></div>
                 </div>
                 <?php if (!$n['est_lu']): ?>
                 <a href="<?php echo BASE_URL; ?>/index.php?route=client/notifications&marquer_lu=<?php echo $n['id']; ?>" class="btn btn-outline btn-sm" style="white-space:nowrap;">Lu</a>

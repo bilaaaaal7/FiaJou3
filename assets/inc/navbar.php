@@ -24,9 +24,27 @@ if (est_connecte()) {
 
 $routeActuelle = $_GET['route'] ?? '';
 
-function sidebar_lien(string $route, string $icone, string $label, string $routeActuelle, $badge = null): void
+// Route « Tableau de bord » propre à chaque rôle : c'est la carte dédiée
+// placée en haut de la sidebar (indépendante des autres menus).
+$routesDashboard = [
+    ROLE_ADMIN     => 'admin',
+    ROLE_CLIENT    => 'client/dashboard',
+    ROLE_CUISINIER => 'cuisinier',
+    ROLE_LIVREUR   => 'livreur',
+];
+$dashboardRoute = $routesDashboard[$role] ?? '';
+$dashboardActif = $routeActuelle === $dashboardRoute;
+
+// Pages de détail qui dépendent d'un menu parent (mise en évidence).
+$parentParDetail = [
+    'client/detail-commande' => 'client/mes-commandes',
+    'client/commande'        => 'client/mes-commandes',
+];
+
+function sidebar_lien(string $route, string $icone, string $label, string $routeActuelle, $badge = null, array $parents = []): void
 {
-    $actif = $routeActuelle === $route ? ' class="active"' : '';
+    $parent = $parents[$routeActuelle] ?? null;
+    $actif = ($routeActuelle === $route || $parent === $route) ? ' class="active"' : '';
     echo '<a' . $actif . ' href="' . BASE_URL . '/index.php?route=' . htmlspecialchars($route) . '">';
     echo '<i data-lucide="' . htmlspecialchars($icone) . '" aria-hidden="true"></i>';
     echo '<span>' . htmlspecialchars($label);
@@ -48,14 +66,25 @@ $roleLabel = $roleLabels[$role] ?? $role;
 ?>
 <div class="app-shell">
     <aside class="sidebar" id="sidebar">
-        <div class="brand">
-            <span class="logo-mark" style="width:34px;height:34px;flex-shrink:0;"><?php $logoSurFondSombre = true; include ROOT_PATH . '/assets/inc/logo.php'; ?></span>
-            <span><?php echo APP_NAME; ?></span>
+        <div class="sidebar-head">
+            <div class="brand">
+                <span class="logo-mark" style="width:34px;height:34px;flex-shrink:0;"><?php include ROOT_PATH . '/assets/inc/logo.php'; ?></span>
+                <span><?php echo APP_NAME; ?></span>
+            </div>
+            <?php require ROOT_PATH . '/assets/inc/theme_toggle.php'; ?>
         </div>
 
+        <a class="dashboard-card<?php echo $dashboardActif ? ' active' : ''; ?>"
+           href="<?php echo BASE_URL; ?>/index.php?route=<?php echo htmlspecialchars($dashboardRoute); ?>"
+           aria-current="<?php echo $dashboardActif ? 'page' : 'false'; ?>">
+            <span class="dc-icon"><i data-lucide="home" aria-hidden="true"></i></span>
+            <span class="dc-label">Tableau de bord</span>
+            <span class="dc-arrow"><i data-lucide="chevron-right" aria-hidden="true"></i></span>
+        </a>
+
         <nav>
+            <div class="sidebar-section-label">Menu</div>
             <?php if ($role === ROLE_ADMIN): ?>
-                <?php sidebar_lien('admin', 'layout-dashboard', 'Tableau de bord', $routeActuelle); ?>
                 <?php sidebar_lien('admin/plats', 'utensils', 'Produits', $routeActuelle); ?>
                 <?php sidebar_lien('admin/categories', 'tags', 'Catégories', $routeActuelle); ?>
                 <?php sidebar_lien('admin/commandes', 'shopping-bag', 'Commandes', $routeActuelle); ?>
@@ -66,17 +95,14 @@ $roleLabel = $roleLabels[$role] ?? $role;
                 <?php sidebar_lien('admin/livreurs', 'bike', 'Livreurs', $routeActuelle); ?>
                 <?php sidebar_lien('admin/zones', 'map-pin', 'Zones de livraison', $routeActuelle); ?>
             <?php elseif ($role === ROLE_CLIENT): ?>
-                <?php sidebar_lien('client/dashboard', 'layout-dashboard', 'Tableau de bord', $routeActuelle); ?>
                 <?php sidebar_lien('client', 'utensils-crossed', 'Menu', $routeActuelle); ?>
                 <?php sidebar_lien('client/menu-semaine', 'calendar-days', 'Menu de la semaine', $routeActuelle); ?>
                 <?php sidebar_lien('client/panier', 'shopping-cart', 'Panier (' . $panierModele->nombreArticles() . ')', $routeActuelle); ?>
-                <?php sidebar_lien('client/mes-commandes', 'package', 'Mes commandes', $routeActuelle); ?>
+                <?php sidebar_lien('client/mes-commandes', 'package', 'Mes commandes', $routeActuelle, null, $parentParDetail); ?>
                 <?php sidebar_lien('client/profil', 'user', 'Profil', $routeActuelle); ?>
             <?php elseif ($role === ROLE_CUISINIER): ?>
-                <?php sidebar_lien('cuisinier', 'cooking-pot', 'Commandes à préparer', $routeActuelle); ?>
                 <?php sidebar_lien('cuisinier/historique', 'history', 'Historique', $routeActuelle); ?>
             <?php elseif ($role === ROLE_LIVREUR): ?>
-                <?php sidebar_lien('livreur', 'truck', 'Livraisons du jour', $routeActuelle); ?>
                 <?php sidebar_lien('livreur/historique', 'history', 'Historique', $routeActuelle); ?>
             <?php endif; ?>
 
