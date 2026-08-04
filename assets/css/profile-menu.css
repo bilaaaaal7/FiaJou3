@@ -1,0 +1,159 @@
+/*
+  Icône de profil circulaire + menu déroulant (Mon Profil, Mes Commandes,
+  Notifications, Paramètres, Déconnexion). Palette alignée sur la charte
+  FiaJou3 (Or Tajine #B88618 / Noir Charbon #171717).
+*/
+
+.profile-menu {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.profile-menu__trigger {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 2px solid rgba(184, 134, 24, 0.55);
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+
+.profile-menu__trigger:hover,
+.profile-menu__trigger[aria-expanded="true"] {
+    border-color: #B88618;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(184, 134, 24, 0.28);
+}
+
+.profile-menu__avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #B88618, #7a5810);
+    color: #fff;
+    font-family: 'Poppins', 'Open Sans', sans-serif;
+    font-weight: 700;
+    font-size: 0.92rem;
+    letter-spacing: 0.3px;
+}
+
+.profile-menu__avatar--lg {
+    width: 48px;
+    height: 48px;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.profile-menu__dot {
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: #e0533d;
+    border: 2px solid #171717;
+}
+
+.profile-menu--dark .profile-menu__dot { border-color: #F8F5EF; }
+
+.profile-menu__dropdown {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    width: 250px;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 18px 40px rgba(23, 23, 23, 0.18);
+    border: 1px solid #e8e2d3;
+    padding: 8px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px) scale(0.98);
+    transform-origin: top right;
+    transition: opacity .18s ease, transform .18s ease, visibility .18s;
+    z-index: 1000;
+}
+
+.profile-menu.is-open .profile-menu__dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
+
+.profile-menu__header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 10px 14px;
+    border-bottom: 1px solid #eee6d6;
+    margin-bottom: 6px;
+}
+
+.profile-menu__name {
+    font-family: 'Poppins', 'Open Sans', sans-serif;
+    font-weight: 700;
+    font-size: 0.94rem;
+    color: #171717;
+    line-height: 1.25;
+}
+
+.profile-menu__role {
+    font-size: 0.74rem;
+    color: #706B62;
+    text-transform: capitalize;
+}
+
+.profile-menu__dropdown a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 9px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: #171717;
+    text-decoration: none;
+    transition: background .15s ease, color .15s ease, padding-left .15s ease;
+}
+
+.profile-menu__dropdown a i { width: 16px; text-align: center; color: #B88618; }
+
+.profile-menu__dropdown a:hover {
+    background: #f4ecd8;
+    padding-left: 16px;
+}
+
+.profile-menu__badge {
+    margin-left: auto;
+    background: #B88618;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    border-radius: 999px;
+    padding: 1px 7px;
+}
+
+.profile-menu__divider {
+    height: 1px;
+    background: #eee6d6;
+    margin: 6px 4px;
+}
+
+.profile-menu__logout { color: #c0392b !important; }
+.profile-menu__logout i { color: #c0392b !important; }
+.profile-menu__logout:hover { background: #fbe3e1 !important; }
+
+@media (max-width: 480px) {
+    .profile-menu__dropdown { width: 230px; right: -8px; }
+}
