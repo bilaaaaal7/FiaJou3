@@ -37,6 +37,29 @@ class HistoriqueModele
         return $stmt->fetchAll();
     }
 
+    /**
+     * Journal d'activité d'un utilisateur (cuisinier/livreur) :
+     * les modifications de statut qu'il a lui-même effectuées.
+     */
+    public function getParUser(int $userId, int $limit = 100): array
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT osh.id, osh.order_id, osh.ancien_statut, osh.nouveau_statut,
+                    osh.commentaire, osh.date_modification,
+                    orders.date_livraison, orders.heure_livraison, orders.total,
+                    profiles.prenom AS client_prenom, profiles.nom AS client_nom
+             FROM order_status_history osh
+             INNER JOIN orders ON osh.order_id = orders.id
+             INNER JOIN users ON orders.user_id = users.id
+             INNER JOIN profiles ON users.id = profiles.user_id
+             WHERE osh.user_id = ?
+             ORDER BY osh.date_modification DESC
+             LIMIT " . (int) $limit
+        );
+        $stmt->execute([$userId]);
+        return $stmt->fetchAll();
+    }
+
     public function getDernierStatut(int $orderId): array|false
     {
         $stmt = $this->pdo->prepare(

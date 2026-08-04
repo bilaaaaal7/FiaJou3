@@ -66,6 +66,7 @@ require ROOT_PATH . '/assets/inc/quick_access.php';
                             <input type="hidden" name="id" value="<?php echo $c['id']; ?>">
                             <button type="submit" name="demarrerLivraison" class="btn btn-gold btn-sm">Démarrer</button>
                         </form>
+                        <a href="<?php echo BASE_URL; ?>/index.php?route=livreur/detail-commande&id=<?php echo (int) $c['id']; ?>" class="btn btn-outline btn-sm">Voir</a>
                     </td>
                 </tr>
             <?php endforeach; ?>
@@ -118,6 +119,7 @@ require ROOT_PATH . '/assets/inc/quick_access.php';
                             <input type="text" name="commentaire_probleme" placeholder="Décrire le problème..." style="border:1px solid #f1c3bd; border-radius:6px; padding:4px 8px; font-size:0.82rem; width:180px;">
                             <button type="submit" name="signalerProbleme" class="btn btn-danger btn-sm">Signaler problème</button>
                         </form>
+                        <a href="<?php echo BASE_URL; ?>/index.php?route=livreur/detail-commande&id=<?php echo (int) $c['id']; ?>" class="btn btn-outline btn-sm">Voir</a>
                     </td>
                 </tr>
             <?php endforeach; ?>
@@ -139,7 +141,7 @@ require ROOT_PATH . '/assets/inc/quick_access.php';
     <div class="table-wrap">
         <table class="data-table">
             <thead>
-                <tr><th>ID</th><th>Client</th><th>Articles</th><th>Heure</th><th>Total</th><th>Zone</th></tr>
+                <tr><th>ID</th><th>Client</th><th>Articles</th><th>Heure</th><th>Total</th><th>Zone</th><th></th></tr>
             </thead>
             <tbody>
             <?php foreach ($commandesLivreesAujourdHui as $c): ?>
@@ -161,6 +163,7 @@ require ROOT_PATH . '/assets/inc/quick_access.php';
                     <td><?php echo $c['heure_livraison']; ?></td>
                     <td><?php echo number_format($c['total'], 2); ?> DH</td>
                     <td><?php echo htmlspecialchars($c['zone_nom'] ?? '-'); ?></td>
+                    <td><a href="<?php echo BASE_URL; ?>/index.php?route=livreur/detail-commande&id=<?php echo (int) $c['id']; ?>" class="btn btn-outline btn-sm">Voir</a></td>
                 </tr>
             <?php endforeach; ?>
             </tbody>

@@ -602,7 +602,7 @@ a:focus {
 .food_section .btn-box a {
   display: inline-block;
   padding: 10px 55px;
-  background-color: #B88618;
+  background-color: #a37209;
   color: #ffffff;
   border-radius: 45px;
   -webkit-transition: all 0.3s;
@@ -649,7 +649,7 @@ a:focus {
 .about_section .detail-box a {
   display: inline-block;
   padding: 10px 45px;
-  background-color: #B88618;
+  background-color: #916506;
   color: #ffffff;
   border-radius: 45px;
   -webkit-transition: all 0.3s;
@@ -711,7 +711,7 @@ a:focus {
   text-transform: uppercase;
   display: inline-block;
   padding: 10px 55px;
-  background-color: #B88618;
+  background-color: #916912;
   color: #ffffff;
   border-radius: 45px;
   -webkit-transition: all 0.3s;
@@ -770,7 +770,7 @@ a:focus {
 
 .client_section .box .img-box img {
   border-radius: 100%;
-  border: 5px solid #B88618;
+  border: 5px solid #815d11;
   position: relative;
 }
 
@@ -781,7 +781,7 @@ a:focus {
   top: 0;
   width: 20px;
   height: 20px;
-  background-color: #B88618;
+  background-color: #7d5b12;
   -webkit-transform: rotate(45deg) translateX(-50%);
           transform: rotate(45deg) translateX(-50%);
 }
@@ -820,7 +820,7 @@ a:focus {
 .client_section .owl-carousel .owl-nav .owl-next {
   width: 45px;
   height: 45px;
-  background-color: #B88618;
+  background-color: #9b7013;
   color: #ffffff;
   outline: none;
   bottom: 0px;
