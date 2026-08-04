@@ -3,3 +3,13 @@
 [2026-08-03 18:10:39] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
 [2026-08-03 18:13:45] user=5 email=ismailsghir107@gmail.com role=admin action=commande.statut details="id=3 nouveau_statut=prete" ip=::1
 [2026-08-03 18:18:15] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-03 18:23:56] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-03 18:25:19] user=2 email=admin@test.com role=admin action=connexion.reussie details="email=admin@test.com" ip=::1
+[2026-08-03 18:29:09] user=2 email=admin@test.com role=admin action=connexion.reussie details="email=admin@test.com" ip=::1
+[2026-08-03 18:32:43] user=2 email=admin@test.com role=admin action=connexion.reussie details="email=admin@test.com" ip=::1
+[2026-08-03 18:35:01] user=2 email=admin@test.com role=admin action=commande.assigner details="order_id=5 cook_id=3 driver_id=4" ip=::1
+[2026-08-03 18:38:55] user=3 email=cook@test.com role=cook action=commande.statut details="order_id=5 nouveau_statut=en_preparation" ip=::1
+[2026-08-03 18:38:55] user=3 email=cook@test.com role=cook action=commande.statut details="order_id=5 nouveau_statut=prete" ip=::1
+[2026-08-03 18:39:39] user=4 email=driver@test.com role=driver action=commande.statut details="order_id=5 nouveau_statut=en_livraison" ip=::1
+[2026-08-03 18:39:39] user=4 email=driver@test.com role=driver action=commande.statut details="order_id=5 nouveau_statut=livree" ip=::1
+[2026-08-03 18:46:43] user=2 email=admin@test.com role=admin action=connexion.reussie details="email=admin@test.com" ip=::1

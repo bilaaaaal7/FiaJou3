@@ -18,6 +18,11 @@ $mpTotal = $mpDetails['total'];
 $mpDate = $mpPanier->getDate();
 $mpNb = $mpPanier->nombreArticles();
 $mpOuvert = isset($_GET['panier']) && $_GET['panier'] === '1';
+$mpRetour = preg_replace('/[^a-z0-9\/_-]/i', '', $_GET['route'] ?? 'client');
+$mpRetour = $mpRetour !== '' ? $mpRetour : 'client';
+if (strpos($mpRetour, 'client') !== 0) {
+    $mpRetour = 'client';
+}
 ?>
 <style>
     .mp-toggle {
@@ -46,10 +51,26 @@ $mpOuvert = isset($_GET['panier']) && $_GET['panier'] === '1';
     }
     .mp-body { flex: 1; overflow-y: auto; padding: 8px 18px; }
     .mp-item {
-        display: flex; justify-content: space-between; gap: 10px;
+        display: flex; gap: 10px; align-items: center;
         padding: 10px 0; border-bottom: 1px dashed #e5dfd2; font-size: 0.9rem;
     }
-    .mp-item .mp-qty { color: #B88618; font-weight: 700; white-space: nowrap; }
+    .mp-item img {
+        width: 46px; height: 46px; object-fit: cover; border-radius: 8px; flex-shrink: 0;
+    }
+    .mp-item .mp-info { flex: 1; min-width: 0; }
+    .mp-item .mp-nom { font-weight: 600; line-height: 1.25; }
+    .mp-item .mp-prix { color: #706862; font-size: 0.8rem; }
+    .mp-item .mp-ctrl {
+        display: inline-flex; align-items: center; gap: 2px; margin-top: 4px;
+    }
+    .mp-item .mp-ctrl a {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 22px; height: 22px; border-radius: 6px; text-decoration: none;
+        font-weight: 700; font-size: 0.85rem; line-height: 1;
+        border: 1px solid #B88618; color: #B88618; background: #fff;
+    }
+    .mp-item .mp-ctrl a.mp-del { border-color: #c0392b; color: #c0392b; }
+    .mp-item .mp-qty { padding: 0 6px; font-weight: 700; color: #171717; }
     .mp-empty { color: #706862; text-align: center; padding: 40px 10px; }
     .mp-foot {
         padding: 14px 18px; background: #fff; border-top: 1px solid #e5dfd2;
@@ -91,8 +112,17 @@ $mpOuvert = isset($_GET['panier']) && $_GET['panier'] === '1';
         <?php else: ?>
             <?php foreach ($mpArticles as $mpArticle): ?>
                 <div class="mp-item">
-                    <span><?php echo htmlspecialchars($mpArticle['nom']); ?></span>
-                    <span class="mp-qty"><?php echo (int) $mpArticle['quantite']; ?> × <?php echo number_format((float) $mpArticle['prix'], 2, ',', ' '); ?> DH</span>
+                    <img src="<?php echo UPLOADS_URL; ?>/<?php echo htmlspecialchars($mpArticle['image']); ?>" alt="<?php echo htmlspecialchars($mpArticle['nom']); ?>">
+                    <div class="mp-info">
+                        <div class="mp-nom"><?php echo htmlspecialchars($mpArticle['nom']); ?></div>
+                        <div class="mp-prix"><?php echo number_format((float) $mpArticle['prix'], 2, ',', ' '); ?> DH</div>
+                        <div class="mp-ctrl">
+                            <a href="<?php echo BASE_URL; ?>/index.php?route=client/panier&moins=<?php echo (int) $mpArticle['id']; ?>&retour=<?php echo urlencode($mpRetour); ?>" title="Retirer une quantité">&minus;</a>
+                            <span class="mp-qty"><?php echo (int) $mpArticle['quantite']; ?></span>
+                            <a href="<?php echo BASE_URL; ?>/index.php?route=client/panier&plus=<?php echo (int) $mpArticle['id']; ?>&retour=<?php echo urlencode($mpRetour); ?>" title="Ajouter une quantité">+</a>
+                            <a class="mp-del" href="<?php echo BASE_URL; ?>/index.php?route=client/panier&supprimer=<?php echo (int) $mpArticle['id']; ?>&retour=<?php echo urlencode($mpRetour); ?>" title="Supprimer">&times;</a>
+                        </div>
+                    </div>
                 </div>
             <?php endforeach; ?>
         <?php endif; ?>
@@ -103,12 +133,15 @@ $mpOuvert = isset($_GET['panier']) && $_GET['panier'] === '1';
             <span>Total</span>
             <span><?php echo number_format((float) $mpTotal, 2, ',', ' '); ?> DH</span>
         </div>
-        <div class="mp-actions">
+        <div class="mp-actions" style="margin-bottom:8px;">
             <a class="mp-link" href="<?php echo BASE_URL; ?>/index.php?route=client/panier">Voir le panier</a>
             <?php if (!empty($mpArticles)): ?>
-                <a class="mp-cta" href="<?php echo BASE_URL; ?>/index.php?route=client/commander">Commander</a>
+                <a class="mp-cta" href="<?php echo BASE_URL; ?>/index.php?route=client/commander">Valider la commande</a>
             <?php endif; ?>
         </div>
+        <button type="button" onclick="mpFermer()" style="width:100%; background:none; border:none; color:#706862; font-size:0.85rem; text-decoration:underline; cursor:pointer; padding:4px;">
+            Continuer mes achats
+        </button>
     </div>
 </aside>
 
