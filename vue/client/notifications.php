@@ -1,5 +1,6 @@
 <?php
 $pageTitle = "Notifications - " . APP_NAME;
+$pageHeading = "Notifications";
 $extraCss = ['admin.css'];
 require ROOT_PATH . '/assets/inc/header.php';
 require ROOT_PATH . '/assets/inc/navbar.php';
@@ -7,8 +8,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
 
 <div style="max-width:800px; margin:0 auto;">
 
-    <div class="topbar">
-        <h1>Notifications</h1>
+    <div class="topbar" style="justify-content:flex-end;">
         <?php if ($nbNonLues > 0): ?>
         <a href="<?php echo BASE_URL; ?>/index.php?route=client/notifications&marquer_tout_lu=1" class="btn btn-outline btn-sm">Tout marquer comme lu</a>
         <?php endif; ?>

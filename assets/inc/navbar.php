@@ -83,7 +83,6 @@ $roleLabel = $roleLabels[$role] ?? $role;
         </a>
 
         <nav>
-            <div class="sidebar-section-label">Menu</div>
             <?php if ($role === ROLE_ADMIN): ?>
                 <?php sidebar_lien('admin/plats', 'utensils', 'Produits', $routeActuelle); ?>
                 <?php sidebar_lien('admin/categories', 'tags', 'Catégories', $routeActuelle); ?>
@@ -105,24 +104,62 @@ $roleLabel = $roleLabels[$role] ?? $role;
             <?php elseif ($role === ROLE_LIVREUR): ?>
                 <?php sidebar_lien('livreur/historique', 'history', 'Historique', $routeActuelle); ?>
             <?php endif; ?>
-
-            <?php sidebar_lien('client/notifications', 'bell', 'Notifications', $routeActuelle, $nbNotifs > 0 ? ($nbNotifs > 9 ? '9+' : $nbNotifs) : null); ?>
         </nav>
-
-        <div class="sidebar-footer">
-            <div class="sidebar-profile">
-                <span class="avatar"><?php echo htmlspecialchars($initial); ?></span>
-                <div class="profile-info">
-                    <strong><?php echo htmlspecialchars($prenom); ?></strong>
-                    <span><?php echo htmlspecialchars($roleLabel); ?></span>
-                </div>
-            </div>
-            <a class="logout-link" href="<?php echo BASE_URL; ?>/index.php?route=deconnexion">
-                <i data-lucide="log-out" aria-hidden="true"></i>
-                <span>Déconnexion</span>
-            </a>
-        </div>
     </aside>
 
     <div class="main">
-        <button type="button" class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">&#9776;</button>
+        <?php
+        // Titre affiché dans l'en-tête : $pageHeading si la vue le définit.
+        // Les vues qui possèdent leur propre titre (topbar, page client)
+        // ne définissent pas $pageHeading pour éviter toute duplication.
+        $pageHeading = (string) ($pageHeading ?? '');
+        ?>
+        <div class="topheader">
+            <div class="topheader-left">
+                <button type="button" class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')" aria-label="Ouvrir le menu">&#9776;</button>
+                <?php if ($pageHeading !== ''): ?>
+                    <h1 class="topheader-title"><?php echo htmlspecialchars($pageHeading); ?></h1>
+                <?php endif; ?>
+            </div>
+
+            <div class="topheader-actions">
+                <a class="topheader-notif" href="<?php echo BASE_URL; ?>/index.php?route=client/notifications" aria-label="Notifications">
+                    <i data-lucide="bell" aria-hidden="true"></i>
+                    <?php if ($nbNotifs > 0): ?>
+                        <span class="topheader-notif-badge"><?php echo $nbNotifs > 9 ? '9+' : $nbNotifs; ?></span>
+                    <?php endif; ?>
+                </a>
+
+                <div class="topheader-profile" data-profile-menu>
+                    <button type="button" class="topheader-profile-trigger" data-profile-trigger aria-haspopup="true" aria-expanded="false">
+                        <span class="avatar"><?php echo htmlspecialchars($initial); ?></span>
+                        <span class="topheader-profile-name"><?php echo htmlspecialchars($prenom); ?></span>
+                        <i data-lucide="chevron-down" class="topheader-profile-caret" aria-hidden="true"></i>
+                    </button>
+
+                    <div class="topheader-profile-dropdown" data-profile-dropdown role="menu">
+                        <div class="topheader-profile-dropdown-head">
+                            <span class="avatar avatar-lg"><?php echo htmlspecialchars($initial); ?></span>
+                            <div class="topheader-profile-dropdown-identity">
+                                <strong><?php echo htmlspecialchars($prenom); ?></strong>
+                                <span><?php echo htmlspecialchars($roleLabel); ?></span>
+                            </div>
+                        </div>
+                        <div class="topheader-profile-dropdown-divider"></div>
+                        <a role="menuitem" class="topheader-profile-dropdown-item" href="<?php echo BASE_URL; ?>/index.php?route=<?php echo $role === ROLE_CLIENT ? 'client/profil' : 'profil'; ?>">
+                            <i data-lucide="user" aria-hidden="true"></i>
+                            <span>Mon profil</span>
+                        </a>
+                        <a role="menuitem" class="topheader-profile-dropdown-item" href="<?php echo BASE_URL; ?>/index.php?route=parametres">
+                            <i data-lucide="settings" aria-hidden="true"></i>
+                            <span>Paramètres</span>
+                        </a>
+                        <div class="topheader-profile-dropdown-divider"></div>
+                        <a role="menuitem" class="topheader-profile-dropdown-logout" href="<?php echo BASE_URL; ?>/index.php?route=deconnexion">
+                            <i data-lucide="log-out" aria-hidden="true"></i>
+                            <span>Déconnexion</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>

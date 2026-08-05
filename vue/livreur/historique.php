@@ -1,11 +1,10 @@
 <?php
 $pageTitle = "Historique livreur - " . APP_NAME;
+$pageHeading = "Historique de livraison";
 $extraCss = ['admin.css'];
 require ROOT_PATH . '/assets/inc/header.php';
 require ROOT_PATH . '/assets/inc/navbar.php';
 ?>
-
-<h1>Historique de livraison</h1>
 
 <div class="panel">
     <h2>Mon activité récente</h2>

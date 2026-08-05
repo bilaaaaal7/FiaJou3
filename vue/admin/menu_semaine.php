@@ -1,11 +1,10 @@
 <?php
 $pageTitle = "Menu de la semaine - " . APP_NAME;
+$pageHeading = "Menu de la semaine";
 $extraCss = ['admin.css'];
 require ROOT_PATH . '/assets/inc/header.php';
 require ROOT_PATH . '/assets/inc/navbar.php';
 ?>
-
-<h1>Menu de la semaine</h1>
 
 <?php
 $erreursAdmin = [

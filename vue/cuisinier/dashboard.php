@@ -1,5 +1,6 @@
 <?php
 $pageTitle = "Espace cuisinier - " . APP_NAME;
+$pageHeading = "Espace cuisinier";
 $extraCss = ['admin.css'];
 require ROOT_PATH . '/assets/inc/header.php';
 require ROOT_PATH . '/assets/inc/navbar.php';

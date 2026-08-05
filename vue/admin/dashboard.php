@@ -1,5 +1,6 @@
 <?php
 $pageTitle = "Dashboard Admin - " . APP_NAME;
+$pageHeading = "Tableau de bord";
 $extraCss = ['admin.css'];
 require ROOT_PATH . '/assets/inc/header.php';
 require ROOT_PATH . '/assets/inc/navbar.php';

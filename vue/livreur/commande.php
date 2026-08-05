@@ -1,5 +1,6 @@
 <?php
 $pageTitle = "Livraison #" . (int) $commande['id'] . " - " . APP_NAME;
+$pageHeading = "Commande #" . (int) $commande['id'];
 $extraCss = ['admin.css'];
 require ROOT_PATH . '/assets/inc/header.php';
 require ROOT_PATH . '/assets/inc/navbar.php';
@@ -7,8 +8,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
 
 <div style="max-width: 1000px; margin: 0 auto;">
 
-    <div class="topbar">
-        <h1>Commande #<?php echo (int) $commande['id']; ?></h1>
+    <div class="topbar" style="justify-content:flex-end;">
         <a href="<?php echo BASE_URL; ?>/index.php?route=livreur" class="btn btn-outline btn-sm">Retour</a>
     </div>
 

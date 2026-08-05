@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 [2026-08-05 11:25:01] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
 [2026-08-05 11:28:39] user=5 email=ismailsghir107@gmail.com role=admin action=plat.modifier details="id=8 nom=Couscous Poulet prix=75 disponible=1" ip=::1
 [2026-08-05 11:40:08] user=5 email=ismailsghir107@gmail.com role=admin action=categorie.supprimer details="id=7" ip=::1
@@ -13,3 +14,18 @@
 [2026-08-05 12:44:21] user=5 email=ismailsghir107@gmail.com role=admin action=commande.statut details="id=11 nouveau_statut=en_livraison" ip=::1
 [2026-08-05 12:44:56] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
 [2026-08-05 12:48:59] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+=======
+[2026-08-05 11:20:15] user=5 email=elbbilal00@gmail.com role=admin action=connexion.reussie details="email=elbbilal00@gmail.com" ip=127.0.0.1
+[2026-08-05 11:35:19] user=5 email=elbbilal00@gmail.com role=admin action=connexion.reussie details="email=elbbilal00@gmail.com" ip=127.0.0.1
+[2026-08-05 11:38:10] user=5 email=elbbilal00@gmail.com role=admin action=connexion.reussie details="email=elbbilal00@gmail.com" ip=127.0.0.1
+[2026-08-05 12:07:42] user=5 email=elbbilal00@gmail.com role=admin action=connexion.reussie details="email=elbbilal00@gmail.com" ip=127.0.0.1
+[2026-08-05 12:13:09] user=1 email=admin@test.com role=admin action=categorie.creer details="nom=CatTest" ip=::1
+[2026-08-05 12:13:54] user=1 email=admin@test.com role=admin action=categorie.creer details="nom=CatTest2" ip=::1
+[2026-08-05 12:14:04] user=1 email=admin@test.com role=admin action=plat.creer details="nom=PlatTest prix=10.50" ip=::1
+[2026-08-05 12:30:29] user=5 email=elbbilal00@gmail.com role=admin action=plat.creer details="nom=-  prix=10" ip=::1
+[2026-08-05 12:33:03] user=5 email=elbbilal00@gmail.com role=admin action=plat.creer details="nom=-- prix=2" ip=::1
+[2026-08-05 12:33:10] user=5 email=elbbilal00@gmail.com role=admin action=plat.supprimer details="id=32" ip=::1
+[2026-08-05 12:33:14] user=5 email=elbbilal00@gmail.com role=admin action=plat.supprimer details="id=33" ip=::1
+[2026-08-05 12:36:11] user=5 email=elbbilal00@gmail.com role=admin action=plat.creer details="nom=-- prix=1" ip=::1
+[2026-08-05 12:36:15] user=5 email=elbbilal00@gmail.com role=admin action=plat.supprimer details="id=34" ip=::1
+>>>>>>> 648cc781b1da634463d974574d4cbd2989374fb3

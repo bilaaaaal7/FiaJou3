@@ -1,11 +1,10 @@
 <?php
 $pageTitle = "Catégories - " . APP_NAME;
+$pageHeading = "Gestion des catégories";
 $extraCss = ['admin.css'];
 require ROOT_PATH . '/assets/inc/header.php';
 require ROOT_PATH . '/assets/inc/navbar.php';
 ?>
-
-<h1>Gestion des catégories</h1>
 
 <?php if (!empty($error)): ?>
     <div class="alert alert-danger py-2" role="alert"><?php echo htmlspecialchars($error); ?></div>
@@ -47,7 +46,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
 
 <div class="panel">
     <h2><?php echo $idModifier ? 'Modifier la catégorie' : 'Ajouter une catégorie'; ?></h2>
-    <form method="POST" action="<?php echo BASE_URL; ?>/index.php?route=admin/categories">
+    <form method="POST" action="<?php echo BASE_URL; ?>/index.php?route=admin/categories" enctype="multipart/form-data">
         <div class="form-grid">
             <div class="form-group">
                 <label>Nom</label>
@@ -58,19 +57,16 @@ require ROOT_PATH . '/assets/inc/navbar.php';
                 <input type="text" name="description" value="<?php echo htmlspecialchars($description); ?>" required>
             </div>
             <div class="form-group">
-                <label>Image (nom de fichier)</label>
-                <input type="file" name="image" required>
+                <label>Image (fichier)</label>
+                <input type="file" name="image" accept="image/*">
+                <small class="form-hint">Laisser vide pour conserver l'image actuelle.</small>
             </div>
         </div>
         <input type="hidden" name="id" value="<?php echo $idModifier; ?>">
         <div class="form-actions">
             <?php if ($idModifier): ?>
                 <button type="submit" name="modifier" class="btn btn-gold">Modifier</button>
-                <form method="POST"
-                    action="<?php echo BASE_URL; ?>/index.php?route=admin/categories"
-                    enctype="multipart/form-data">
-                    <button type="submit" name="annuler" class="btn btn-outline">Annuler</button>
-                </form>
+                <a href="<?php echo BASE_URL; ?>/index.php?route=admin/categories" class="btn btn-outline">Annuler</a>
             <?php else: ?>
                 <button type="submit" name="ajouter" class="btn btn-gold">Ajouter</button>
             <?php endif; ?>

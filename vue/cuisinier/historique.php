@@ -1,11 +1,10 @@
 <?php
 $pageTitle = "Historique cuisinier - " . APP_NAME;
+$pageHeading = "Historique de production";
 $extraCss = ['admin.css'];
 require ROOT_PATH . '/assets/inc/header.php';
 require ROOT_PATH . '/assets/inc/navbar.php';
 ?>
-
-<h1>Historique de production</h1>
 
 <div class="panel">
     <h2>Mon activité récente</h2>

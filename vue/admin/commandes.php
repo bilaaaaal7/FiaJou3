@@ -1,11 +1,10 @@
 <?php
 $pageTitle = "Gestion des commandes - " . APP_NAME;
+$pageHeading = "Gestion des commandes";
 $extraCss = ['admin.css'];
 require ROOT_PATH . '/assets/inc/header.php';
 require ROOT_PATH . '/assets/inc/navbar.php';
 ?>
-
-<h1>Gestion des commandes</h1>
 
 <div class="panel">
     <div class="filter-bar">

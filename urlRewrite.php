@@ -93,6 +93,27 @@ function dispatch(): void
             return;
 
         /* =========================
+           ESPACE PERSONNEL
+           (accessible à tout rôle connecté via exiger_connexion)
+        ========================= */
+
+        case 'profil':
+            reset_meta();
+            $_SESSION['pr_title'] = 'Mon profil - ' . APP_NAME;
+            $_SESSION['meta_description'] = 'Consultez les informations de votre compte ' . APP_NAME . '.';
+            $_SESSION['meta_keywords'] = 'profil, mon compte, ' . APP_NAME;
+            require ROOT_PATH . '/controleur/ProfilControleur.php';
+            return;
+
+        case 'parametres':
+            reset_meta();
+            $_SESSION['pr_title'] = 'Paramètres - ' . APP_NAME;
+            $_SESSION['meta_description'] = 'Modifiez vos informations personnelles, votre email et votre mot de passe sur ' . APP_NAME . '.';
+            $_SESSION['meta_keywords'] = 'paramètres, mot de passe, email, ' . APP_NAME;
+            require ROOT_PATH . '/controleur/ParametresControleur.php';
+            return;
+
+        /* =========================
            ESPACE ADMINISTRATEUR
            (protégé par exiger_role(ROLE_ADMIN) dans chaque contrôleur ;
            non indexable, mais titre/description cohérents pour l'onglet)

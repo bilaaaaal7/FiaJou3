@@ -30,5 +30,32 @@ $extraJs = $extraJs ?? [];
             }
         });
     </script>
+    <script>
+        // Menu déroulant du profil (header supérieur)
+        document.addEventListener('click', function (e) {
+            var trigger = e.target.closest('[data-profile-trigger]');
+            var openMenu = document.querySelector('.topheader-profile.open');
+
+            if (trigger) {
+                var menu = trigger.closest('[data-profile-menu]');
+                var isOpen = menu.classList.contains('open');
+                if (openMenu && openMenu !== menu) { openMenu.classList.remove('open'); }
+                menu.classList.toggle('open', !isOpen);
+                trigger.setAttribute('aria-expanded', String(!isOpen));
+                return;
+            }
+
+            if (openMenu && !e.target.closest('[data-profile-menu]')) {
+                openMenu.classList.remove('open');
+            }
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                var openMenu = document.querySelector('.topheader-profile.open');
+                if (openMenu) { openMenu.classList.remove('open'); }
+            }
+        });
+    </script>
 </body>
 </html>
