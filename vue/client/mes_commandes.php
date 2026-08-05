@@ -1,19 +1,39 @@
 <?php
 $pageTitle = "Mes commandes - " . APP_NAME;
 $extraCss = ['admin.css'];
+$bodyClass = 'profil-sans-sidebar';
 require ROOT_PATH . '/assets/inc/header.php';
 require ROOT_PATH . '/assets/inc/navbar.php';
+
+$prenomCmd = trim((string) ($_SESSION['prenom'] ?? ''));
+$nomCmd    = trim((string) ($_SESSION['nom'] ?? ''));
+$emailCmd  = (string) ($_SESSION['email'] ?? '');
+$initialesCmd = mb_strtoupper(mb_substr($prenomCmd, 0, 1) . mb_substr($nomCmd, 0, 1));
+if ($initialesCmd === '') {
+    $initialesCmd = '?';
+}
 ?>
 
-<div style="max-width: 1100px; margin: 0 auto;">
+<div class="page-profil">
 
     <div class="topbar">
         <h1>Mes commandes</h1>
-        <a href="<?php echo BASE_URL; ?>/index.php?route=client" class="btn btn-gold btn-sm">Consulter le menu</a>
+        <div class="topbar-actions">
+            <p class="profil-subtitle">Suivez vos commandes, du panier jusqu'à la livraison.</p>
+            <a href="<?php echo BASE_URL; ?>/index.php?route=client" class="btn btn-gold btn-sm">Consulter le menu</a>
+        </div>
+    </div>
+
+    <div class="profil-hero">
+        <span class="profil-hero-avatar"><?php echo htmlspecialchars($initialesCmd); ?></span>
+        <div class="profil-hero-info">
+            <strong><?php echo htmlspecialchars(trim($prenomCmd . ' ' . $nomCmd)); ?></strong>
+            <span><?php echo htmlspecialchars($emailCmd); ?></span>
+        </div>
     </div>
 
     <?php if (!empty($commandes)): ?>
-    <div class="panel">
+    <div class="panel profil-card">
         <div class="filter-bar">
             <div class="form-group">
                 <label>Filtrer</label>
@@ -81,7 +101,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
     </script>
 
     <?php else: ?>
-    <div class="panel">
+    <div class="panel profil-card">
         <div class="empty-state">
             Vous n'avez pas encore passé de commande.
             <br><br>

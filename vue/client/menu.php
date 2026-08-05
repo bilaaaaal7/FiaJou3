@@ -135,7 +135,7 @@ $jourLabel = [
         <h2><?php echo htmlspecialchars($catNom); ?></h2>
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px;">
             <?php foreach ($catPlats as $plat): ?>
-            <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden;">
+            <div class="dish-card" style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden;">
                 <a href="<?php echo BASE_URL; ?>/index.php?route=client/produit&id=<?php echo $plat['id']; ?>">
                     <img src="<?php echo UPLOADS_URL; ?>/<?php echo htmlspecialchars($plat['image']); ?>"
                          alt="<?php echo htmlspecialchars($plat['nom']); ?>"

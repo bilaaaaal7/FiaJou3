@@ -109,24 +109,35 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             left: 0;
             width: 100%;
             z-index: 999;
-            padding: 12px 0;
-            background: rgba(23, 23, 23, 0.92);
-            -webkit-backdrop-filter: blur(12px);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            transition: background-color .3s ease, box-shadow .3s ease, padding .3s ease;
+            padding: 10px 0;
+            background: rgba(23, 23, 23, 0.88);
+            -webkit-backdrop-filter: blur(14px);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+            transition: background-color .3s ease, box-shadow .3s ease, padding .3s ease, border-color .3s ease;
         }
         .header_section.is-scrolled {
             background: rgba(23, 23, 23, 0.97);
-            padding: 8px 0;
+            padding: 7px 0;
             box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
         }
+        .header_section .container { max-width: 1320px; }
 
-        /* ---------- Barre de navigation : alignement + espacements ---------- */
-        .custom_nav-container .navbar-nav {
-            padding-left: 0;
-            gap: 4px;
+        /* ---------- Barre de navigation : alignement + espacements uniformes ---------- */
+        .header_section .navbar {
+            display: flex;
             align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            min-height: 56px;
+            padding: 0;
+        }
+        .custom_nav-container .navbar-nav {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding-left: 0;
+            margin: 0;
         }
 
         .navbar-brand {
@@ -134,6 +145,8 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             align-items: center;
             gap: 12px;
             padding: 0;
+            margin: 0;
+            flex-shrink: 0;
         }
         .logo-mark { display: inline-flex; align-items: center; justify-content: center; }
         .logo-mark svg { display: block; width: 100%; height: 100%; }
@@ -145,26 +158,29 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             letter-spacing: 0.4px;
             color: #ffffff;
             line-height: 1;
+            white-space: nowrap;
         }
 
         .custom_nav-container .navbar-nav .nav-item .nav-link {
             position: relative;
-            padding: 9px 18px;
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 18px;
             margin: 0 2px;
             color: rgba(255, 255, 255, 0.85);
             text-transform: uppercase;
             font-weight: 600;
-            font-size: 0.93rem;
+            font-size: 0.9rem;
             letter-spacing: 0.5px;
             border-radius: 30px;
-            transition: color .3s ease, background-color .3s ease;
+            transition: color .3s ease, background-color .3s ease, transform .3s ease;
         }
         .custom_nav-container .navbar-nav .nav-item .nav-link::after {
             content: "";
             position: absolute;
             left: 18px;
             right: 18px;
-            bottom: 4px;
+            bottom: 5px;
             height: 2px;
             border-radius: 2px;
             background: var(--fj-or);
@@ -180,7 +196,13 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
         .custom_nav-container .navbar-nav .nav-item:hover .nav-link::after,
         .custom_nav-container .navbar-nav .nav-item.active .nav-link::after { transform: scaleX(1); }
 
-        .user_option { gap: 10px; }
+        .user_option {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+            flex-shrink: 0;
+        }
 
         /* ---------- Logo : le header et le hero sont sombres dans les DEUX thèmes ;
            la variante claire (texte Noir Charbon) y serait illisible,
@@ -193,14 +215,14 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
         .header_section .theme-toggle {
             width: 42px;
             height: 42px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.35);
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.30);
             color: #f5f5f5;
             border-radius: 50%;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            transition: background-color .3s ease, border-color .3s ease, color .3s ease, transform .3s ease;
+            transition: background-color .3s ease, border-color .3s ease, color .3s ease, transform .3s ease, box-shadow .3s ease;
         }
         .header_section .theme-toggle svg { width: 18px; height: 18px; }
         .header_section .theme-toggle [data-theme-icon="moon"] { display: none; }
@@ -211,6 +233,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             border-color: var(--fj-or);
             color: #ffffff;
             transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(184, 134, 24, 0.25);
         }
 
         /* ---------- Bouton "Commander" (header) ---------- */
@@ -313,7 +336,9 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             border-radius: 50%;
             background: radial-gradient(circle at 50% 38%, rgba(184, 134, 24, 0.18), rgba(184, 134, 24, 0) 68%);
             filter: drop-shadow(0 24px 48px rgba(0, 0, 0, 0.4));
-            animation: fj-float 6s ease-in-out infinite;
+            will-change: transform, box-shadow;
+            /* Flottement doux + respiration (échelle très légère) + glow discret */
+            animation: fj-hero-float 7s ease-in-out infinite;
         }
         .hero_icon::before {
             content: "";
@@ -350,6 +375,18 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
         @keyframes fj-float {
             0%, 100% { transform: translateY(0); }
             50%      { transform: translateY(-14px); }
+        }
+        /* Logo hero : monte/descend lentement, « respire » (scale très faible)
+           et diffuse un halo or discret — 60fps (transform + box-shadow uniquement). */
+        @keyframes fj-hero-float {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+                box-shadow: 0 0 0 0 rgba(184, 134, 24, 0), 0 24px 48px rgba(0, 0, 0, 0.35);
+            }
+            50% {
+                transform: translateY(-12px) scale(1.02);
+                box-shadow: 0 0 58px 12px rgba(184, 134, 24, 0.16), 0 24px 48px rgba(0, 0, 0, 0.35);
+            }
         }
 
         /* ---------- Boutons (partagés par la page d'accueil) ---------- */
@@ -1049,7 +1086,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
 
         /* Navbar claire */
         [data-theme="light"] .header_section {
-            background: rgba(255, 255, 255, 0.92);
+            background: rgba(255, 255, 255, 0.88);
             border-bottom: 1px solid rgba(0, 0, 0, 0.08);
         }
         [data-theme="light"] .header_section.is-scrolled {
@@ -1060,7 +1097,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
 
         /* Liens du menu en clair : texte noir, actif en pastille or */
         [data-theme="light"] .custom_nav-container .navbar-nav .nav-item .nav-link {
-            color: rgba(23, 23, 23, 0.82);
+            color: rgba(23, 23, 23, 0.80);
         }
         [data-theme="light"] .custom_nav-container .navbar-nav .nav-item:hover .nav-link,
         [data-theme="light"] .custom_nav-container .navbar-nav .nav-item.active .nav-link { color: #171717; }
@@ -1083,6 +1120,24 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             background: rgba(184, 134, 24, 0.15);
             border-color: var(--fj-or);
             color: var(--fj-or-sombre);
+            box-shadow: 0 6px 16px rgba(184, 134, 24, 0.20);
+        }
+
+        /* Icônes panier + menu profil en clair : bordure lisible, icône visible */
+        [data-theme="light"] .user_option .fj-cart-nav {
+            border-color: rgba(23, 23, 23, 0.28);
+            background: rgba(0, 0, 0, 0.04);
+            color: #171717;
+        }
+        [data-theme="light"] .user_option .fj-cart-nav:hover {
+            border-color: var(--fj-or);
+            background: rgba(184, 134, 24, 0.12);
+        }
+        [data-theme="light"] .user_option .fj-cart-nav:hover svg { color: var(--fj-or-sombre); }
+        [data-theme="light"] .header_section .profile-menu__trigger {
+            border-color: rgba(23, 23, 23, 0.28);
+            background: rgba(0, 0, 0, 0.04);
+            color: #171717;
         }
 
         /* Menu mobile (collapse) en clair */
@@ -1135,6 +1190,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
 
         /* ---------- Responsive : tablette & mobile ---------- */
         @media (max-width: 991px) {
+            .header_section { padding: 8px 0; }
             .custom_nav-container .navbar-collapse {
                 background: rgba(23, 23, 23, 0.97);
                 margin-top: 10px;
@@ -1147,11 +1203,17 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                 padding-left: 0;
                 align-items: center;
                 gap: 2px;
+                width: 100%;
+            }
+            .custom_nav-container .navbar-nav .nav-item {
+                width: 100%;
+                text-align: center;
             }
             .custom_nav-container .navbar-nav .nav-item .nav-link {
                 padding: 10px 20px;
                 margin: 2px 0;
-                text-align: center;
+                justify-content: center;
+                width: 100%;
             }
             .user_option {
                 justify-content: center;
@@ -1200,12 +1262,12 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             width: 42px;
             height: 42px;
             border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.22);
-            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.05);
             color: #ffffff;
             cursor: pointer;
             padding: 0;
-            transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+            transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease, background-color .2s ease;
         }
         .user_option .fj-cart-nav svg {
             width: 19px;
@@ -1216,6 +1278,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
         .user_option .fj-cart-nav:hover {
             border-color: var(--fj-or);
             transform: translateY(-1px);
+            background: rgba(184, 134, 24, 0.12);
             box-shadow: 0 6px 16px rgba(184, 134, 24, 0.28);
         }
         .user_option .fj-cart-nav:hover svg { color: #ffffff; }
@@ -1238,12 +1301,13 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
         }
         /* Le menu profil est aussi affiché dans le header public (fond sombre). */
         .header_section .profile-menu__trigger {
-            border-color: rgba(255, 255, 255, 0.22);
+            border-color: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.05);
             color: #ffffff;
         }
         .header_section .profile-menu__trigger .fa-user { color: var(--fj-or-clair); }
         @media (max-width: 991px) {
-            .user_option { justify-content: flex-start; }
+            .user_option { justify-content: center; }
         }
     </style>
 </head>
@@ -1465,7 +1529,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                 }
                 ?>
 
-                <div class="menu-days fj-reveal">
+                <div class="menu-days">
                     <?php foreach ($jourLabels as $jourKey => $jourLabel): ?>
                         <?php $itemsJour = $itemsParJour[$jourKey] ?? []; ?>
                         <?php if (empty($itemsJour)): continue; endif; ?>
@@ -1508,7 +1572,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                 </div>
 
                 <?php if (!empty($itemsSamedi)): ?>
-                <section class="menu-samedi fj-reveal fj-reveal-delay-1" data-fj-modal-open="samedi" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Voir le menu libre du samedi">
+                <section class="menu-samedi" data-fj-modal-open="samedi" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Voir le menu libre du samedi">
                     <header class="menu-samedi-head">
                         <h3 class="menu-samedi-title">Samedi — Menu libre</h3>
                         <?php if ($samediOuvert && $dateSamedi): ?>

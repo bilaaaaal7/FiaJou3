@@ -1,14 +1,24 @@
 <?php
 $pageTitle = "Mon profil - " . APP_NAME;
 $extraCss = ['admin.css'];
+$bodyClass = 'profil-sans-sidebar';
 require ROOT_PATH . '/assets/inc/header.php';
 require ROOT_PATH . '/assets/inc/navbar.php';
+
+$prenomProfil = trim((string) ($profil['prenom'] ?? ''));
+$nomProfil    = trim((string) ($profil['nom'] ?? ''));
+$emailProfil  = (string) ($profil['email'] ?? '');
+$initialesProfil = mb_strtoupper(mb_substr($prenomProfil, 0, 1) . mb_substr($nomProfil, 0, 1));
+if ($initialesProfil === '') {
+    $initialesProfil = '?';
+}
 ?>
 
-<div style="max-width: 800px; margin: 0 auto;">
+<div class="page-profil">
 
     <div class="topbar">
         <h1>Mon profil</h1>
+        <p class="profil-subtitle">Gérez vos informations personnelles et votre mot de passe.</p>
     </div>
 
     <?php if ($succes): ?>
@@ -19,8 +29,19 @@ require ROOT_PATH . '/assets/inc/navbar.php';
         <div class="alert-box alert-error"><?php echo htmlspecialchars($erreur); ?></div>
     <?php endif; ?>
 
-    <div class="panel">
-        <h2>Informations personnelles</h2>
+    <div class="profil-hero">
+        <span class="profil-hero-avatar"><?php echo htmlspecialchars($initialesProfil); ?></span>
+        <div class="profil-hero-info">
+            <strong><?php echo htmlspecialchars(trim($prenomProfil . ' ' . $nomProfil)); ?></strong>
+            <span><?php echo htmlspecialchars($emailProfil); ?></span>
+        </div>
+    </div>
+
+    <div class="panel profil-card">
+        <div class="profil-card-head">
+            <i data-lucide="user" aria-hidden="true"></i>
+            <h2>Informations personnelles</h2>
+        </div>
 
         <form method="POST" action="<?php echo BASE_URL; ?>/index.php?route=client/profil">
             <div class="form-grid">
@@ -68,8 +89,11 @@ require ROOT_PATH . '/assets/inc/navbar.php';
         </form>
     </div>
 
-    <div class="panel" style="margin-top:24px;">
-        <h2>Changer le mot de passe</h2>
+    <div class="panel profil-card">
+        <div class="profil-card-head">
+            <i data-lucide="lock" aria-hidden="true"></i>
+            <h2>Changer le mot de passe</h2>
+        </div>
 
         <form method="POST" action="<?php echo BASE_URL; ?>/index.php?route=client/profil">
             <div class="form-grid">

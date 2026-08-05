@@ -52,7 +52,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
                 </h2>
                 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
                     <?php foreach ($itemsParJour[$cle] as $item): ?>
-                    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden;">
+                    <div class="menu-week-card" style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden;">
                         <img src="<?php echo UPLOADS_URL; ?>/<?php echo htmlspecialchars($item['image']); ?>"
                              alt="<?php echo htmlspecialchars($item['plat_nom']); ?>"
                              style="width: 100%; height: 140px; object-fit: cover;">
@@ -90,7 +90,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
             <?php if (!empty($itemsSamedi)): ?>
                 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
                     <?php foreach ($itemsSamedi as $item): ?>
-                    <div style="background: var(--gold-light); border: 1px solid var(--border); border-radius: 12px; padding: 12px;">
+                    <div class="menu-week-card" style="background: var(--gold-light); border: 1px solid var(--border); border-radius: 12px; padding: 12px;">
                         <div style="font-weight: 600; font-size: 0.95rem;"><?php echo htmlspecialchars($item['plat_nom']); ?></div>
                         <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">
                             <?php echo htmlspecialchars($item['categorie']); ?>

@@ -1,44 +1,68 @@
 <?php
 $pageTitle = "Notifications - " . APP_NAME;
-$pageHeading = "Notifications";
 $extraCss = ['admin.css'];
+
+// Page partagée par tous les rôles : la mise en page « profil » (sans sidebar)
+// n'est appliquée que dans l'espace client. Les autres rôles conservent leur sidebar.
+$estClientNotif = utilisateur_role() === ROLE_CLIENT;
+if ($estClientNotif) {
+    $bodyClass = 'profil-sans-sidebar';
+}
 require ROOT_PATH . '/assets/inc/header.php';
 require ROOT_PATH . '/assets/inc/navbar.php';
+
+$prenomNotif = trim((string) ($_SESSION['prenom'] ?? ''));
+$nomNotif    = trim((string) ($_SESSION['nom'] ?? ''));
+$emailNotif  = (string) ($_SESSION['email'] ?? '');
+$initialesNotif = mb_strtoupper(mb_substr($prenomNotif, 0, 1) . mb_substr($nomNotif, 0, 1));
+if ($initialesNotif === '') {
+    $initialesNotif = '?';
+}
 ?>
 
-<div style="max-width:800px; margin:0 auto;">
+<div class="page-profil">
 
-    <div class="topbar" style="justify-content:flex-end;">
-        <?php if ($nbNonLues > 0): ?>
-        <a href="<?php echo BASE_URL; ?>/index.php?route=client/notifications&marquer_tout_lu=1" class="btn btn-outline btn-sm">Tout marquer comme lu</a>
-        <?php endif; ?>
+    <div class="topbar">
+        <h1>Notifications</h1>
+        <div class="topbar-actions">
+            <?php if ($nbNonLues > 0): ?>
+                <p class="profil-subtitle"><?php echo (int) $nbNonLues; ?> notification(s) non lue(s).</p>
+                <a href="<?php echo BASE_URL; ?>/index.php?route=client/notifications&marquer_tout_lu=1" class="btn btn-outline btn-sm">Tout marquer comme lu</a>
+            <?php else: ?>
+                <p class="profil-subtitle">Vous n'avez aucune notification non lue.</p>
+            <?php endif; ?>
+        </div>
     </div>
 
-    <?php if ($nbNonLues > 0): ?>
-    <p style="color:var(--text-muted); margin-bottom:16px;"><?php echo $nbNonLues; ?> notification(s) non lue(s).</p>
-    <?php endif; ?>
+    <div class="profil-hero">
+        <span class="profil-hero-avatar"><?php echo htmlspecialchars($initialesNotif); ?></span>
+        <div class="profil-hero-info">
+            <strong><?php echo htmlspecialchars(trim($prenomNotif . ' ' . $nomNotif)); ?></strong>
+            <span><?php echo htmlspecialchars($emailNotif); ?></span>
+        </div>
+    </div>
 
-    <div class="panel" style="padding:0;">
+    <div class="panel profil-card">
         <?php if (!empty($notifications)): ?>
             <?php foreach ($notifications as $n): ?>
-            <div style="padding:16px 20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:start; gap:12px; <?php echo !$n['est_lu'] ? 'background:var(--gold-light);' : ''; ?>">
-                <div>
-                    <div style="font-weight:600; margin-bottom:4px;">
-                        <?php if (!$n['est_lu']): ?>
-                            <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--gold-dark); margin-right:6px;"></span>
-                        <?php endif; ?>
+            <div class="notif-item<?php echo $n['est_lu'] ? '' : ' notif-unread'; ?>"
+                 style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px;">
+                <div style="min-width:0;">
+                    <div class="notif-title">
+                        <i data-lucide="bell" aria-hidden="true"></i>
                         <?php echo htmlspecialchars($n['titre']); ?>
                     </div>
-                    <div style="color:var(--text-muted); font-size:0.9rem; margin-bottom:4px;"><?php echo htmlspecialchars($n['message']); ?></div>
-                    <div style="color:var(--text-muted); font-size:0.8rem;"><?php echo $n['date_notification']; ?></div>
+                    <div class="notif-msg"><?php echo htmlspecialchars($n['message']); ?></div>
+                    <small><?php echo htmlspecialchars($n['date_notification']); ?></small>
                 </div>
                 <?php if (!$n['est_lu']): ?>
-                <a href="<?php echo BASE_URL; ?>/index.php?route=client/notifications&marquer_lu=<?php echo $n['id']; ?>" class="btn btn-outline btn-sm" style="white-space:nowrap;">Lu</a>
+                    <a href="<?php echo BASE_URL; ?>/index.php?route=client/notifications&marquer_lu=<?php echo (int) $n['id']; ?>"
+                       class="btn btn-outline btn-sm" style="white-space:nowrap;">Lu</a>
                 <?php endif; ?>
             </div>
             <?php endforeach; ?>
         <?php else: ?>
-            <div class="empty-state" style="padding:40px;">Aucune notification.</div>
+            <div class="empty-state">Aucune notification.</div>
         <?php endif; ?>
     </div>
 
