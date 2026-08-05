@@ -40,7 +40,7 @@ if (isset($_POST['register'])) {
         if ($existant) {
             $error = "Cet email est déjà utilisé.";
         } else {
-            $utilisateurModele->creerCompte([
+            $userId = $utilisateurModele->creerCompte([
                 'prenom' => $prenom,
                 'nom' => $nom,
                 'telephone' => $telephone,
@@ -51,7 +51,19 @@ if (isset($_POST['register'])) {
             ]);
 
             $limiteur->reinitialiser();
-            $success = "Compte créé avec succès. Vous pouvez vous connecter.";
+
+            // Auto-connexion : même comportement que le flux de connexion.
+            $profile = $utilisateurModele->findProfileByUserId($userId);
+
+            $_SESSION['user_id'] = $userId;
+            $_SESSION['prenom']  = $profile['prenom'];
+            $_SESSION['role']    = $profile['role'];
+            $_SESSION['email']   = $email;
+
+            $route = route_par_defaut_pour_role($profile['role']);
+
+            header('Location: ' . BASE_URL . '/index.php?route=' . $route);
+            exit;
         }
     }
     }
