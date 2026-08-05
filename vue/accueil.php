@@ -110,9 +110,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             width: 100%;
             z-index: 999;
             padding: 10px 0;
-            background: rgba(23, 23, 23, 0.88);
-            -webkit-backdrop-filter: blur(14px);
-            backdrop-filter: blur(14px);
+            background: rgba(23, 23, 23, 0.95);
             border-bottom: 1px solid rgba(255, 255, 255, 0.07);
             transition: background-color .3s ease, box-shadow .3s ease, padding .3s ease, border-color .3s ease;
         }
@@ -143,7 +141,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
         .navbar-brand {
             display: inline-flex;
             align-items: center;
-            gap: 12px;
+            gap: 0;
             padding: 0;
             margin: 0;
             flex-shrink: 0;
@@ -152,14 +150,6 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
         .logo-mark svg { display: block; width: 100%; height: 100%; }
         .logo-mark img { display: block; width: 100%; height: 100%; object-fit: contain; }
         .navbar-brand .logo-mark { width: 38px; height: 38px; flex-shrink: 0; }
-        .navbar-brand span {
-            font-weight: 800;
-            font-size: 26px;
-            letter-spacing: 0.4px;
-            color: #ffffff;
-            line-height: 1;
-            white-space: nowrap;
-        }
 
         .custom_nav-container .navbar-nav .nav-item .nav-link {
             position: relative;
@@ -1084,16 +1074,17 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
         [data-theme="light"] .logo-theme-light { display: block !important; }
         [data-theme="light"] .logo-theme-dark { display: none !important; }
 
-        /* Navbar claire */
+        /* Navbar claire : fond quasi transparent, intégrée au hero, avec une
+           simple ligne de séparation. Au scroll : fond légèrement plus présent
+           pour la lisibilité, ombre très discrète. */
         [data-theme="light"] .header_section {
-            background: rgba(255, 255, 255, 0.88);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            background: rgba(255, 255, 255, 0.55);
+            border-bottom: 1px solid rgba(23, 23, 23, 0.06);
         }
         [data-theme="light"] .header_section.is-scrolled {
-            background: rgba(255, 255, 255, 0.97);
-            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+            background: rgba(255, 255, 255, 0.90);
+            box-shadow: 0 6px 18px rgba(23, 23, 23, 0.08);
         }
-        [data-theme="light"] .navbar-brand span { color: #171717; }
 
         /* Liens du menu en clair : texte noir, actif en pastille or */
         [data-theme="light"] .custom_nav-container .navbar-nav .nav-item .nav-link {
@@ -1138,13 +1129,6 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             border-color: rgba(23, 23, 23, 0.28);
             background: rgba(0, 0, 0, 0.04);
             color: #171717;
-        }
-
-        /* Menu mobile (collapse) en clair */
-        [data-theme="light"] .custom_nav-container .navbar-collapse {
-            background: rgba(255, 255, 255, 0.98);
-            border-color: rgba(0, 0, 0, 0.08);
-            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.15);
         }
 
         /* Hero clair : fond blanc cassé, texte Noir Charbon */
@@ -1199,6 +1183,11 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                 border: 1px solid rgba(255, 255, 255, 0.08);
                 box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
             }
+            [data-theme="light"] .custom_nav-container .navbar-collapse {
+                background: rgba(255, 255, 255, 0.98);
+                border-color: rgba(0, 0, 0, 0.08);
+                box-shadow: 0 24px 48px rgba(0, 0, 0, 0.15);
+            }
             .custom_nav-container .navbar-nav {
                 padding-left: 0;
                 align-items: center;
@@ -1224,7 +1213,6 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
         }
 
         @media (max-width: 767px) {
-            .navbar-brand span { font-size: 22px; }
             .navbar-brand .logo-mark { width: 32px; height: 32px; }
             .slider_section--static { padding: 44px 0 64px; }
             .slider_section .detail-box h1 { font-size: 2.2rem; }
@@ -1332,7 +1320,6 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                 <nav class="navbar navbar-expand-lg custom_nav-container">
                     <a class="navbar-brand" href="<?php echo BASE_URL; ?>/index.php?route=accueil">
                         <span class="logo-mark"><?php include ROOT_PATH . '/assets/inc/logo.php'; ?></span>
-                        <span><?php echo htmlspecialchars(APP_NAME); ?></span>
                     </a>
 
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
