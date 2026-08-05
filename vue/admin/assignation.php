@@ -1,11 +1,10 @@
 <?php
 $pageTitle = "Assignation des commandes - " . APP_NAME;
+$pageHeading = "Assignation des commandes";
 $extraCss = ['admin.css'];
 require ROOT_PATH . '/assets/inc/header.php';
 require ROOT_PATH . '/assets/inc/navbar.php';
 ?>
-
-<h1>Assignation des commandes</h1>
 
 <?php if (!empty($message)): ?>
     <div class="alert-box alert-success"><?php echo htmlspecialchars($message); ?></div>

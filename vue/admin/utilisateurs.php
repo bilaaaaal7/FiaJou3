@@ -1,11 +1,10 @@
 <?php
 $pageTitle = "Gestion des utilisateurs - " . APP_NAME;
+$pageHeading = "Gestion des utilisateurs";
 $extraCss = ['admin.css'];
 require ROOT_PATH . '/assets/inc/header.php';
 require ROOT_PATH . '/assets/inc/navbar.php';
 ?>
-
-<h1>Gestion des utilisateurs</h1>
 
 <?php if (!empty($error)): ?>
     <div class="alert alert-danger py-2" role="alert"><?php echo htmlspecialchars($error); ?></div>

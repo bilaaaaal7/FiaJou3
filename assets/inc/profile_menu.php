@@ -47,6 +47,9 @@ if ($initiales === '') {
         <a role="menuitem" href="<?php echo BASE_URL; ?>/index.php?route=client/mes-commandes">
             <i class="fa fa-shopping-bag" aria-hidden="true"></i> Mes Commandes
         </a>
+        <a role="menuitem" href="<?php echo BASE_URL; ?>/index.php?route=parametres">
+            <i class="fa fa-cog" aria-hidden="true"></i> Paramètres
+        </a>
         <div class="profile-menu__divider"></div>
         <a role="menuitem" href="<?php echo BASE_URL; ?>/index.php?route=deconnexion" class="profile-menu__logout">
             <i class="fa fa-sign-out" aria-hidden="true"></i> Déconnexion

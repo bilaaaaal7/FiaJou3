@@ -1,11 +1,10 @@
 <?php
 $pageTitle = "Zones de livraison - " . APP_NAME;
+$pageHeading = "Zones de livraison";
 $extraCss = ['admin.css'];
 require ROOT_PATH . '/assets/inc/header.php';
 require ROOT_PATH . '/assets/inc/navbar.php';
 ?>
-
-<h1>Gestion des zones de livraison</h1>
 
 <?php if (!empty($erreur)): ?>
     <div class="alert-box alert-error"><?php echo htmlspecialchars($erreur); ?></div>

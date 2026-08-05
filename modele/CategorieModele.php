@@ -1,112 +1,66 @@
 <?php
 /**
  * Modele Categorie
- * Donnees stockees directement dans le code (modele/data/categories.php),
- * remplace l'ancien acces a la table `categories` en base de donnees.
+ * Acces a la table `categories` de la base de donnees (PDO).
  */
+
+require_once __DIR__ . '/Database.php';
 
 class CategorieModele
 {
-    private static ?array $categories = null;
+    private PDO $pdo;
 
-    private const DATA_FILE = __DIR__ . '/data/categories.php';
-
-    private function charger(): void
+    public function __construct()
     {
-        if (self::$categories === null) {
-            self::$categories = require self::DATA_FILE;
-        }
-    }
-
-    /**
-     * Reecrit le fichier data/categories.php avec le tableau courant.
-     */
-    private function sauvegarder(): void
-    {
-        $export = "<?php\n"
-            . "/**\n"
-            . " * Donnees statiques des categories.\n"
-            . " * Remplace la table `categories` de la base de donnees.\n"
-            . " * Fichier regenere automatiquement par CategorieModele.\n"
-            . " */\n\n"
-            . "return " . var_export(self::$categories, true) . ";\n";
-
-        file_put_contents(self::DATA_FILE, $export);
+        $this->pdo = Database::getConnection();
     }
 
     public function getToutes(): array
     {
-        $this->charger();
-        return array_values(self::$categories);
+        $stmt = $this->pdo->query("SELECT * FROM categories ORDER BY id");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getParId(int $id): array|false
     {
-        $this->charger();
-        return self::$categories[$id] ?? false;
+        $stmt = $this->pdo->prepare("SELECT * FROM categories WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function creer(string $nom, string $description, string $image): void
+    public function creer(string $nom, string $description, ?string $image = null): void
     {
-        $this->charger();
-
-        $nouvelId = self::$categories ? max(array_keys(self::$categories)) + 1 : 1;
-
-        self::$categories[$nouvelId] = [
-            'id' => $nouvelId,
-            'nom' => $nom,
-            'description' => $description,
-            'image' => $image,
-        ];
-
-        $this->sauvegarder();
+        $stmt = $this->pdo->prepare(
+            "INSERT INTO categories (nom, description, image) VALUES (?, ?, ?)"
+        );
+        $stmt->execute([$nom, $description, $image]);
     }
 
-    public function mettreAJour(int $id, string $nom, string $description, string $image): void
+    public function mettreAJour(int $id, string $nom, string $description, ?string $image = null): void
     {
-        $this->charger();
-
-        if (!isset(self::$categories[$id])) {
-            return;
-        }
-
-        self::$categories[$id] = [
-            'id' => $id,
-            'nom' => $nom,
-            'description' => $description,
-            'image' => $image,
-        ];
-
-        $this->sauvegarder();
+        $stmt = $this->pdo->prepare(
+            "UPDATE categories SET nom = ?, description = ?, image = ? WHERE id = ?"
+        );
+        $stmt->execute([$nom, $description, $image, $id]);
     }
 
     public function supprimer(int $id): bool
     {
-        $this->charger();
-
-        if (!isset(self::$categories[$id])) {
-            return false;
-        }
-
-        // Meme comportement que l'ancienne contrainte de cle etrangere :
-        // on refuse la suppression si des plats appartiennent encore a cette categorie.
-        require_once __DIR__ . '/PlatModele.php';
-        $platModele = new PlatModele();
-        foreach ($platModele->getTous() as $plat) {
-            if ((int) $plat['category_id'] === $id) {
+        try {
+            $stmt = $this->pdo->prepare("DELETE FROM categories WHERE id = ?");
+            $stmt->execute([$id]);
+            return $stmt->rowCount() > 0;
+        } catch (PDOException $e) {
+            // Contrainte de cle etrangere : la categorie contient encore des plats.
+            if ($e->getCode() === '23000') {
                 return false;
             }
+            throw $e;
         }
-
-        unset(self::$categories[$id]);
-        $this->sauvegarder();
-
-        return true;
     }
 
     public function compter(): int
     {
-        $this->charger();
-        return count(self::$categories);
+        return (int) $this->pdo->query("SELECT COUNT(*) FROM categories")->fetchColumn();
     }
 }

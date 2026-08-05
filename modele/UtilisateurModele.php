@@ -22,6 +22,13 @@ class UtilisateurModele
         return $stmt->fetch();
     }
 
+    public function findById(int $id): array|false
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM users WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch();
+    }
+
     public function findProfileByUserId(int $userId): array|false
     {
         $stmt = $this->pdo->prepare("SELECT * FROM profiles WHERE user_id = ?");
@@ -189,6 +196,25 @@ class UtilisateurModele
         $hashed = password_hash($nouveauMdp, PASSWORD_DEFAULT);
         $stmt = $this->pdo->prepare("UPDATE users SET password = ? WHERE id = ?");
         $stmt->execute([$hashed, $id]);
+    }
+
+    /**
+     * Met à jour l'email d'un compte. Retourne false si l'email est déjà
+     * utilisé par un autre compte.
+     */
+    public function changerEmail(int $id, string $email): bool
+    {
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM users WHERE email = ? AND id != ?");
+        $stmt->execute([$email, $id]);
+
+        if ((int) $stmt->fetchColumn() > 0) {
+            return false;
+        }
+
+        $stmt = $this->pdo->prepare("UPDATE users SET email = ? WHERE id = ?");
+        $stmt->execute([$email, $id]);
+
+        return true;
     }
 
     public function setActif(int $id, bool $actif): void

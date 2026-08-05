@@ -1,5 +1,6 @@
 <?php
 $pageTitle = "Espace livreur - " . APP_NAME;
+$pageHeading = "Espace livreur";
 $extraCss = ['admin.css'];
 require ROOT_PATH . '/assets/inc/header.php';
 require ROOT_PATH . '/assets/inc/navbar.php';

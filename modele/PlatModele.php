@@ -1,46 +1,31 @@
 <?php
 /**
  * Modele Plat
- * Donnees stockees directement dans le code (modele/data/plats.php),
- * remplace l'ancien acces a la table `plats` en base de donnees.
+ * Acces a la table `plats` de la base de donnees (PDO).
  */
 
 require_once __DIR__ . '/Database.php';
-require_once __DIR__ . '/CategorieModele.php';
 
 class PlatModele
 {
-    private static ?array $plats = null;
+    private PDO $pdo;
 
-    private const DATA_FILE = __DIR__ . '/data/plats.php';
-
-    private function charger(): void
+    public function __construct()
     {
-        if (self::$plats === null) {
-            self::$plats = require self::DATA_FILE;
-        }
-    }
-
-    /**
-     * Reecrit le fichier data/plats.php avec le tableau courant.
-     */
-    private function sauvegarder(): void
-    {
-        $export = "<?php\n"
-            . "/**\n"
-            . " * Donnees statiques des plats.\n"
-            . " * Remplace la table `plats` de la base de donnees.\n"
-            . " * Fichier regenere automatiquement par PlatModele.\n"
-            . " */\n\n"
-            . "return " . var_export(self::$plats, true) . ";\n";
-
-        file_put_contents(self::DATA_FILE, $export);
+        $this->pdo = Database::getConnection();
     }
 
     public function getTous(): array
     {
-        $this->charger();
-        return array_values(self::$plats);
+        $stmt = $this->pdo->query("SELECT * FROM plats ORDER BY id");
+        $plats = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($plats as &$plat) {
+            $plat['prix'] = (float) $plat['prix'];
+        }
+        unset($plat);
+
+        return $plats;
     }
 
     /**
@@ -48,112 +33,99 @@ class PlatModele
      */
     public function getMenu(): array
     {
-        $this->charger();
+        $stmt = $this->pdo->query(
+            "SELECT p.id, p.nom, p.description, p.prix, p.image, p.disponible,
+                    c.nom AS categorie
+             FROM plats p
+             INNER JOIN categories c ON c.id = p.category_id
+             ORDER BY c.nom, p.nom"
+        );
 
-        $categorieModele = new CategorieModele();
-        $categories = [];
-        foreach ($categorieModele->getToutes() as $categorie) {
-            $categories[$categorie['id']] = $categorie['nom'];
+        $menu = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($menu as &$plat) {
+            $plat['id'] = (int) $plat['id'];
+            $plat['prix'] = (float) $plat['prix'];
+            $plat['disponible'] = (int) $plat['disponible'];
         }
-
-        $menu = [];
-        foreach (self::$plats as $plat) {
-            if (!isset($categories[$plat['category_id']])) {
-                continue; // equivalent a l'INNER JOIN d'origine
-            }
-
-            $menu[] = [
-                'id' => $plat['id'],
-                'nom' => $plat['nom'],
-                'description' => $plat['description'],
-                'prix' => $plat['prix'],
-                'image' => $plat['image'],
-                'disponible' => $plat['disponible'],
-                'categorie' => $categories[$plat['category_id']],
-            ];
-        }
-
-        usort($menu, function ($a, $b) {
-            return [$a['categorie'], $a['nom']] <=> [$b['categorie'], $b['nom']];
-        });
+        unset($plat);
 
         return $menu;
     }
 
     public function getParId(int $id): array|false
     {
-        $this->charger();
-        return self::$plats[$id] ?? false;
+        $stmt = $this->pdo->prepare("SELECT * FROM plats WHERE id = ?");
+        $stmt->execute([$id]);
+
+        $plat = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($plat) {
+            $plat['prix'] = (float) $plat['prix'];
+        }
+
+        return $plat;
     }
 
     public function creer(array $donnees): void
     {
-        $this->charger();
-
-        $nouvelId = self::$plats ? max(array_keys(self::$plats)) + 1 : 1;
-
-        self::$plats[$nouvelId] = [
-            'id' => $nouvelId,
-            'category_id' => (int) $donnees['category_id'],
-            'nom' => $donnees['nom'],
-            'description' => $donnees['description'],
-            'prix' => (float) $donnees['prix'],
-            'image' => $donnees['image'],
-            'disponible' => (int) $donnees['disponible'],
-        ];
-
-        $this->sauvegarder();
+        $stmt = $this->pdo->prepare(
+            "INSERT INTO plats (category_id, nom, description, prix, image, disponible)
+             VALUES (?, ?, ?, ?, ?, ?)"
+        );
+        $stmt->execute([
+            (int) $donnees['category_id'],
+            $donnees['nom'],
+            $donnees['description'] ?? null,
+            (float) $donnees['prix'],
+            $donnees['image'] ?? null,
+            (int) ($donnees['disponible'] ?? 1),
+        ]);
     }
 
     public function mettreAJour(int $id, array $donnees): void
     {
-        $this->charger();
-
-        if (!isset(self::$plats[$id])) {
-            return;
-        }
-
-        self::$plats[$id] = [
-            'id' => $id,
-            'category_id' => (int) $donnees['category_id'],
-            'nom' => $donnees['nom'],
-            'description' => $donnees['description'],
-            'prix' => (float) $donnees['prix'],
-            'image' => $donnees['image'],
-            'disponible' => (int) $donnees['disponible'],
-        ];
-
-        $this->sauvegarder();
+        $stmt = $this->pdo->prepare(
+            "UPDATE plats
+             SET category_id = ?, nom = ?, description = ?, prix = ?, image = ?, disponible = ?
+             WHERE id = ?"
+        );
+        $stmt->execute([
+            (int) $donnees['category_id'],
+            $donnees['nom'],
+            $donnees['description'] ?? null,
+            (float) $donnees['prix'],
+            $donnees['image'] ?? null,
+            (int) ($donnees['disponible'] ?? 1),
+            $id,
+        ]);
     }
 
     public function supprimer(int $id): bool
     {
-        $this->charger();
-
-        if (!isset(self::$plats[$id])) {
-            return false;
-        }
-
-        // Meme comportement que l'ancienne contrainte de cle etrangere :
-        // on refuse la suppression si le plat fait partie de commandes existantes.
-        $pdo = Database::getConnection();
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM order_items WHERE product_id = ?");
+        // Refuse la suppression si le plat fait partie de commandes existantes
+        // (meme comportement que l'ancienne contrainte de cle etrangere).
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM order_items WHERE product_id = ?");
         $stmt->execute([$id]);
 
         if ((int) $stmt->fetchColumn() > 0) {
             return false;
         }
 
-        unset(self::$plats[$id]);
-        $this->sauvegarder();
-
-        return true;
+        try {
+            $stmt = $this->pdo->prepare("DELETE FROM plats WHERE id = ?");
+            $stmt->execute([$id]);
+            return $stmt->rowCount() > 0;
+        } catch (PDOException $e) {
+            // Contrainte de cle etrangere (ex : plat present dans un menu de la semaine).
+            if ($e->getCode() === '23000') {
+                return false;
+            }
+            throw $e;
+        }
     }
 
     public function compter(): int
     {
-        $this->charger();
-        return count(self::$plats);
+        return (int) $this->pdo->query("SELECT COUNT(*) FROM plats")->fetchColumn();
     }
 
     /**
