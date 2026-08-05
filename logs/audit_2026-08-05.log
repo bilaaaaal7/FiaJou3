@@ -100,3 +100,12 @@
 [2026-08-05 15:15:36] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.publier details="id=12" ip=::1
 [2026-08-05 15:16:15] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
 [2026-08-05 15:18:25] user=5 email=ismailsghir107@gmail.com role=admin action=plat.creer details="nom=Tajine pruneaux  prix=100" ip=::1
+[2026-08-05 15:27:43] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-05 15:38:45] user=1 email=admin@test role=admin action=menu_semaine.modifier_plat details="item_id=49 product_id=25 menu_id=15" ip=127.0.0.1
+[2026-08-05 15:39:33] user=1 email=admin@test role=admin action=menu_semaine.creer_semaine details="semaine=2026-08-10 -> 2026-08-16" ip=127.0.0.1
+[2026-08-05 15:39:33] user=1 email=admin@test role=admin action=menu_semaine.dupliquer details="source_id=16 semaine=2026-08-17 -> 2026-08-23" ip=127.0.0.1
+[2026-08-05 15:39:44] user=1 email=admin@test role=admin action=menu_semaine.creer_semaine details="semaine=2026-08-10 -> 2026-08-16" ip=127.0.0.1
+[2026-08-05 15:40:10] user=1 email=admin@test role=admin action=menu_semaine.dupliquer details="source_id=18 semaine=2026-08-17 -> 2026-08-23" ip=127.0.0.1
+[2026-08-05 15:40:29] user=1 email=admin@test role=admin action=menu_semaine.dupliquer details="source_id=1 semaine=2026-08-10 -> 2026-08-16" ip=127.0.0.1
+[2026-08-05 15:42:22] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-05 15:44:26] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1

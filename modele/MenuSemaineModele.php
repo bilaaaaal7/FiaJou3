@@ -28,6 +28,22 @@ class MenuSemaineModele
         return $stmt->fetch();
     }
 
+    /**
+     * Menu couvrant une période hebdomadaire précise (lundi → dimanche).
+     * Un menu publié prime sur un brouillon, lui-même prioritaire sur un
+     * menu archivé ; à statut égal, le plus récemment créé l'emporte.
+     */
+    public function getParSemaine(string $weekStart, string $weekEnd): array|false
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT * FROM weekly_menus
+             WHERE week_start = ? AND week_end = ?
+             ORDER BY (statut = 'archive'), date_creation DESC LIMIT 1"
+        );
+        $stmt->execute([$weekStart, $weekEnd]);
+        return $stmt->fetch();
+    }
+
     public function getPublie(): array|false
     {
         $stmt = $this->pdo->query(
@@ -54,11 +70,21 @@ class MenuSemaineModele
 
         foreach ($items as &$item) {
             $plat = $platModele->getParId((int) $item['product_id']);
-            $item['plat_nom'] = $plat['nom'] ?? null;
-            $item['prix'] = $plat['prix'] ?? null;
+            // L'entrée du menu possède son propre "instantané" (nom, description,
+            // prix, catégorie) : s'il est renseigné il prime sur le plat, sinon on
+            // retombe sur les valeurs du produit réutilisable. Modifier une semaine
+            // n'affecte donc jamais les autres semaines ni le plat lui-même.
+            $item['plat_nom'] = $item['nom'] ?: ($plat['nom'] ?? null);
+            $item['prix'] = $item['prix'] ?? ($plat['prix'] ?? null);
             $item['image'] = $plat['image'] ?? null;
             $item['disponible'] = $plat['disponible'] ?? null;
-            $item['categorie'] = $plat ? ($categories[$plat['category_id']] ?? null) : null;
+            $item['description'] = $item['description'] ?? ($plat['description'] ?? null);
+            $item['categorie_id'] = $item['category_id'] !== null
+                ? (int) $item['category_id']
+                : (int) ($plat['category_id'] ?? 0);
+            $item['categorie'] = $item['categorie_id']
+                ? ($categories[$item['categorie_id']] ?? null)
+                : null;
         }
         unset($item);
 
@@ -107,17 +133,36 @@ class MenuSemaineModele
     /**
      * Ajoute un plat au menu pour un jour donné. Si aucune position n'est
      * fournie, le plat est ajouté à la fin du jour. Plusieurs plats peuvent
-     * être ajoutés au même jour.
+     * être ajoutés au même jour (et un même plat peut figurer plusieurs jours
+     * dans la même semaine : aucune contrainte d'unicité).
+     *
+     * Au moment de l'ajout, un "instantané" du plat (nom, description, prix,
+     * catégorie) est copié dans la ligne du menu : chaque semaine garde ainsi
+     * sa propre version indépendante du produit réutilisable.
      */
     public function ajouterItem(int $menuId, int $productId, string $jour, ?int $position = null): void
     {
         if ($position === null) {
             $position = $this->getProchainePosition($menuId, $jour);
         }
+        require_once __DIR__ . '/PlatModele.php';
+        $platModele = new PlatModele();
+        $plat = $platModele->getParId($productId);
         $stmt = $this->pdo->prepare(
-            "INSERT INTO weekly_menu_items (weekly_menu_id, product_id, jour, position) VALUES (?, ?, ?, ?)"
+            "INSERT INTO weekly_menu_items
+                (weekly_menu_id, product_id, jour, position, nom, description, prix, category_id)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
         );
-        $stmt->execute([$menuId, $productId, $jour, $position]);
+        $stmt->execute([
+            $menuId,
+            $productId,
+            $jour,
+            $position,
+            $plat['nom'] ?? null,
+            $plat['description'] ?? null,
+            $plat['prix'] ?? null,
+            $plat['category_id'] ?? null,
+        ]);
     }
 
     /**
@@ -185,6 +230,50 @@ class MenuSemaineModele
     {
         $stmt = $this->pdo->prepare("DELETE FROM weekly_menu_items WHERE id = ?");
         $stmt->execute([$itemId]);
+    }
+
+    /**
+     * Modifie une entrée du menu de la semaine : remplace le plat référencé
+     * et/ou les attributs affichés CETTE semaine (nom, description, prix,
+     * catégorie). Seule la ligne du menu est touchée : le plat réutilisable
+     * et les autres semaines restent inchangés.
+     */
+    public function modifierItem(int $itemId, array $donnees): void
+    {
+        $stmt = $this->pdo->prepare(
+            "UPDATE weekly_menu_items
+             SET product_id = ?, nom = ?, description = ?, prix = ?, category_id = ?
+             WHERE id = ?"
+        );
+        $stmt->execute([
+            (int) $donnees['product_id'],
+            trim($donnees['nom'] ?? '') !== '' ? trim($donnees['nom']) : null,
+            trim($donnees['description'] ?? '') !== '' ? trim($donnees['description']) : null,
+            isset($donnees['prix']) && $donnees['prix'] !== '' ? (float) $donnees['prix'] : null,
+            !empty($donnees['category_id']) ? (int) $donnees['category_id'] : null,
+            $itemId,
+        ]);
+    }
+
+    /**
+     * Duplique un menu de semaine : crée un nouveau menu (brouillon) pour la
+     * période donnée et recopie toutes les entrées du menu source, jour,
+     * position et instantanés compris. Chaque semaine reste indépendante.
+     *
+     * @return int id du nouveau menu
+     */
+    public function dupliquer(int $sourceId, string $nom, string $weekStart, string $weekEnd): int
+    {
+        $nouveauId = $this->creer($nom, $weekStart, $weekEnd);
+        $stmt = $this->pdo->prepare(
+            "INSERT INTO weekly_menu_items
+                (weekly_menu_id, product_id, jour, position, nom, description, prix, category_id)
+             SELECT ?, product_id, jour, position, nom, description, prix, category_id
+             FROM weekly_menu_items
+             WHERE weekly_menu_id = ?"
+        );
+        $stmt->execute([$nouveauId, $sourceId]);
+        return $nouveauId;
     }
 
     /**
@@ -468,5 +557,41 @@ class MenuSemaineModele
             'lundi' => 1, 'mardi' => 2, 'mercredi' => 3, 'jeudi' => 4,
             'vendredi' => 5, 'samedi' => 6, 'dimanche' => 7,
         ];
+    }
+
+    /**
+     * Lundi de la semaine contenant la date donnée (défaut : aujourd'hui).
+     * Les semaines commencent le lundi et se terminent le dimanche.
+     */
+    public static function debutSemaine(?string $date = null): string
+    {
+        $ts = $date ? strtotime($date) : time();
+        return date('Y-m-d', strtotime('monday this week', $ts));
+    }
+
+    /**
+     * Dimanche de fin de semaine pour un lundi donné (lundi + 6 jours).
+     */
+    public static function finSemaine(string $lundi): string
+    {
+        return date('Y-m-d', strtotime($lundi . ' +6 days'));
+    }
+
+    /**
+     * Numéro de semaine ISO (1-53) d'une date donnée.
+     */
+    public static function numeroSemaine(string $date): int
+    {
+        return (int) date('W', strtotime($date));
+    }
+
+    /**
+     * Libellé lisible d'une semaine : "Semaine 32 — 03/08/2026 → 09/08/2026".
+     */
+    public static function libelleSemaine(string $lundi, string $dimanche): string
+    {
+        return 'Semaine ' . self::numeroSemaine($lundi)
+            . ' — ' . date('d/m/Y', strtotime($lundi))
+            . ' → ' . date('d/m/Y', strtotime($dimanche));
     }
 }

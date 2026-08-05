@@ -1293,3 +1293,119 @@ body.sidebar-open .sidebar-overlay {
     .fiajou-navbar .navbar-collapse { padding: 10px 0; }
     .fiajou-navbar .nav-link { padding: 6px 0; }
 }
+
+/* ---------- Menu de la semaine : planification hebdomadaire ---------- */
+.week-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.week-header-top h2 { margin: 0; }
+
+.week-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.week-nav-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.week-label {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.week-dates {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.week-nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.dish-chip-actions { flex-wrap: wrap; }
+.dish-chip-actions .btn { padding: 5px 10px; }
+
+/* ---------- Modale "Modifier un plat" ---------- */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(15, 15, 15, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-overlay[hidden] { display: none; }
+
+.modal-box {
+    width: 100%;
+    max-width: 520px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: 16px;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.25);
+    padding: 22px;
+}
+
+.modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.modal-head h3 { margin: 0; font-size: 1.1rem; }
+
+.modal-close {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 1.4rem;
+    line-height: 1;
+    color: var(--text-muted);
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    transition: background .18s ease, color .18s ease;
+}
+
+.modal-close:hover { background: var(--sidebar-hover); color: var(--gold-dark); }
+
+.modal-error {
+    color: var(--danger);
+    font-size: 0.85rem;
+    margin: 10px 0 0;
+    font-weight: 600;
+}
+
+body.modal-open { overflow: hidden; }
+
+[data-theme="dark"] .modal-overlay { background: rgba(0, 0, 0, 0.65); }
+[data-theme="dark"] .modal-box { box-shadow: 0 24px 48px rgba(0, 0, 0, 0.55); }
+
+@media (max-width: 600px) {
+    .week-nav-actions { width: 100%; }
+    .week-nav-actions .btn { flex: 1 1 auto; justify-content: center; }
+    .modal-box { padding: 16px; }
+}
