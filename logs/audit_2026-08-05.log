@@ -29,3 +29,4 @@
 [2026-08-05 12:36:11] user=5 email=elbbilal00@gmail.com role=admin action=plat.creer details="nom=-- prix=1" ip=::1
 [2026-08-05 12:36:15] user=5 email=elbbilal00@gmail.com role=admin action=plat.supprimer details="id=34" ip=::1
 >>>>>>> 648cc781b1da634463d974574d4cbd2989374fb3
+[2026-08-05 13:23:17] user=5 email=elbbilal00@gmail.com role=admin action=connexion.reussie details="email=elbbilal00@gmail.com" ip=::1
