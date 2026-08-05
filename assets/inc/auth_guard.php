@@ -25,7 +25,7 @@ function route_par_defaut_pour_role(?string $role): string
 {
     $redirects = [
         ROLE_ADMIN     => 'admin',
-        ROLE_CLIENT    => 'client/dashboard',
+        ROLE_CLIENT    => 'accueil',
         ROLE_CUISINIER => 'cuisinier',
         ROLE_LIVREUR   => 'livreur',
     ];

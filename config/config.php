@@ -33,9 +33,9 @@ define('ROLE_LIVREUR', 'driver');
 // Heure limite de commande pour une livraison le lendemain (cahier des charges).
 define('HEURE_LIMITE_COMMANDE', '21:00');
 
-// Jours composant le menu hebdomadaire : un plat spécifique est configuré
-// pour chacun de ces jours par l'administrateur (règle actuelle : un seul plat
-// par jour). Le samedi n'en fait pas partie : c'est un jour de "menu libre".
+// Jours composant le menu hebdomadaire : l'administrateur configure les plats
+// de chacun de ces jours (plusieurs plats possibles par jour). Le samedi n'en
+// fait pas partie : c'est un jour de "menu libre".
 define('JOURS_MENU', ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'dimanche']);
 
 // Samedi : jour de "menu libre". Aucun plat spécifique n'est configuré ;

@@ -6,12 +6,18 @@
  * on le renvoie directement vers son espace.
  */
 
-if (est_connecte()) {
+if (est_connecte() && utilisateur_role() !== ROLE_CLIENT) {
     header('Location: ' . BASE_URL . '/index.php?route=' . route_par_defaut_pour_role(utilisateur_role()));
     exit;
 }
 
 require_once ROOT_PATH . '/modele/MenuSemaineModele.php';
+require_once ROOT_PATH . '/modele/PanierModele.php';
+
+$panierNb = 0;
+if (est_connecte() && utilisateur_role() === ROLE_CLIENT) {
+    $panierNb = (new PanierModele())->nombreArticles();
+}
 
 $menuSemaineModele = new MenuSemaineModele();
 $menu = $menuSemaineModele->getPublie();

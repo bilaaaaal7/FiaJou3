@@ -23,9 +23,15 @@ if (!est_connecte() || utilisateur_role() !== ROLE_CLIENT) {
 $profileMenuVariant = $profileMenuVariant ?? 'dark';
 $prenomUser = $_SESSION['prenom'] ?? '';
 $nomUser    = $_SESSION['nom'] ?? '';
-$initiales  = strtoupper(mb_substr($prenomUser, 0, 1) . mb_substr($nomUser, 0, 1));
+$initiales = strtoupper(mb_substr($prenomUser, 0, 1) . mb_substr($nomUser, 0, 1));
 if ($initiales === '') {
     $initiales = '?';
+}
+
+$nbNotifsNonLues = 0;
+if (!empty($_SESSION['user_id'])) {
+    require_once ROOT_PATH . '/modele/NotificationModele.php';
+    $nbNotifsNonLues = (new NotificationModele())->compterNonLues((int) $_SESSION['user_id']);
 }
 ?>
 <div class="profile-menu profile-menu--<?php echo htmlspecialchars($profileMenuVariant); ?>" data-profile-menu>
@@ -46,6 +52,12 @@ if ($initiales === '') {
         </a>
         <a role="menuitem" href="<?php echo BASE_URL; ?>/index.php?route=client/mes-commandes">
             <i class="fa fa-shopping-bag" aria-hidden="true"></i> Mes Commandes
+        </a>
+        <a role="menuitem" href="<?php echo BASE_URL; ?>/index.php?route=client/notifications">
+            <i class="fa fa-bell" aria-hidden="true"></i> Notifications
+            <?php if ($nbNotifsNonLues > 0): ?>
+                <span class="profile-menu__badge"><?php echo $nbNotifsNonLues > 9 ? '9+' : $nbNotifsNonLues; ?></span>
+            <?php endif; ?>
         </a>
         <a role="menuitem" href="<?php echo BASE_URL; ?>/index.php?route=parametres">
             <i class="fa fa-cog" aria-hidden="true"></i> Paramètres

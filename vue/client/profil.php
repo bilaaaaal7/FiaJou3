@@ -63,7 +63,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
 
             <div class="form-actions">
                 <button type="submit" name="modifier" class="btn btn-gold">Enregistrer les modifications</button>
-                <a href="<?php echo BASE_URL; ?>/index.php?route=client/dashboard" class="btn btn-outline">Annuler</a>
+                <a href="<?php echo BASE_URL; ?>/index.php?route=client/profil" class="btn btn-outline">Annuler</a>
             </div>
         </form>
     </div>

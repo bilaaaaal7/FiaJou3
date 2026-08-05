@@ -29,3 +29,74 @@
 [2026-08-05 12:36:11] user=5 email=elbbilal00@gmail.com role=admin action=plat.creer details="nom=-- prix=1" ip=::1
 [2026-08-05 12:36:15] user=5 email=elbbilal00@gmail.com role=admin action=plat.supprimer details="id=34" ip=::1
 >>>>>>> 648cc781b1da634463d974574d4cbd2989374fb3
+[2026-08-05 13:08:17] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-05 13:09:21] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-05 13:13:07] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-05 13:20:26] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-05 13:31:58] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-05 13:40:24] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-05 13:45:44] user=14 email=refactor.test@fiajou3.ma role=admin action=commande.statut details="id=13 nouveau_statut=en_preparation cook_id=7 driver_id=-" ip=::1
+[2026-08-05 13:46:39] user=14 email=refactor.test@fiajou3.ma role=admin action=commande.statut details="id=13 nouveau_statut=en_livraison cook_id=- driver_id=8" ip=::1
+[2026-08-05 14:47:06] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-05 15:01:42] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-05 15:03:15] user=5 email=ismailsghir107@gmail.com role=admin action=commande.statut details="id=11 nouveau_statut=livree cook_id=11 driver_id=" ip=::1
+[2026-08-05 15:03:46] user=5 email=ismailsghir107@gmail.com role=admin action=commande.statut details="id=8 nouveau_statut=en_livraison cook_id=11 driver_id=8" ip=::1
+[2026-08-05 15:04:00] user=5 email=ismailsghir107@gmail.com role=admin action=commande.statut details="id=8 nouveau_statut=livree cook_id=11 driver_id=8" ip=::1
+[2026-08-05 15:12:43] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.creer details="nom=TEST MENU MULTI semaine=2026-08-17 -> 2026-08-23" ip=::1
+[2026-08-05 15:13:12] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.creer details="nom=TEST MENU MULTI semaine=2026-08-17 -> 2026-08-23" ip=::1
+[2026-08-05 15:13:12] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.ajouter_plat details="menu_id=6 product_id=14 jour=jeudi" ip=::1
+[2026-08-05 15:13:12] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.ajouter_plat details="menu_id=6 product_id=15 jour=jeudi" ip=::1
+[2026-08-05 15:13:12] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.ajouter_plat details="menu_id=6 product_id=24 jour=jeudi" ip=::1
+[2026-08-05 15:13:12] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.ajouter_plat details="menu_id=6 product_id=26 jour=lundi" ip=::1
+[2026-08-05 15:13:12] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.deplacer_plat details="item_id=15 direction=descendre menu_id=6" ip=::1
+[2026-08-05 15:13:13] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.supprimer_plat details="item_id=15 menu_id=6" ip=::1
+[2026-08-05 15:13:13] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.publier details="id=6" ip=::1
+[2026-08-05 15:13:27] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.creer details="nom=TEST MENU MULTI semaine=2026-08-17 -> 2026-08-23" ip=::1
+[2026-08-05 15:13:27] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.ajouter_plat details="menu_id=7 product_id=14 jour=jeudi" ip=::1
+[2026-08-05 15:13:27] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.ajouter_plat details="menu_id=7 product_id=15 jour=jeudi" ip=::1
+[2026-08-05 15:13:27] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.ajouter_plat details="menu_id=7 product_id=24 jour=jeudi" ip=::1
+[2026-08-05 15:13:28] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.ajouter_plat details="menu_id=7 product_id=26 jour=lundi" ip=::1
+[2026-08-05 15:13:28] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.deplacer_plat details="item_id=19 direction=descendre menu_id=7" ip=::1
+[2026-08-05 15:13:28] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.supprimer_plat details="item_id=19 menu_id=7" ip=::1
+[2026-08-05 15:13:28] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.publier details="id=7" ip=::1
+[2026-08-05 15:13:37] user=5 email=ismailsghir107@gmail.com role=admin action=plat.creer details="nom=Lben prix=8" ip=::1
+[2026-08-05 15:13:53] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=1 product_id=30 jour=lundi" ip=::1
+[2026-08-05 15:14:06] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.creer details="nom=TEST MENU MULTI semaine=2026-08-17 -> 2026-08-23" ip=::1
+[2026-08-05 15:14:06] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.ajouter_plat details="menu_id=8 product_id=14 jour=jeudi" ip=::1
+[2026-08-05 15:14:06] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.ajouter_plat details="menu_id=8 product_id=15 jour=jeudi" ip=::1
+[2026-08-05 15:14:06] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.ajouter_plat details="menu_id=8 product_id=24 jour=jeudi" ip=::1
+[2026-08-05 15:14:06] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.publier details="id=8" ip=::1
+[2026-08-05 15:14:19] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.creer details="nom=TEST MENU MULTI semaine=2026-08-17 -> 2026-08-23" ip=::1
+[2026-08-05 15:14:19] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.ajouter_plat details="menu_id=9 product_id=14 jour=jeudi" ip=::1
+[2026-08-05 15:14:19] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.ajouter_plat details="menu_id=9 product_id=15 jour=jeudi" ip=::1
+[2026-08-05 15:14:19] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.ajouter_plat details="menu_id=9 product_id=24 jour=jeudi" ip=::1
+[2026-08-05 15:14:19] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.ajouter_plat details="menu_id=9 product_id=26 jour=lundi" ip=::1
+[2026-08-05 15:14:20] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.deplacer_plat details="item_id=27 direction=descendre menu_id=9" ip=::1
+[2026-08-05 15:14:20] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.supprimer_plat details="item_id=27 menu_id=9" ip=::1
+[2026-08-05 15:14:20] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.publier details="id=9" ip=::1
+[2026-08-05 15:14:36] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.creer details="nom=TEST MENU MULTI semaine=2026-08-17 -> 2026-08-23" ip=::1
+[2026-08-05 15:14:36] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.ajouter_plat details="menu_id=10 product_id=14 jour=jeudi" ip=::1
+[2026-08-05 15:14:37] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.ajouter_plat details="menu_id=10 product_id=15 jour=jeudi" ip=::1
+[2026-08-05 15:14:37] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.ajouter_plat details="menu_id=10 product_id=24 jour=jeudi" ip=::1
+[2026-08-05 15:14:37] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.ajouter_plat details="menu_id=10 product_id=26 jour=lundi" ip=::1
+[2026-08-05 15:14:37] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.deplacer_plat details="item_id=31 direction=descendre menu_id=10" ip=::1
+[2026-08-05 15:14:37] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.supprimer_plat details="item_id=31 menu_id=10" ip=::1
+[2026-08-05 15:14:37] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.publier details="id=10" ip=::1
+[2026-08-05 15:15:18] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.creer details="nom=TEST MENU MULTI semaine=- -> -" ip=::1
+[2026-08-05 15:15:18] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.ajouter_plat details="menu_id=11 product_id=14 jour=jeudi" ip=::1
+[2026-08-05 15:15:18] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.ajouter_plat details="menu_id=11 product_id=15 jour=jeudi" ip=::1
+[2026-08-05 15:15:18] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.ajouter_plat details="menu_id=11 product_id=24 jour=jeudi" ip=::1
+[2026-08-05 15:15:18] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.ajouter_plat details="menu_id=11 product_id=26 jour=lundi" ip=::1
+[2026-08-05 15:15:18] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.deplacer_plat details="item_id=35 direction=descendre menu_id=11" ip=::1
+[2026-08-05 15:15:18] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.supprimer_plat details="item_id=35 menu_id=11" ip=::1
+[2026-08-05 15:15:18] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.publier details="id=11" ip=::1
+[2026-08-05 15:15:35] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.creer details="nom=TEST MENU MULTI semaine=- -> -" ip=::1
+[2026-08-05 15:15:36] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.ajouter_plat details="menu_id=12 product_id=14 jour=jeudi" ip=::1
+[2026-08-05 15:15:36] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.ajouter_plat details="menu_id=12 product_id=15 jour=jeudi" ip=::1
+[2026-08-05 15:15:36] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.ajouter_plat details="menu_id=12 product_id=24 jour=jeudi" ip=::1
+[2026-08-05 15:15:36] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.ajouter_plat details="menu_id=12 product_id=26 jour=lundi" ip=::1
+[2026-08-05 15:15:36] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.deplacer_plat details="item_id=39 direction=descendre menu_id=12" ip=::1
+[2026-08-05 15:15:36] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.supprimer_plat details="item_id=39 menu_id=12" ip=::1
+[2026-08-05 15:15:36] user=5 email=admin@fiajou3.ma role=admin action=menu_semaine.publier details="id=12" ip=::1
+[2026-08-05 15:16:15] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-05 15:18:25] user=5 email=ismailsghir107@gmail.com role=admin action=plat.creer details="nom=Tajine pruneaux  prix=100" ip=::1

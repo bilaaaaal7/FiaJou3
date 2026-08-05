@@ -11,17 +11,16 @@ $erreursAdmin = [
     'nom'            => 'Le nom du menu est obligatoire.',
     'dates'          => 'La date de début doit être antérieure à la date de fin.',
     'chevauchement'  => 'Un menu non archivé couvre déjà cette période. Choisissez une autre semaine.',
-    'jour'           => 'Ce jour comporte déjà un plat. Un seul plat par jour est autorisé.',
     'duplicat'       => 'Ce produit figure déjà dans ce menu. Un produit ne peut apparaître qu\'un seul jour.',
 ];
 if (isset($_GET['erreur']) && isset($erreursAdmin[$_GET['erreur']])): ?>
-    <div class="alert alert-danger py-2" role="alert"><?php echo htmlspecialchars($erreursAdmin[$_GET['erreur']]); ?></div>
+    <div class="alert-box alert-error"><?php echo htmlspecialchars($erreursAdmin[$_GET['erreur']]); ?></div>
 <?php endif; ?>
 
 <div class="panel">
     <h2>Créer un menu</h2>
-    <form method="POST" action="<?php echo BASE_URL; ?>/index.php?route=admin/menu-semaine" style="display:flex; gap:10px; align-items:end; flex-wrap:wrap;">
-        <div class="form-group" style="flex:1; min-width:200px;">
+    <form method="POST" action="<?php echo BASE_URL; ?>/index.php?route=admin/menu-semaine" class="form-inline">
+        <div class="form-group">
             <label>Nom du menu</label>
             <input type="text" name="nom" placeholder="Ex: Menu semaine 30" required>
         </div>
@@ -35,7 +34,7 @@ if (isset($_GET['erreur']) && isset($erreursAdmin[$_GET['erreur']])): ?>
         </div>
         <button type="submit" name="creer" class="btn btn-gold">Créer</button>
     </form>
-    <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 8px;">
+    <p class="panel-note">
         La période sert à savoir quel menu est actif pour chaque date de livraison (7j/7).
     </p>
 </div>
@@ -93,74 +92,93 @@ if (isset($_GET['erreur']) && isset($erreursAdmin[$_GET['erreur']])): ?>
 </div>
 
 <?php if ($menuActuel): ?>
+<?php
+$platsAuMenu = [];
+foreach ($itemsParJour as $items) {
+    foreach ($items as $it) {
+        $platsAuMenu[(int) $it['product_id']] = true;
+    }
+}
+?>
 <div class="panel">
     <h2>Modifier : <?php echo htmlspecialchars($menuActuel['nom']); ?>
         <?php if ($menuActuel['week_start']): ?>
-            <span style="font-weight:400; color:var(--text-muted); font-size:0.9rem;">
+            <span class="panel-sub">
                 — <?php echo htmlspecialchars($menuActuel['week_start']); ?> → <?php echo htmlspecialchars($menuActuel['week_end']); ?>
             </span>
         <?php endif; ?>
     </h2>
 
-    <div style="margin-bottom:20px;">
-        <h3>Ajouter un plat</h3>
-        <form method="POST" action="<?php echo BASE_URL; ?>/index.php?route=admin/menu-semaine&voir=<?php echo $menuActuel['id']; ?>" style="display:flex; gap:10px; align-items:end; flex-wrap:wrap;">
-            <input type="hidden" name="menu_id" value="<?php echo $menuActuel['id']; ?>">
-            <div class="form-group">
-                <label>Jour</label>
-                <select name="jour" required>
-                    <?php foreach (JOURS_MENU as $j): ?>
-                        <option value="<?php echo $j; ?>"><?php echo ucfirst($j); ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <div class="form-group" style="flex:1;">
-                <label>Produit</label>
-                <select name="product_id" required>
-                    <?php foreach ($plats as $p): ?>
-                        <option value="<?php echo $p['id']; ?>"><?php echo htmlspecialchars($p['nom']); ?> (<?php echo number_format($p['prix'], 2); ?> DH)</option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <button type="submit" name="ajouter_item" class="btn btn-gold">Ajouter</button>
-        </form>
-        <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 6px;">
-            Un seul plat par jour (<?php echo implode(', ', array_map('ucfirst', JOURS_MENU)); ?>)
-            et chaque produit ne peut apparaître qu'un seul jour. Le samedi est un jour de menu libre :
-            aucun plat spécifique, tous les plats de la semaine y sont commandables.
-        </p>
-    </div>
+    <p class="panel-note panel-note-block">
+        Chaque jour peut comporter plusieurs plats : ajoutez des plats, retirez-les
+        (×) et réordonnez-les (↑ / ↓). Un produit ne peut apparaître qu'un seul jour
+        dans le menu. Le samedi est un jour de menu libre : aucun plat spécifique,
+        tous les plats de la semaine y sont commandables.
+    </p>
 
     <?php foreach (JOURS_MENU as $jour): ?>
-        <h3><?php echo ucfirst($jour); ?></h3>
-        <?php if (!empty($itemsParJour[$jour])): ?>
-        <div class="table-wrap">
-            <table class="data-table">
-                <thead>
-                    <tr><th>Produit</th><th>Catégorie</th><th>Prix</th><th>Action</th></tr>
-                </thead>
-                <tbody>
-                <?php foreach ($itemsParJour[$jour] as $item): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($item['plat_nom']); ?></td>
-                        <td><?php echo htmlspecialchars($item['categorie']); ?></td>
-                        <td><?php echo number_format($item['prix'], 2); ?> DH</td>
-                        <td>
-                            <a href="<?php echo BASE_URL; ?>/index.php?route=admin/menu-semaine&supprimer_item=<?php echo $item['id']; ?>&menu_id=<?php echo $menuActuel['id']; ?>"
-                               class="btn btn-danger btn-sm" data-confirm="Retirer ce plat ?">Retirer</a>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-                </tbody>
-            </table>
+        <?php $itemsJour = $itemsParJour[$jour] ?? []; ?>
+        <div class="day-block">
+            <div class="day-block-head">
+                <h3><?php echo ucfirst($jour); ?></h3>
+                <span class="day-block-count">
+                    <?php echo count($itemsJour); ?> plat<?php echo count($itemsJour) > 1 ? 's' : ''; ?>
+                </span>
+            </div>
+
+            <?php if (!empty($itemsJour)): ?>
+                <div class="dish-chips">
+                    <?php foreach ($itemsJour as $index => $item): ?>
+                        <div class="dish-chip">
+                            <div class="dish-chip-info">
+                                <span class="dish-chip-name"><?php echo htmlspecialchars($item['plat_nom']); ?></span>
+                                <span class="dish-chip-meta">
+                                    <?php if (!empty($item['categorie'])): ?><?php echo htmlspecialchars($item['categorie']); ?><?php endif; ?>
+                                    <?php if (isset($item['prix'])): ?> · <?php echo number_format((float) $item['prix'], 2, ',', ' '); ?> DH<?php endif; ?>
+                                </span>
+                            </div>
+                            <div class="dish-chip-actions">
+                                <?php if ($index > 0): ?>
+                                    <a class="chip-btn" title="Monter" aria-label="Monter <?php echo htmlspecialchars($item['plat_nom']); ?>"
+                                       href="<?php echo BASE_URL; ?>/index.php?route=admin/menu-semaine&deplacer_item=<?php echo (int) $item['id']; ?>&direction=monter&menu_id=<?php echo $menuActuel['id']; ?>">↑</a>
+                                <?php endif; ?>
+                                <?php if ($index < count($itemsJour) - 1): ?>
+                                    <a class="chip-btn" title="Descendre" aria-label="Descendre <?php echo htmlspecialchars($item['plat_nom']); ?>"
+                                       href="<?php echo BASE_URL; ?>/index.php?route=admin/menu-semaine&deplacer_item=<?php echo (int) $item['id']; ?>&direction=descendre&menu_id=<?php echo $menuActuel['id']; ?>">↓</a>
+                                <?php endif; ?>
+                                <a class="chip-btn chip-btn-danger" title="Retirer" aria-label="Retirer <?php echo htmlspecialchars($item['plat_nom']); ?>"
+                                   href="<?php echo BASE_URL; ?>/index.php?route=admin/menu-semaine&supprimer_item=<?php echo (int) $item['id']; ?>&menu_id=<?php echo $menuActuel['id']; ?>"
+                                   data-confirm="Retirer <?php echo htmlspecialchars($item['plat_nom']); ?> du menu ?">×</a>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php else: ?>
+                <p class="panel-note panel-note-block">Aucun plat pour ce jour.</p>
+            <?php endif; ?>
+
+            <form method="POST" action="<?php echo BASE_URL; ?>/index.php?route=admin/menu-semaine&voir=<?php echo $menuActuel['id']; ?>" class="day-add-form">
+                <input type="hidden" name="menu_id" value="<?php echo $menuActuel['id']; ?>">
+                <input type="hidden" name="jour" value="<?php echo $jour; ?>">
+                <select name="product_id" required aria-label="Ajouter un plat à <?php echo ucfirst($jour); ?>">
+                    <option value="">— Ajouter un plat à <?php echo ucfirst($jour); ?> —</option>
+                    <?php foreach ($plats as $p): ?>
+                        <?php
+                        $dejaDansLeMenu = isset($platsAuMenu[(int) $p['id']]);
+                        $optionLabel = htmlspecialchars($p['nom']) . ' (' . number_format((float) $p['prix'], 2, ',', ' ') . ' DH)';
+                        ?>
+                        <option value="<?php echo (int) $p['id']; ?>" <?php echo $dejaDansLeMenu ? 'disabled' : ''; ?>>
+                            <?php echo $optionLabel . ($dejaDansLeMenu ? ' — déjà dans le menu' : ''); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <button type="submit" name="ajouter_item" class="btn btn-gold btn-sm">Ajouter</button>
+            </form>
         </div>
-        <?php else: ?>
-            <p style="color:var(--text-muted); padding:10px 0;">Aucun plat pour ce jour.</p>
-        <?php endif; ?>
     <?php endforeach; ?>
 
     <h3><?php echo ucfirst(JOUR_MENU_LIBRE); ?> — Menu libre</h3>
-    <p style="color:var(--text-muted); padding:10px 0;">
+    <p class="panel-note panel-note-block">
         Le samedi ne comporte aucun plat spécifique : il n'est pas configurable.
         Tous les plats du menu de la semaine (<?php echo implode(', ', array_map('ucfirst', JOURS_MENU)); ?>)
         y sont proposés à la commande.

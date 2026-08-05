@@ -57,5 +57,33 @@ $extraJs = $extraJs ?? [];
             }
         });
     </script>
+    <script>
+        // Tiroir latéral (mobile) : bascule via body.sidebar-open + voile
+        function toggleSidebar(force) {
+            var sidebar = document.getElementById('sidebar');
+            var open = (typeof force === 'boolean') ? force : !document.body.classList.contains('sidebar-open');
+            document.body.classList.toggle('sidebar-open', open);
+            if (sidebar) { sidebar.classList.toggle('open', open); }
+            var btn = document.querySelector('.menu-toggle');
+            if (btn) { btn.setAttribute('aria-expanded', String(open)); }
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && document.body.classList.contains('sidebar-open')) {
+                toggleSidebar(false);
+            }
+        });
+
+        document.addEventListener('click', function (e) {
+            if (!document.body.classList.contains('sidebar-open')) { return; }
+            if (e.target.closest('#sidebar nav a') || e.target.closest('.dashboard-card')) {
+                toggleSidebar(false);
+            }
+        });
+
+        window.addEventListener('resize', function () {
+            if (window.innerWidth > 900) { toggleSidebar(false); }
+        });
+    </script>
 </body>
 </html>

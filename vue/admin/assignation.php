@@ -51,7 +51,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
                             if (!$cookFound) echo 'ID: ' . $cmd['assigned_cook_id'];
                             ?>
                         <?php else: ?>
-                            <em style="color:var(--text-muted)">Non assigné</em>
+                            <em class="text-muted">Non assigné</em>
                         <?php endif; ?>
                     </td>
                     <td>
@@ -68,13 +68,13 @@ require ROOT_PATH . '/assets/inc/navbar.php';
                             if (!$driverFound) echo 'ID: ' . $cmd['assigned_driver_id'];
                             ?>
                         <?php else: ?>
-                            <em style="color:var(--text-muted)">Non assigné</em>
+                            <em class="text-muted">Non assigné</em>
                         <?php endif; ?>
                     </td>
                     <td>
-                        <form method="POST" action="<?php echo BASE_URL; ?>/index.php?route=admin/assignation" style="display:inline-flex; gap:4px; align-items:center; flex-wrap:wrap;">
+                        <form method="POST" action="<?php echo BASE_URL; ?>/index.php?route=admin/assignation" class="assign-form">
                             <input type="hidden" name="order_id" value="<?php echo $cmd['id']; ?>">
-                            <select name="cook_id" class="form-group">
+                            <select name="cook_id" aria-label="Assigner un cuisinier">
                                 <option value="">-- Cuisinier --</option>
                                 <?php foreach ($cuisiniers as $c): ?>
                                     <option value="<?php echo $c['id']; ?>" <?php if ($cmd['assigned_cook_id'] == $c['id']) echo 'selected'; ?>>
@@ -82,7 +82,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
                                     </option>
                                 <?php endforeach; ?>
                             </select>
-                            <select name="driver_id" class="form-group">
+                            <select name="driver_id" aria-label="Assigner un livreur">
                                 <option value="">-- Livreur --</option>
                                 <?php foreach ($livreurs as $l): ?>
                                     <option value="<?php echo $l['id']; ?>" <?php if ($cmd['assigned_driver_id'] == $l['id']) echo 'selected'; ?>>

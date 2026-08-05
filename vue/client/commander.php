@@ -138,7 +138,7 @@ $priorityDefaut = isset($_POST['priority']) && !empty($_POST['priority']);
 
             <div class="form-actions">
                 <button type="submit" name="commander" class="btn btn-gold">Valider la commande</button>
-                <a href="<?php echo BASE_URL; ?>/index.php?route=client/panier" class="btn btn-outline">Retour au panier</a>
+                <a href="<?php echo BASE_URL; ?>/index.php?route=client" class="btn btn-outline">Retour au menu</a>
             </div>
         </form>
     </div>

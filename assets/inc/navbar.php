@@ -28,7 +28,7 @@ $routeActuelle = $_GET['route'] ?? '';
 // placée en haut de la sidebar (indépendante des autres menus).
 $routesDashboard = [
     ROLE_ADMIN     => 'admin',
-    ROLE_CLIENT    => 'client/dashboard',
+    ROLE_CLIENT    => '',
     ROLE_CUISINIER => 'cuisinier',
     ROLE_LIVREUR   => 'livreur',
 ];
@@ -49,7 +49,7 @@ function sidebar_lien(string $route, string $icone, string $label, string $route
     echo '<i data-lucide="' . htmlspecialchars($icone) . '" aria-hidden="true"></i>';
     echo '<span>' . htmlspecialchars($label);
     if ($badge) {
-        echo ' <span class="badge-status st-annulee">' . htmlspecialchars((string) $badge) . '</span>';
+        echo ' <span class="nav-badge">' . htmlspecialchars((string) $badge) . '</span>';
     }
     echo '</span></a>';
 }
@@ -64,6 +64,7 @@ $prenom = trim((string) ($_SESSION['prenom'] ?? ''));
 $initial = $prenom !== '' ? mb_strtoupper(mb_substr($prenom, 0, 1)) : '?';
 $roleLabel = $roleLabels[$role] ?? $role;
 ?>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar(false)" aria-hidden="true"></div>
 <div class="app-shell">
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-head">
@@ -74,6 +75,7 @@ $roleLabel = $roleLabels[$role] ?? $role;
             <?php require ROOT_PATH . '/assets/inc/theme_toggle.php'; ?>
         </div>
 
+        <?php if ($dashboardRoute !== ''): ?>
         <a class="dashboard-card<?php echo $dashboardActif ? ' active' : ''; ?>"
            href="<?php echo BASE_URL; ?>/index.php?route=<?php echo htmlspecialchars($dashboardRoute); ?>"
            aria-current="<?php echo $dashboardActif ? 'page' : 'false'; ?>">
@@ -81,6 +83,7 @@ $roleLabel = $roleLabels[$role] ?? $role;
             <span class="dc-label">Tableau de bord</span>
             <span class="dc-arrow"><i data-lucide="chevron-right" aria-hidden="true"></i></span>
         </a>
+        <?php endif; ?>
 
         <nav>
             <?php if ($role === ROLE_ADMIN): ?>
@@ -94,9 +97,9 @@ $roleLabel = $roleLabels[$role] ?? $role;
                 <?php sidebar_lien('admin/livreurs', 'bike', 'Livreurs', $routeActuelle); ?>
                 <?php sidebar_lien('admin/zones', 'map-pin', 'Zones de livraison', $routeActuelle); ?>
             <?php elseif ($role === ROLE_CLIENT): ?>
+                <?php sidebar_lien('accueil', 'home', 'Accueil', $routeActuelle); ?>
                 <?php sidebar_lien('client', 'utensils-crossed', 'Menu', $routeActuelle); ?>
                 <?php sidebar_lien('client/menu-semaine', 'calendar-days', 'Menu de la semaine', $routeActuelle); ?>
-                <?php sidebar_lien('client/panier', 'shopping-cart', 'Panier (' . $panierModele->nombreArticles() . ')', $routeActuelle); ?>
                 <?php sidebar_lien('client/mes-commandes', 'package', 'Mes commandes', $routeActuelle, null, $parentParDetail); ?>
                 <?php sidebar_lien('client/profil', 'user', 'Profil', $routeActuelle); ?>
             <?php elseif ($role === ROLE_CUISINIER): ?>
@@ -116,7 +119,7 @@ $roleLabel = $roleLabels[$role] ?? $role;
         ?>
         <div class="topheader">
             <div class="topheader-left">
-                <button type="button" class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')" aria-label="Ouvrir le menu">&#9776;</button>
+                <button type="button" class="menu-toggle" onclick="toggleSidebar()" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="sidebar">&#9776;</button>
                 <?php if ($pageHeading !== ''): ?>
                     <h1 class="topheader-title"><?php echo htmlspecialchars($pageHeading); ?></h1>
                 <?php endif; ?>
@@ -129,6 +132,14 @@ $roleLabel = $roleLabels[$role] ?? $role;
                         <span class="topheader-notif-badge"><?php echo $nbNotifs > 9 ? '9+' : $nbNotifs; ?></span>
                     <?php endif; ?>
                 </a>
+
+                <?php if ($role === ROLE_CLIENT): ?>
+                <button type="button" class="topheader-notif" onclick="fjCartOuvrir()"
+                        aria-label="Ouvrir mon panier" title="Mon panier">
+                    <i data-lucide="shopping-cart" aria-hidden="true"></i>
+                    <span class="topheader-notif-badge" data-fj-cart-badge<?php echo $panierModele->nombreArticles() > 0 ? '' : ' hidden'; ?>><?php echo $panierModele->nombreArticles() > 9 ? '9+' : $panierModele->nombreArticles(); ?></span>
+                </button>
+                <?php endif; ?>
 
                 <div class="topheader-profile" data-profile-menu>
                     <button type="button" class="topheader-profile-trigger" data-profile-trigger aria-haspopup="true" aria-expanded="false">
@@ -150,6 +161,12 @@ $roleLabel = $roleLabels[$role] ?? $role;
                             <i data-lucide="user" aria-hidden="true"></i>
                             <span>Mon profil</span>
                         </a>
+                        <?php if ($role === ROLE_CLIENT): ?>
+                        <a role="menuitem" class="topheader-profile-dropdown-item" href="<?php echo BASE_URL; ?>/index.php?route=client/mes-commandes">
+                            <i data-lucide="package" aria-hidden="true"></i>
+                            <span>Mes commandes</span>
+                        </a>
+                        <?php endif; ?>
                         <a role="menuitem" class="topheader-profile-dropdown-item" href="<?php echo BASE_URL; ?>/index.php?route=parametres">
                             <i data-lucide="settings" aria-hidden="true"></i>
                             <span>Paramètres</span>

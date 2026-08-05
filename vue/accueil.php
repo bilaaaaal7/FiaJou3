@@ -11,6 +11,10 @@
 
 $pageTitle = APP_NAME . " - Repas faits maison, livrés chez vous";
 
+// Client connecté : la Home reste accessible et affiche Panier + Profil.
+$estClientConnecte = est_connecte() && utilisateur_role() === ROLE_CLIENT;
+$panierNb = (int) ($panierNb ?? 0);
+
 $jourLabels = [
     'lundi'     => 'Lundi',
     'mardi'     => 'Mardi',
@@ -57,6 +61,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
     <link href="<?php echo BASE_URL; ?>/assets/feane/css/font-awesome.min.css" rel="stylesheet" />
     <link href="<?php echo BASE_URL; ?>/assets/feane/css/style.css" rel="stylesheet" />
     <link href="<?php echo BASE_URL; ?>/assets/feane/css/responsive.css" rel="stylesheet" />
+    <link href="<?php echo BASE_URL; ?>/assets/css/profile-menu.css" rel="stylesheet" />
 
     <style>
         /* =====================================================================
@@ -513,6 +518,388 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             margin-bottom: 22px; letter-spacing: 0.02em;
         }
 
+        /* ---------- Menu de la semaine : cartes par jour + samedi (menu libre) ---------- */
+        .menu-days {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 16px;
+            margin-top: 34px;
+        }
+        .menu-day-card {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #ffffff;
+            border: 1px solid rgba(0, 0, 0, 0.07);
+            border-radius: 16px;
+            padding: 20px 22px;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.07);
+            transition: transform .3s ease, box-shadow .3s ease;
+        }
+        .menu-day-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 34px rgba(0, 0, 0, 0.12);
+        }
+        .menu-day-card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+        .menu-day-name {
+            font-weight: 800;
+            font-size: 0.95rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--fj-or-sombre);
+        }
+        .menu-day-status {
+            flex-shrink: 0;
+            font-size: 0.66rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+        .menu-day-status-open { background: #f4ecd8; color: #7a5810; }
+        .menu-day-status-closed { background: #fdecea; color: #c0392b; }
+        .menu-day-status-unavailable { background: #f1efe9; color: #8a8478; }
+        .menu-day-dish {
+            margin: 0;
+            font-size: 1.02rem;
+            font-weight: 700;
+            line-height: 1.35;
+            color: #171717;
+        }
+        .menu-day-cat { font-size: 0.78rem; color: #8a8478; }
+        .menu-day-more {
+            display: inline-block;
+            margin-top: 3px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--fj-or-sombre);
+            background: rgba(255, 190, 51, 0.18);
+            border-radius: 20px;
+            padding: 2px 9px;
+        }
+        .menu-day-card-foot {
+            margin-top: auto;
+            padding-top: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .menu-day-price { font-size: 1.08rem; font-weight: 800; color: var(--fj-or); }
+
+        .menu-add-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #c8931f, var(--fj-or));
+            color: #ffffff;
+            font-size: 1.4rem;
+            font-weight: 600;
+            line-height: 1;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(184, 134, 24, 0.35);
+            transition: transform .25s ease, box-shadow .25s ease;
+        }
+        .menu-add-btn:hover {
+            transform: scale(1.12) rotate(-6deg);
+            box-shadow: 0 8px 18px rgba(184, 134, 24, 0.5);
+            color: #ffffff;
+        }
+
+        /* Samedi — Menu libre (fond or de l'ancien design) */
+        .menu-samedi {
+            margin-top: 34px;
+            padding: 26px 24px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #c8931f, var(--fj-or));
+            box-shadow: 0 14px 30px rgba(184, 134, 24, 0.30);
+        }
+        .menu-samedi-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .menu-samedi-title { margin: 0; color: #ffffff; font-size: 1.3rem; font-weight: 800; }
+        .menu-samedi-date {
+            background: rgba(23, 23, 23, 0.20);
+            color: #ffffff;
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 20px;
+        }
+        .menu-samedi-desc { margin: 10px 0 0; color: rgba(255, 255, 255, 0.9); font-size: 0.85rem; }
+        .menu-samedi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 12px;
+            margin-top: 18px;
+        }
+        .menu-samedi-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 14px 16px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16);
+            transition: transform .25s ease, box-shadow .25s ease;
+        }
+        .menu-samedi-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.22);
+        }
+        .menu-samedi-dish { font-size: 0.92rem; font-weight: 700; color: #171717; line-height: 1.3; }
+        .menu-samedi-meta { display: block; margin-top: 2px; font-size: 0.76rem; color: #8a8478; }
+        .menu-samedi-badge {
+            flex-shrink: 0;
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+        .menu-samedi-badge-closed { background: #fdecea; color: #c0392b; }
+        .menu-samedi-badge-unavailable { background: #f1efe9; color: #8a8478; }
+
+        [data-theme="dark"] .menu-day-card {
+            background: #1b1b21;
+            border-color: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+        }
+        [data-theme="dark"] .menu-day-name { color: #e0b14d; }
+        [data-theme="dark"] .menu-day-dish { color: #f2efe8; }
+        [data-theme="dark"] .menu-day-cat { color: #b9b2a6; }
+        [data-theme="dark"] .menu-day-status-open { background: #3a3120; color: #e0b14d; }
+        [data-theme="dark"] .menu-day-status-closed { background: #452824; color: #ff9b8f; }
+        [data-theme="dark"] .menu-day-status-unavailable { background: #2a2a30; color: #b9b2a6; }
+        [data-theme="dark"] .menu-samedi-card {
+            background: #232329;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        }
+        [data-theme="dark"] .menu-samedi-dish { color: #f2efe8; }
+        [data-theme="dark"] .menu-samedi-meta { color: #b9b2a6; }
+        [data-theme="dark"] .menu-samedi-badge-closed { background: #452824; color: #ff9b8f; }
+        [data-theme="dark"] .menu-samedi-badge-unavailable { background: #2a2a30; color: #b9b2a6; }
+
+        .menu-day-card, .menu-samedi { cursor: pointer; }
+        .menu-samedi:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 42px rgba(184, 134, 24, 0.42);
+        }
+
+        body.fj-modal-ouvert { overflow: hidden; }
+
+        /* ---------- Modale "Menu du jour" (panneau flottant centré) ---------- */
+        .fj-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 2200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity .3s ease, visibility .3s ease;
+        }
+        .fj-modal.is-open { opacity: 1; visibility: visible; }
+        .fj-modal-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(10, 10, 14, 0.68);
+            -webkit-backdrop-filter: blur(3px);
+            backdrop-filter: blur(3px);
+        }
+        .fj-modal-dialog {
+            position: relative;
+            width: 100%;
+            max-width: 720px;
+            max-height: min(86vh, 640px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: #ffffff;
+            border-radius: 18px;
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.38);
+            transform: translateY(18px) scale(0.97);
+            transition: transform .3s cubic-bezier(.22, .61, .36, 1);
+        }
+        .fj-modal.is-open .fj-modal-dialog { transform: none; }
+        .fj-modal-close {
+            position: absolute;
+            top: 12px;
+            right: 14px;
+            z-index: 2;
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.06);
+            color: #171717;
+            font-size: 1.5rem;
+            line-height: 1;
+            cursor: pointer;
+            transition: background-color .2s ease, color .2s ease, transform .2s ease;
+        }
+        .fj-modal-close:hover {
+            background: rgba(184, 134, 24, 0.18);
+            color: var(--fj-or-sombre);
+            transform: rotate(90deg);
+        }
+        .fj-modal-panel {
+            display: none;
+            overflow-y: auto;
+            padding: 26px 26px 28px;
+        }
+        .fj-modal-panel.is-active { display: block; }
+        .fj-modal-head { padding-right: 40px; margin-bottom: 14px; }
+        .fj-modal-title {
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            color: #171717;
+        }
+        .fj-modal-date {
+            display: inline-block;
+            margin-top: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--fj-or-sombre);
+            background: #f4ecd8;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+        .fj-modal-closed {
+            display: inline-block;
+            margin: 0 0 14px;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            background: #c0392b;
+            color: #ffffff;
+        }
+        .fj-modal-list { display: flex; flex-direction: column; gap: 14px; }
+        .fj-modal-dish {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            background: #ffffff;
+            border: 1px solid rgba(0, 0, 0, 0.07);
+            border-radius: 14px;
+            padding: 12px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+        }
+        .fj-modal-dish-img {
+            width: 96px;
+            height: 96px;
+            flex-shrink: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #f1efe9;
+        }
+        .fj-modal-dish-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .fj-modal-dish-info {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .fj-modal-dish-name { font-size: 1rem; font-weight: 700; color: #171717; line-height: 1.3; }
+        .fj-modal-dish-cat {
+            align-self: flex-start;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #7a5810;
+            background: #f4ecd8;
+            padding: 2px 10px;
+            border-radius: 20px;
+        }
+        .fj-modal-dish-desc { margin: 0; font-size: 0.8rem; color: #8a8478; line-height: 1.45; }
+        .fj-modal-dish-foot {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 6px;
+        }
+        .fj-modal-dish-price { font-size: 1.02rem; font-weight: 800; color: var(--fj-or); }
+        .fj-modal-dish-status {
+            font-size: 0.66rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+        .fj-modal-dish-status-ok { background: #e7f4e7; color: #2e7d32; }
+        .fj-modal-dish-status-ko { background: #f1efe9; color: #8a8478; }
+        .fj-modal-add {
+            margin-left: auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 30px;
+            background: linear-gradient(135deg, #c8931f, var(--fj-or));
+            color: #ffffff;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(184, 134, 24, 0.35);
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+        .fj-modal-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(184, 134, 24, 0.5);
+            color: #ffffff;
+        }
+        .fj-modal-add .ico-plus { font-size: 1.1rem; font-weight: 600; line-height: 1; }
+
+        [data-theme="dark"] .fj-modal-dialog { background: #1b1b21; }
+        [data-theme="dark"] .fj-modal-title { color: #f2efe8; }
+        [data-theme="dark"] .fj-modal-close { background: rgba(255, 255, 255, 0.08); color: #f2efe8; }
+        [data-theme="dark"] .fj-modal-close:hover { background: rgba(184, 134, 24, 0.25); color: #e0b14d; }
+        [data-theme="dark"] .fj-modal-date { background: #3a3120; color: #e0b14d; }
+        [data-theme="dark"] .fj-modal-dish {
+            background: #232329;
+            border-color: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        }
+        [data-theme="dark"] .fj-modal-dish-img { background: #2a2a30; }
+        [data-theme="dark"] .fj-modal-dish-name { color: #f2efe8; }
+        [data-theme="dark"] .fj-modal-dish-cat { background: #3a3120; color: #e0b14d; }
+        [data-theme="dark"] .fj-modal-dish-desc { color: #b9b2a6; }
+        [data-theme="dark"] .fj-modal-dish-status-ok { background: #1f3321; color: #81c784; }
+        [data-theme="dark"] .fj-modal-dish-status-ko { background: #2a2a30; color: #b9b2a6; }
+
+        @media (max-width: 480px) {
+            .fj-modal { padding: 12px; }
+            .fj-modal-panel { padding: 20px 16px 22px; }
+            .fj-modal-dish-img { width: 76px; height: 76px; }
+        }
+
         /* ---------- À propos ---------- */
         .about_section {
             background: linear-gradient(160deg, #1b1b21, var(--fj-noir));
@@ -803,6 +1190,61 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             .hero_icon, .hero_icon::before, .hero_dot { animation: none !important; }
             * { animation-duration: .01ms !important; }
         }
+
+        /* ---------- Icône Panier de la navbar (client connecté) ---------- */
+        .user_option .fj-cart-nav {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.22);
+            background: transparent;
+            color: #ffffff;
+            cursor: pointer;
+            padding: 0;
+            transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+        }
+        .user_option .fj-cart-nav svg {
+            width: 19px;
+            height: 19px;
+            color: var(--fj-or-clair);
+            transition: color .2s ease;
+        }
+        .user_option .fj-cart-nav:hover {
+            border-color: var(--fj-or);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(184, 134, 24, 0.28);
+        }
+        .user_option .fj-cart-nav:hover svg { color: #ffffff; }
+        .user_option .fj-cart-nav:focus-visible { outline: 2px solid var(--fj-or); outline-offset: 2px; }
+        .user_option .fj-cart-badge {
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px;
+            border-radius: 999px;
+            background: var(--fj-or);
+            color: #ffffff;
+            font-size: 0.68rem;
+            font-weight: 700;
+            line-height: 18px;
+            text-align: center;
+            pointer-events: none;
+        }
+        /* Le menu profil est aussi affiché dans le header public (fond sombre). */
+        .header_section .profile-menu__trigger {
+            border-color: rgba(255, 255, 255, 0.22);
+            color: #ffffff;
+        }
+        .header_section .profile-menu__trigger .fa-user { color: var(--fj-or-clair); }
+        @media (max-width: 991px) {
+            .user_option { justify-content: flex-start; }
+        }
     </style>
 </head>
 
@@ -850,9 +1292,18 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                         </ul>
                         <div class="user_option">
                             <?php $themeToggleClass = 'header-theme-toggle'; require ROOT_PATH . '/assets/inc/theme_toggle.php'; ?>
-                            <a href="<?php echo BASE_URL; ?>/index.php?route=inscription" class="order_online">
-                                Commander
-                            </a>
+                            <?php if ($estClientConnecte): ?>
+                                <button type="button" class="fj-cart-nav" onclick="fjCartOuvrir()"
+                                        aria-label="Ouvrir mon panier" title="Mon panier">
+                                    <i data-lucide="shopping-cart" aria-hidden="true"></i>
+                                    <span class="fj-cart-badge" data-fj-cart-badge<?php echo $panierNb > 0 ? '' : ' hidden'; ?>><?php echo $panierNb > 9 ? '9+' : $panierNb; ?></span>
+                                </button>
+                                <?php $profileMenuVariant = 'light'; require ROOT_PATH . '/assets/inc/profile_menu.php'; ?>
+                            <?php else: ?>
+                                <a href="<?php echo BASE_URL; ?>/index.php?route=inscription" class="order_online">
+                                    Commander
+                                </a>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </nav>
@@ -873,8 +1324,8 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                                 et recevez-les chauds directement à votre porte, en quelques clics.
                             </p>
                             <div class="btn-box fj-reveal fj-reveal-delay-3">
-                                <a href="<?php echo BASE_URL; ?>/index.php?route=inscription" class="btn1">
-                                    Commencer à commander
+                                <a href="<?php echo BASE_URL; ?>/index.php?route=<?php echo $estClientConnecte ? 'client' : 'inscription'; ?>" class="btn1">
+                                    <?php echo $estClientConnecte ? 'Consulter le menu' : 'Commencer à commander'; ?>
                                 </a>
                             </div>
                         </div>
@@ -903,7 +1354,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                             <div class="detail-box">
                                 <h5>Cuisine 100% locale</h5>
                                 <h6><span>Fait</span> maison</h6>
-                                <a href="<?php echo BASE_URL; ?>/index.php?route=inscription">
+                                <a href="<?php echo BASE_URL; ?>/index.php?route=<?php echo $estClientConnecte ? 'client' : 'inscription'; ?>">
                                     Commander <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
                                 </a>
                             </div>
@@ -917,7 +1368,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                             <div class="detail-box">
                                 <h5>Livraison rapide</h5>
                                 <h6><span>Chaud</span> et à l'heure</h6>
-                                <a href="<?php echo BASE_URL; ?>/index.php?route=inscription">
+                                <a href="<?php echo BASE_URL; ?>/index.php?route=<?php echo $estClientConnecte ? 'client' : 'inscription'; ?>">
                                     Commander <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
                                 </a>
                             </div>
@@ -941,63 +1392,237 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                     Aucun menu n'est publié pour le moment. Revenez bientôt !
                 </div>
             <?php else: ?>
-                <ul class="filters_menu fj-reveal">
-                    <li class="active" data-filter="*">Tous les jours</li>
+                <?php
+                $dateParJour   = [];
+                $ouvertParJour = [];
+                foreach ($jourLabels as $jourKey => $jourLabel) {
+                    $date = $menuSemaineModele->prochaineDatePourJour($jourKey);
+                    $dateParJour[$jourKey] = $date;
+                    $ouvertParJour[$jourKey] = false;
+                    if ($date) {
+                        [$ouvertParJour[$jourKey]] = $menuSemaineModele->dateLivraisonValide($date);
+                    }
+                }
+
+                $statutJour = [];
+                foreach ($jourLabels as $jourKey => $jourLabel) {
+                    $aUnPlatDisponible = false;
+                    foreach (($itemsParJour[$jourKey] ?? []) as $platJour) {
+                        if (!empty($platJour['disponible'])) {
+                            $aUnPlatDisponible = true;
+                            break;
+                        }
+                    }
+                    if ($ouvertParJour[$jourKey] && $aUnPlatDisponible) {
+                        $statutJour[$jourKey] = 'ouvert';
+                    } elseif ($ouvertParJour[$jourKey]) {
+                        $statutJour[$jourKey] = 'indisponible';
+                    } else {
+                        $statutJour[$jourKey] = 'cloture';
+                    }
+                }
+
+                $dateSamedi = $menuSemaineModele->prochaineDatePourJour(JOUR_MENU_LIBRE);
+                $samediOuvert = false;
+                if ($dateSamedi) {
+                    [$samediOuvert] = $menuSemaineModele->dateLivraisonValide($dateSamedi);
+                }
+
+                $itemsSamedi = [];
+                foreach ($jourLabels as $jourKey => $jourLabel) {
+                    foreach (($itemsParJour[$jourKey] ?? []) as $item) {
+                        $itemsSamedi[$item['product_id']] = $item;
+                    }
+                }
+
+                $panneauxModale = [];
+                foreach ($jourLabels as $jourKey => $jourLabel) {
+                    if (empty($itemsParJour[$jourKey])) {
+                        continue;
+                    }
+                    $panneauxModale[$jourKey] = [
+                        'titre'   => $jourLabel,
+                        'date'    => $dateParJour[$jourKey],
+                        'ouvert'  => $statutJour[$jourKey] === 'ouvert',
+                        'cloture' => $statutJour[$jourKey] === 'cloture',
+                        'items'   => $itemsParJour[$jourKey],
+                    ];
+                }
+                if (!empty($itemsSamedi)) {
+                    $panneauxModale['samedi'] = [
+                        'titre'   => 'Samedi — Menu libre',
+                        'date'    => $samediOuvert ? $dateSamedi : null,
+                        'ouvert'  => $samediOuvert,
+                        'cloture' => !$samediOuvert,
+                        'items'   => array_values($itemsSamedi),
+                    ];
+                }
+
+                $platsParId = [];
+                require_once ROOT_PATH . '/modele/PlatModele.php';
+                foreach ((new PlatModele())->getMenu() as $plat) {
+                    $platsParId[(int) $plat['id']] = $plat;
+                }
+                ?>
+
+                <div class="menu-days fj-reveal">
                     <?php foreach ($jourLabels as $jourKey => $jourLabel): ?>
-                        <?php if (!empty($itemsParJour[$jourKey])): ?>
-                            <li data-filter=".<?php echo $jourKey; ?>"><?php echo $jourLabel; ?></li>
-                        <?php endif; ?>
+                        <?php $itemsJour = $itemsParJour[$jourKey] ?? []; ?>
+                        <?php if (empty($itemsJour)): continue; endif; ?>
+                        <?php $item = $itemsJour[0]; ?>
+                        <?php $nbPlatsJour = count($itemsJour); ?>
+                        <article class="menu-day-card" data-fj-modal-open="<?php echo $jourKey; ?>" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Voir le menu du <?php echo $jourLabel; ?>">
+                            <header class="menu-day-card-head">
+                                <span class="menu-day-name"><?php echo $jourLabel; ?></span>
+                                <span class="menu-day-status menu-day-status-<?php echo $statutJour[$jourKey]; ?>">
+                                    <?php echo $statutJour[$jourKey] === 'ouvert' ? 'Ouvert' : ($statutJour[$jourKey] === 'cloture' ? 'Clôturé' : 'Indisponible'); ?>
+                                </span>
+                            </header>
+                            <div class="menu-day-card-body">
+                                <h4 class="menu-day-dish"><?php echo htmlspecialchars($item['plat_nom']); ?></h4>
+                                <?php if (!empty($item['categorie'])): ?>
+                                    <span class="menu-day-cat"><?php echo htmlspecialchars($item['categorie']); ?></span>
+                                <?php endif; ?>
+                                <?php if ($nbPlatsJour > 1): ?>
+                                    <?php $autresPlats = $nbPlatsJour - 1; ?>
+                                    <span class="menu-day-more">+ <?php echo $autresPlats; ?> autre<?php echo $autresPlats > 1 ? 's' : ''; ?> plat<?php echo $autresPlats > 1 ? 's' : ''; ?></span>
+                                <?php endif; ?>
+                            </div>
+                            <footer class="menu-day-card-foot">
+                                <span class="menu-day-price">
+                                    <?php echo isset($item['prix']) ? number_format((float) $item['prix'], 2) . ' MAD' : ''; ?>
+                                </span>
+                                <?php if ($statutJour[$jourKey] === 'ouvert'): ?>
+                                    <a class="menu-add-btn"
+                                       href="<?php echo $estClientConnecte
+                                           ? BASE_URL . '/index.php?route=client&ajouter=' . (int) $item['product_id'] . '&date=' . $dateParJour[$jourKey]
+                                           : BASE_URL . '/index.php?route=inscription'; ?>"
+                                       title="<?php echo $estClientConnecte
+                                           ? 'Ajouter au panier · livraison le ' . date('d/m/Y', strtotime($dateParJour[$jourKey]))
+                                           : 'Créez un compte pour commander'; ?>"
+                                       aria-label="Ajouter au panier">+</a>
+                                <?php endif; ?>
+                            </footer>
+                        </article>
                     <?php endforeach; ?>
-                    <li data-filter=".samedi">Samedi · Menu libre</li>
-                </ul>
+                </div>
 
-                <p class="menu-samedi-note fj-reveal fj-reveal-delay-1">
-                    Le samedi, le menu est libre : tous les plats de la semaine sont commandables.
-                </p>
-
-                <div class="filters-content fj-reveal fj-reveal-delay-2">
-                    <div class="row grid">
-                        <?php foreach ($jourLabels as $jourKey => $jourLabel): ?>
-                            <?php foreach (($itemsParJour[$jourKey] ?? []) as $item): ?>
-                                <div class="col-sm-6 col-lg-4 all samedi <?php echo $jourKey; ?>">
-                                    <div class="box">
-                                        <div>
-                                            <div class="img-box">
-                                                <?php if (!empty($item['image'])): ?>
-                                                    <img src="<?php echo UPLOADS_URL . '/' . rawurlencode($item['image']); ?>" alt="<?php echo htmlspecialchars($item['plat_nom']); ?>">
-                                                <?php else: ?>
-                                                    <img src="<?php echo $photoTajine; ?>" alt="<?php echo htmlspecialchars($item['plat_nom']); ?>">
-                                                <?php endif; ?>
-                                            </div>
-                                            <div class="detail-box">
-                                                <span class="categorie-tag"><?php echo htmlspecialchars($jourLabel); ?><?php echo !empty($item['categorie']) ? ' · ' . htmlspecialchars($item['categorie']) : ''; ?></span>
-                                                <h5><?php echo htmlspecialchars($item['plat_nom']); ?></h5>
-                                                <div class="options">
-                                                    <h6 class="price-tag">
-                                                        <?php echo isset($item['prix']) ? number_format((float) $item['prix'], 2) . ' MAD' : ''; ?>
-                                                    </h6>
-                                                    <a href="<?php echo BASE_URL; ?>/index.php?route=inscription">
-                                                        <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                <?php if (!empty($itemsSamedi)): ?>
+                <section class="menu-samedi fj-reveal fj-reveal-delay-1" data-fj-modal-open="samedi" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Voir le menu libre du samedi">
+                    <header class="menu-samedi-head">
+                        <h3 class="menu-samedi-title">Samedi — Menu libre</h3>
+                        <?php if ($samediOuvert && $dateSamedi): ?>
+                            <span class="menu-samedi-date">Livraison le <?php echo date('d/m/Y', strtotime($dateSamedi)); ?></span>
+                        <?php endif; ?>
+                    </header>
+                    <p class="menu-samedi-desc">
+                        Aucun menu spécifique le samedi : choisissez librement parmi tous les plats de la semaine.
+                    </p>
+                    <div class="menu-samedi-grid">
+                        <?php foreach ($itemsSamedi as $item): ?>
+                            <div class="menu-samedi-card">
+                                <div>
+                                    <span class="menu-samedi-dish"><?php echo htmlspecialchars($item['plat_nom']); ?></span>
+                                    <span class="menu-samedi-meta">
+                                        <?php if (!empty($item['categorie'])): ?><?php echo htmlspecialchars($item['categorie']); ?> · <?php endif; ?>
+                                        <?php echo isset($item['prix']) ? number_format((float) $item['prix'], 2) . ' MAD' : ''; ?>
+                                    </span>
                                 </div>
-                            <?php endforeach; ?>
+                                <?php if ($samediOuvert && $item['disponible']): ?>
+                                    <a class="menu-add-btn"
+                                       href="<?php echo $estClientConnecte
+                                           ? BASE_URL . '/index.php?route=client&ajouter=' . (int) $item['product_id'] . '&date=' . $dateSamedi
+                                           : BASE_URL . '/index.php?route=inscription'; ?>"
+                                       title="<?php echo $estClientConnecte
+                                           ? 'Ajouter au panier · livraison le ' . date('d/m/Y', strtotime($dateSamedi))
+                                           : 'Créez un compte pour commander'; ?>"
+                                       aria-label="Ajouter au panier">+</a>
+                                <?php elseif (!$samediOuvert): ?>
+                                    <span class="menu-samedi-badge menu-samedi-badge-closed">Clôturé</span>
+                                <?php else: ?>
+                                    <span class="menu-samedi-badge menu-samedi-badge-unavailable">Indisponible</span>
+                                <?php endif; ?>
+                            </div>
                         <?php endforeach; ?>
                     </div>
-                </div>
+                </section>
+                <?php endif; ?>
             <?php endif; ?>
 
             <div class="btn-box fj-reveal">
-                <a href="<?php echo BASE_URL; ?>/index.php?route=inscription">
-                    Créer un compte pour commander
+                <a href="<?php echo BASE_URL; ?>/index.php?route=<?php echo $estClientConnecte ? 'client' : 'inscription'; ?>">
+                    <?php echo $estClientConnecte ? 'Consulter le menu complet' : 'Créer un compte pour commander'; ?>
                 </a>
             </div>
         </div>
     </section>
     <!-- end food section -->
+
+    <?php if ($hasMenu): ?>
+    <!-- modale "Menu du jour" : panneaux pré-rendus (données existantes), ouverts sans rechargement -->
+    <div class="fj-modal" id="fj-modal" role="dialog" aria-modal="true" aria-label="Menu du jour">
+        <div class="fj-modal-overlay" data-fj-modal-close></div>
+        <div class="fj-modal-dialog">
+            <button type="button" class="fj-modal-close" data-fj-modal-close aria-label="Fermer">&times;</button>
+
+            <?php foreach ($panneauxModale as $jourKey => $panneau): ?>
+                <div class="fj-modal-panel" data-fj-modal-panel="<?php echo $jourKey; ?>">
+                    <div class="fj-modal-head">
+                        <h3 class="fj-modal-title"><?php echo htmlspecialchars($panneau['titre']); ?></h3>
+                        <?php if ($panneau['date']): ?>
+                            <span class="fj-modal-date">Livraison le <?php echo date('d/m/Y', strtotime($panneau['date'])); ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <?php if ($panneau['cloture']): ?>
+                        <span class="fj-modal-closed">Clôturé</span>
+                    <?php endif; ?>
+                    <div class="fj-modal-list">
+                        <?php foreach ($panneau['items'] as $item): ?>
+                            <?php $itemDescription = $platsParId[(int) $item['product_id']]['description'] ?? null; ?>
+                            <article class="fj-modal-dish">
+                                <div class="fj-modal-dish-img">
+                                    <?php if (!empty($item['image'])): ?>
+                                        <img src="<?php echo UPLOADS_URL . '/' . rawurlencode($item['image']); ?>" alt="<?php echo htmlspecialchars($item['plat_nom']); ?>" loading="lazy">
+                                    <?php else: ?>
+                                        <img src="<?php echo $photoTajine; ?>" alt="<?php echo htmlspecialchars($item['plat_nom']); ?>" loading="lazy">
+                                    <?php endif; ?>
+                                </div>
+                                <div class="fj-modal-dish-info">
+                                    <span class="fj-modal-dish-name"><?php echo htmlspecialchars($item['plat_nom']); ?></span>
+                                    <?php if (!empty($item['categorie'])): ?>
+                                        <span class="fj-modal-dish-cat"><?php echo htmlspecialchars($item['categorie']); ?></span>
+                                    <?php endif; ?>
+                                    <?php if ($itemDescription): ?>
+                                        <p class="fj-modal-dish-desc"><?php echo htmlspecialchars($itemDescription); ?></p>
+                                    <?php endif; ?>
+                                    <div class="fj-modal-dish-foot">
+                                        <span class="fj-modal-dish-price">
+                                            <?php echo isset($item['prix']) ? number_format((float) $item['prix'], 2) . ' MAD' : ''; ?>
+                                        </span>
+                                        <span class="fj-modal-dish-status <?php echo $item['disponible'] ? 'fj-modal-dish-status-ok' : 'fj-modal-dish-status-ko'; ?>">
+                                            <?php echo $item['disponible'] ? 'Disponible' : 'Indisponible'; ?>
+                                        </span>
+                                        <?php if ($panneau['ouvert'] && $item['disponible']): ?>
+                                            <a class="fj-modal-add"
+                                               href="<?php echo $estClientConnecte
+                                                   ? BASE_URL . '/index.php?route=client&ajouter=' . (int) $item['product_id'] . '&date=' . $panneau['date']
+                                                   : BASE_URL . '/index.php?route=inscription'; ?>"
+                                               title="<?php echo $estClientConnecte
+                                                   ? 'Ajouter au panier · livraison le ' . date('d/m/Y', strtotime($panneau['date']))
+                                                   : 'Créez un compte pour commander'; ?>">
+                                                <span class="ico-plus">+</span> Ajouter
+                                            </a>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </article>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <?php endif; ?>
 
     <!-- about section -->
     <section class="about_section layout_padding" id="about">
@@ -1154,6 +1779,8 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
     </footer>
     <!-- end footer section -->
 
+    <?php if ($estClientConnecte) require ROOT_PATH . '/assets/inc/mini_panier.php'; ?>
+
     <script src="<?php echo BASE_URL; ?>/assets/feane/js/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="<?php echo BASE_URL; ?>/assets/feane/js/bootstrap.js"></script>
@@ -1162,6 +1789,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
     <script src="<?php echo BASE_URL; ?>/assets/feane/js/custom.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/theme.js"></script>
+    <script src="<?php echo BASE_URL; ?>/assets/js/profile-menu.js"></script>
     <script>if (window.lucide) { lucide.createIcons(); }</script>
 
     <script>
@@ -1230,6 +1858,64 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             } else {
                 elements.forEach(rendreVisible);
             }
+        })();
+    </script>
+
+    <script>
+        // Modale "Menu du jour" : ouverture depuis les cartes du menu de la semaine.
+        // Aucune navigation ni rechargement : les panneaux sont déjà rendus dans la page.
+        (function () {
+            var modale = document.getElementById('fj-modal');
+            if (!modale) return;
+
+            var panneaux = modale.querySelectorAll('[data-fj-modal-panel]');
+            var declencheurActif = null;
+
+            function ouvrir(jour, declencheur) {
+                for (var i = 0; i < panneaux.length; i++) {
+                    panneaux[i].classList.toggle('is-active', panneaux[i].getAttribute('data-fj-modal-panel') === jour);
+                }
+                declencheurActif = declencheur;
+                modale.classList.add('is-open');
+                document.body.classList.add('fj-modal-ouvert');
+                var boutonFermer = modale.querySelector('.fj-modal-close');
+                if (boutonFermer) boutonFermer.focus();
+            }
+
+            function fermer() {
+                modale.classList.remove('is-open');
+                document.body.classList.remove('fj-modal-ouvert');
+                if (declencheurActif && declencheurActif.focus) declencheurActif.focus();
+                declencheurActif = null;
+            }
+
+            // Ouverture : clic sur une carte du jour ou sur la section samedi.
+            // Le bouton "+" (ajout direct existant) ne doit pas ouvrir la modale.
+            document.addEventListener('click', function (e) {
+                if (e.target.closest && e.target.closest('.menu-add-btn')) return;
+                var declencheur = e.target.closest ? e.target.closest('[data-fj-modal-open]') : null;
+                if (declencheur) ouvrir(declencheur.getAttribute('data-fj-modal-open'), declencheur);
+            });
+
+            // Fermeture : bouton X, clic sur le voile (extérieur), touche Échap.
+            modale.addEventListener('click', function (e) {
+                if (e.target === modale || (e.target.closest && e.target.closest('[data-fj-modal-close]'))) {
+                    fermer();
+                }
+            });
+
+            document.addEventListener('keydown', function (e) {
+                if (e.target.closest && e.target.closest('.menu-add-btn')) return;
+                if (e.key === 'Escape' && modale.classList.contains('is-open')) {
+                    fermer();
+                    return;
+                }
+                if ((e.key === 'Enter' || e.key === ' ') && e.target.closest && e.target.closest('[data-fj-modal-open]')) {
+                    e.preventDefault();
+                    var declencheur = e.target.closest('[data-fj-modal-open]');
+                    ouvrir(declencheur.getAttribute('data-fj-modal-open'), declencheur);
+                }
+            });
         })();
     </script>
 

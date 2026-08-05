@@ -23,6 +23,19 @@ a { text-decoration: none; color: inherit; }
    functional headings stay in Open Sans for readability. */
 .brand-font { font-family: var(--font-display); }
 
+/* Focus visible : repère clavier cohérent sur toute l'interface */
+.btn:focus-visible,
+.sidebar nav a:focus-visible,
+.dashboard-card:focus-visible,
+.quick-access-card:focus-visible,
+.topheader-notif:focus-visible,
+.topheader-profile-trigger:focus-visible,
+.menu-toggle:focus-visible,
+a:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+}
+
 /* ---------- Layout ---------- */
 .app-shell {
     display: flex;
@@ -168,11 +181,21 @@ a { text-decoration: none; color: inherit; }
 
 .sidebar nav a.active svg { color: var(--gold); }
 
-/* Déconnexion en bas de la sidebar */
-.sidebar-footer {
-    margin-top: 16px;
-    padding-top: 14px;
-    border-top: 1px solid var(--border-soft);
+/* Compteur neutre dans la sidebar (ex. panier client) */
+.nav-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    margin-left: auto;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    background: var(--gold);
+    color: var(--dark);
+    flex-shrink: 0;
 }
 
 /* Avatar rond réutilisé par le header (profil) */
@@ -194,26 +217,6 @@ a { text-decoration: none; color: inherit; }
     width: 42px;
     height: 42px;
     font-size: 1.1rem;
-}
-
-.sidebar .logout-link {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 10px;
-    padding: 10px 12px;
-    border-radius: 10px;
-    color: #d98c82;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: background .18s ease, color .18s ease;
-}
-
-.sidebar .logout-link svg { width: 18px; height: 18px; flex-shrink: 0; }
-
-.sidebar .logout-link:hover {
-    background: rgba(192,57,43,0.14);
-    color: #ffb3aa;
 }
 
 .main {
@@ -421,7 +424,7 @@ a { text-decoration: none; color: inherit; }
 .topheader-profile-dropdown-logout svg { width: 16px; height: 16px; }
 
 .topheader-profile-dropdown-logout:hover {
-    background: rgba(192,57,43,0.14);
+    background: rgba(192, 57, 43, 0.14);
     color: #ffb3aa;
 }
 
@@ -439,6 +442,7 @@ a { text-decoration: none; color: inherit; }
     .topheader-profile-dropdown { right: -8px; min-width: 210px; }
 }
 
+/* ---------- Topbar (actions de page) ---------- */
 .topbar {
     display: flex;
     align-items: center;
@@ -452,16 +456,6 @@ a { text-decoration: none; color: inherit; }
     font-size: 1.5rem;
     font-weight: 700;
     margin: 0;
-    color: var(--text);
-}
-
-.topbar .user-chip {
-    background: var(--surface);
-    border: 1px solid var(--border-soft);
-    padding: 8px 16px;
-    border-radius: 999px;
-    font-size: 0.86rem;
-    font-weight: 500;
     color: var(--text);
 }
 
@@ -558,7 +552,6 @@ a { text-decoration: none; color: inherit; }
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    background: var(--gold-light);
     background: color-mix(in srgb, var(--kpi-accent, var(--gold-dark)) 12%, var(--mix-base));
     color: var(--kpi-accent, var(--gold-dark));
     transition: background .18s ease, color .18s ease;
@@ -567,7 +560,6 @@ a { text-decoration: none; color: inherit; }
 .kpi-card-icon .kpi-icon svg { width: 22px; height: 22px; }
 
 .kpi-card-icon:hover .kpi-icon {
-    background: var(--gold);
     background: color-mix(in srgb, var(--kpi-accent, var(--gold-dark)) 18%, var(--mix-base));
     color: var(--kpi-accent, var(--gold-dark));
 }
@@ -789,6 +781,203 @@ table.data-table tr:hover td { background: var(--table-hover); }
 
 .form-actions { margin-top: 18px; display: flex; gap: 10px; }
 
+/* Note discrète dans un panneau (menu de la semaine, etc.) */
+.panel-note {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    line-height: 1.5;
+    margin-top: 8px;
+}
+
+.panel-note.panel-note-block {
+    margin-top: 0;
+    padding: 10px 0;
+}
+
+/* Sous-titre de panneau (inline dans un <h2>) */
+.panel-sub {
+    font-weight: 400;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.section-block { margin-bottom: 20px; }
+
+/* Rangée de formulaire horizontale (ex. menu de la semaine) */
+.form-inline {
+    display: flex;
+    align-items: flex-end;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.form-inline .form-group { flex: 1; min-width: 190px; }
+
+/* Formulaire d'assignation : sélecteurs compacts alignés sur une ligne */
+.assign-form {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.assign-form select {
+    width: 150px;
+    max-width: 100%;
+    border: 1px solid var(--border-soft);
+    border-radius: 9px;
+    padding: 8px 10px;
+    font-size: 0.82rem;
+    font-family: inherit;
+    background: var(--input-bg);
+    color: var(--text);
+    transition: background-color .25s ease, border-color .18s ease;
+}
+
+.assign-form select:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(255,190,51,0.25);
+}
+
+/* ---------- Menu de la semaine : gestion par jour (multi-plats) ---------- */
+.day-block {
+    background: var(--surface-2);
+    border: 1px solid var(--border-soft);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+.day-block-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.day-block-head h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.day-block-count {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--gold-dark);
+    background: var(--gold-light);
+    border-radius: 999px;
+    padding: 3px 10px;
+    white-space: nowrap;
+}
+
+.dish-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.dish-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: 999px;
+    padding: 6px 8px 6px 14px;
+    box-shadow: var(--shadow-sm);
+    max-width: 100%;
+}
+
+.dish-chip-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.dish-chip-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dish-chip-meta {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+.dish-chip-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.chip-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 999px;
+    border: 1px solid var(--border-soft);
+    background: var(--surface-3);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1;
+    transition: background .18s ease, color .18s ease, border-color .18s ease;
+}
+
+.chip-btn:hover {
+    background: var(--gold-light);
+    border-color: var(--gold);
+    color: var(--gold-dark);
+}
+
+.chip-btn-danger {
+    color: var(--danger);
+}
+
+.chip-btn-danger:hover {
+    background: #fbe3e1;
+    border-color: #f1c3bd;
+    color: #a3231a;
+}
+
+.day-add-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.day-add-form select {
+    flex: 1;
+    min-width: 220px;
+    border: 1px solid var(--border-soft);
+    border-radius: 9px;
+    padding: 8px 10px;
+    font-size: 0.82rem;
+    font-family: inherit;
+    background: var(--input-bg);
+    color: var(--text);
+    transition: background-color .25s ease, border-color .18s ease;
+}
+
+.day-add-form select:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(255,190,51,0.25);
+}
+
 /* ---------- Alerts / filters ---------- */
 .alert-box {
     padding: 12px 16px;
@@ -837,6 +1026,86 @@ table.data-table tr:hover td { background: var(--table-hover); }
 }
 
 .alert-title svg { width: 18px; height: 18px; color: var(--danger); }
+
+/* Liste d'alertes opérationnelles */
+.alert-list {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.alert-list li { margin-bottom: 6px; }
+
+/* ---------- Graphiques du dashboard admin ---------- */
+.bar-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    height: 200px;
+    padding: 10px 4px 0;
+}
+
+.bar-col {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+    height: 100%;
+}
+
+.bar-value {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--gold-dark);
+}
+
+.bar {
+    width: 100%;
+    max-width: 46px;
+    min-height: 4px;
+    border-radius: 6px 6px 0 0;
+}
+
+.bar.is-today { box-shadow: 0 0 0 1px rgba(184, 134, 24, 0.4); }
+
+.bar-day {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+/* Barre de répartition par statut */
+.chart-stack {
+    display: flex;
+    height: 26px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 14px;
+}
+
+.chart-stack > div { min-width: 4px; }
+
+.chart-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
+}
+
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    display: inline-block;
+}
 
 /* ---------- Listes de statuts & notifications (dashboards) ---------- */
 .statut-list { display: flex; flex-direction: column; gap: 10px; }
@@ -898,11 +1167,8 @@ table.data-table tr:hover td { background: var(--table-hover); }
    La plupart des composants utilisent déjà les jetons sémantiques de
    app.css (fonds, surfaces, textes, bordures) : ils basculent seuls.
    On ne surcharge ici que ce qui reste spécifique : les badges de statut,
-   les alertes à fonds colorés et le bloc déconnexion. */
+   les alertes à fonds colorés et les ombres. */
 [data-theme="dark"] .sidebar { box-shadow: 1px 0 14px rgba(0, 0, 0, 0.35); }
-
-[data-theme="dark"] .sidebar .logout-link { color: #f09a8f; }
-[data-theme="dark"] .sidebar .logout-link:hover { background: rgba(239, 99, 81, 0.16); color: #ffc9c2; }
 
 [data-theme="dark"] .topheader-profile-dropdown-logout { color: #f09a8f; }
 [data-theme="dark"] .topheader-profile-dropdown-logout:hover { background: rgba(239, 99, 81, 0.16); color: #ffc9c2; }
@@ -928,13 +1194,44 @@ table.data-table tr:hover td { background: var(--table-hover); }
 [data-theme="dark"] .form-group select::placeholder,
 [data-theme="dark"] .form-group textarea::placeholder { color: #6f6a62; }
 
+/* ---------- Responsive mobile/tablet ---------- */
 @media (max-width: 900px) {
     .two-col { grid-template-columns: 1fr; }
     .grid-2 { grid-template-columns: 1fr; }
-    .sidebar { position: fixed; left: -270px; z-index: 50; transition: left .2s ease; }
-    .sidebar.open { left: 0; }
+
+    /* Sidebar en tiroir sur tablette/mobile */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 50;
+        transform: translateX(-100%);
+        transition: transform .22s ease;
+        box-shadow: none;
+    }
+    body.sidebar-open .sidebar,
+    .sidebar.open { transform: translateX(0); }
+
+    body.sidebar-open { overflow: hidden; }
+
     .main { padding: 18px; }
     .menu-toggle { display: inline-flex !important; }
+}
+
+/* Voile semi-transparent derrière le tiroir (mobile) */
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 45;
+    background: rgba(15, 15, 15, 0.45);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .2s ease, visibility .2s;
+}
+
+body.sidebar-open .sidebar-overlay {
+    opacity: 1;
+    visibility: visible;
 }
 
 .menu-toggle {
@@ -949,9 +1246,9 @@ table.data-table tr:hover td { background: var(--table-hover); }
     color: var(--text);
     cursor: pointer;
     font-size: 1.1rem;
+    flex-shrink: 0;
 }
 
-/* ---------- Responsive mobile/tablet ---------- */
 @media (max-width: 768px) {
     body { margin: 0; }
     .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
@@ -964,6 +1261,7 @@ table.data-table tr:hover td { background: var(--table-hover); }
     .actions-cell { flex-direction: column; gap: 4px; }
     h1 { font-size: 1.3rem; }
     .table-wrap { margin: 0 -16px; }
+    .bar-chart { height: 170px; }
 }
 
 @media (max-width: 480px) {
@@ -971,6 +1269,20 @@ table.data-table tr:hover td { background: var(--table-hover); }
     .topbar { flex-direction: column; align-items: flex-start; gap: 8px; }
     table.data-table { font-size: 0.8rem; }
     table.data-table th, table.data-table td { padding: 8px 6px; }
+}
+
+/* ---------- Accessibilité : animations réduites ---------- */
+@media (prefers-reduced-motion: reduce) {
+    .sidebar,
+    .sidebar-overlay,
+    .topheader-profile-dropdown,
+    .topheader-profile-caret,
+    .dashboard-card,
+    .kpi-card-icon,
+    .quick-access-card,
+    .btn {
+        transition: none !important;
+    }
 }
 
 /* ---------- Navbar responsive ---------- */

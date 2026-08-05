@@ -223,14 +223,6 @@ function dispatch(): void
             require ROOT_PATH . '/controleur/client/ProduitControleur.php';
             return;
 
-        case 'client/dashboard':
-            reset_meta();
-            $_SESSION['pr_title'] = 'Tableau de bord - ' . APP_NAME;
-            $_SESSION['meta_description'] = 'Retrouvez un aperçu de votre activité et de vos commandes sur ' . APP_NAME . '.';
-            $_SESSION['meta_keywords'] = 'tableau de bord client, ' . APP_NAME;
-            require ROOT_PATH . '/controleur/client/DashboardControleur.php';
-            return;
-
         case 'client/panier':
             reset_meta();
             $_SESSION['pr_title'] = 'Mon panier - ' . APP_NAME;

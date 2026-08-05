@@ -7,7 +7,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
 ?>
 
 <?php if (!empty($error)): ?>
-    <div class="alert alert-danger py-2" role="alert"><?php echo htmlspecialchars($error); ?></div>
+    <div class="alert-box alert-error"><?php echo htmlspecialchars($error); ?></div>
 <?php endif; ?>
 
 <div class="panel">

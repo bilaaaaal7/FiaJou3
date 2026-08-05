@@ -60,17 +60,24 @@ if (isset($_POST['ajouter_item'])) {
     $productId = (int) $_POST['product_id'];
     $jour = $_POST['jour'];
 
-    $conflit = $menuModele->jourOccupe($menuId, $jour);
     $platDejaPresent = $menuModele->platPresent($menuId, $productId);
 
-    if ($conflit || $platDejaPresent) {
-        $erreur = $conflit ? 'jour' : 'duplicat';
-        header('Location: ' . BASE_URL . '/index.php?route=admin/menu-semaine&voir=' . $menuId . '&erreur=' . $erreur);
+    if ($platDejaPresent) {
+        header('Location: ' . BASE_URL . '/index.php?route=admin/menu-semaine&voir=' . $menuId . '&erreur=duplicat');
         exit;
     }
 
     $menuModele->ajouterItem($menuId, $productId, $jour);
     journaliser_audit('menu_semaine.ajouter_plat', 'menu_id=' . $menuId . ' product_id=' . $productId . ' jour="' . $jour . '"');
+    header('Location: ' . BASE_URL . '/index.php?route=admin/menu-semaine&voir=' . $menuId);
+    exit;
+}
+
+if (isset($_GET['deplacer_item'])) {
+    $menuId = (int) ($_GET['menu_id'] ?? 0);
+    $decalage = (($_GET['direction'] ?? '') === 'descendre') ? 1 : -1;
+    $menuModele->deplacerItem((int) $_GET['deplacer_item'], $decalage);
+    journaliser_audit('menu_semaine.deplacer_plat', 'item_id=' . (int) $_GET['deplacer_item'] . ' direction=' . ($decalage > 0 ? 'descendre' : 'monter') . ' menu_id=' . $menuId);
     header('Location: ' . BASE_URL . '/index.php?route=admin/menu-semaine&voir=' . $menuId);
     exit;
 }

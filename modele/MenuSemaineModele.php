@@ -68,7 +68,9 @@ class MenuSemaineModele
         usort($items, function ($a, $b) use ($ordreJours) {
             $jourA = $ordreJours[$a['jour']] ?? 99;
             $jourB = $ordreJours[$b['jour']] ?? 99;
-            return [$jourA, $a['categorie']] <=> [$jourB, $b['categorie']];
+            $positionA = (int) ($a['position'] ?? 0);
+            $positionB = (int) ($b['position'] ?? 0);
+            return [$jourA, $positionA, $a['categorie']] <=> [$jourB, $positionB, $b['categorie']];
         });
 
         return $items;
@@ -102,12 +104,81 @@ class MenuSemaineModele
         $stmt->execute([$id]);
     }
 
-    public function ajouterItem(int $menuId, int $productId, string $jour): void
+    /**
+     * Ajoute un plat au menu pour un jour donné. Si aucune position n'est
+     * fournie, le plat est ajouté à la fin du jour. Plusieurs plats peuvent
+     * être ajoutés au même jour.
+     */
+    public function ajouterItem(int $menuId, int $productId, string $jour, ?int $position = null): void
+    {
+        if ($position === null) {
+            $position = $this->getProchainePosition($menuId, $jour);
+        }
+        $stmt = $this->pdo->prepare(
+            "INSERT INTO weekly_menu_items (weekly_menu_id, product_id, jour, position) VALUES (?, ?, ?, ?)"
+        );
+        $stmt->execute([$menuId, $productId, $jour, $position]);
+    }
+
+    /**
+     * Position à utiliser pour ajouter un plat à la fin d'un jour.
+     */
+    public function getProchainePosition(int $menuId, string $jour): int
     {
         $stmt = $this->pdo->prepare(
-            "INSERT INTO weekly_menu_items (weekly_menu_id, product_id, jour) VALUES (?, ?, ?)"
+            "SELECT COUNT(*) FROM weekly_menu_items WHERE weekly_menu_id = ? AND jour = ?"
         );
-        $stmt->execute([$menuId, $productId, $jour]);
+        $stmt->execute([$menuId, $jour]);
+        return (int) $stmt->fetchColumn();
+    }
+
+    /**
+     * Ligne brute d'un item du menu (ou false si introuvable).
+     */
+    public function getItemParId(int $itemId): array|false
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM weekly_menu_items WHERE id = ?");
+        $stmt->execute([$itemId]);
+        return $stmt->fetch();
+    }
+
+    /**
+     * Identifiants ordonnés des plats d'un jour (position puis id).
+     */
+    public function getIdsPourJour(int $menuId, string $jour): array
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT id FROM weekly_menu_items
+             WHERE weekly_menu_id = ? AND jour = ?
+             ORDER BY position ASC, id ASC"
+        );
+        $stmt->execute([$menuId, $jour]);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    /**
+     * Déplace un plat d'un cran dans l'ordre de son jour (monter/descendre).
+     * $decalage vaut -1 (monter) ou +1 (descendre).
+     */
+    public function deplacerItem(int $itemId, int $decalage): void
+    {
+        $item = $this->getItemParId($itemId);
+        if (!$item) {
+            return;
+        }
+        $ids = $this->getIdsPourJour((int) $item['weekly_menu_id'], (string) $item['jour']);
+        $index = array_search($itemId, $ids, true);
+        $nouvelIndex = $index + $decalage;
+        if ($index === false || $nouvelIndex < 0 || $nouvelIndex >= count($ids)) {
+            return;
+        }
+        array_splice($ids, $index, 1);
+        array_splice($ids, $nouvelIndex, 0, [$itemId]);
+
+        $stmt = $this->pdo->prepare("UPDATE weekly_menu_items SET position = ? WHERE id = ?");
+        foreach ($ids as $i => $id) {
+            $stmt->execute([$i, (int) $id]);
+        }
     }
 
     public function supprimerItem(int $itemId): void

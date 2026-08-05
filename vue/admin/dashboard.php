@@ -156,9 +156,9 @@ require ROOT_PATH . '/assets/inc/quick_access.php';
     <h2 class="alert-title">
         <i data-lucide="triangle-alert" aria-hidden="true"></i> Alertes opérationnelles
     </h2>
-    <ul style="margin:0; padding-left:20px;">
+    <ul class="alert-list">
         <?php foreach ($alertes as $alerte): ?>
-            <li style="margin-bottom:6px;"><?php echo $alerte; ?></li>
+            <li><?php echo $alerte; ?></li>
         <?php endforeach; ?>
     </ul>
 </div>
@@ -172,19 +172,17 @@ $maxCa = max(1, max(array_column($stats7Jours, 'ca')));
 <div class="grid-2">
     <div class="panel">
         <h2>Commandes — 7 derniers jours</h2>
-        <div style="display: flex; align-items: flex-end; gap: 10px; height: 200px; padding: 10px 4px 0;">
+        <div class="bar-chart">
             <?php foreach ($stats7Jours as $stat): ?>
                 <?php
                 $hauteur = round(($stat['nb'] / $maxNb) * 100);
                 $jourCourant = $stat['date'] === date('Y-m-d');
                 ?>
-                <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px;">
-                    <span style="font-size: 0.78rem; font-weight: 700; color: var(--gold-dark);"><?php echo $stat['nb']; ?></span>
-                    <div title="<?php echo $stat['date']; ?>"
-                         style="width: 100%; max-width: 46px; height: <?php echo $hauteur; ?>%; min-height: 4px;
-                                background: <?php echo $jourCourant ? 'var(--gold)' : '#D8C79B'; ?>;
-                                border-radius: 6px 6px 0 0;"></div>
-                    <span style="font-size: 0.72rem; color: var(--text-muted);"><?php echo htmlspecialchars($stat['label']); ?></span>
+                <div class="bar-col">
+                    <span class="bar-value"><?php echo $stat['nb']; ?></span>
+                    <div class="bar<?php echo $jourCourant ? ' is-today' : ''; ?>" title="<?php echo $stat['date']; ?>"
+                         style="height: <?php echo $hauteur; ?>%; background: <?php echo $jourCourant ? 'var(--gold)' : '#D8C79B'; ?>;"></div>
+                    <span class="bar-day"><?php echo htmlspecialchars($stat['label']); ?></span>
                 </div>
             <?php endforeach; ?>
         </div>
@@ -192,19 +190,17 @@ $maxCa = max(1, max(array_column($stats7Jours, 'ca')));
 
     <div class="panel">
         <h2>Chiffre d'affaires — 7 derniers jours</h2>
-        <div style="display: flex; align-items: flex-end; gap: 10px; height: 200px; padding: 10px 4px 0;">
+        <div class="bar-chart">
             <?php foreach ($stats7Jours as $stat): ?>
                 <?php
                 $hauteur = round(($stat['ca'] / $maxCa) * 100);
                 $jourCourant = $stat['date'] === date('Y-m-d');
                 ?>
-                <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px;">
-                    <span style="font-size: 0.78rem; font-weight: 700; color: var(--gold-dark);"><?php echo $stat['ca'] > 0 ? number_format($stat['ca'], 0, ',', ' ') : ''; ?></span>
-                    <div title="<?php echo $stat['date'] . ' : ' . number_format($stat['ca'], 2, ',', ' ') . ' DH'; ?>"
-                         style="width: 100%; max-width: 46px; height: <?php echo $hauteur; ?>%; min-height: 4px;
-                                background: <?php echo $jourCourant ? 'var(--gold-dark)' : '#B9A06B'; ?>;
-                                border-radius: 6px 6px 0 0;"></div>
-                    <span style="font-size: 0.72rem; color: var(--text-muted);"><?php echo htmlspecialchars($stat['label']); ?></span>
+                <div class="bar-col">
+                    <span class="bar-value"><?php echo $stat['ca'] > 0 ? number_format($stat['ca'], 0, ',', ' ') : ''; ?></span>
+                    <div class="bar<?php echo $jourCourant ? ' is-today' : ''; ?>" title="<?php echo $stat['date'] . ' : ' . number_format($stat['ca'], 2, ',', ' ') . ' DH'; ?>"
+                         style="height: <?php echo $hauteur; ?>%; background: <?php echo $jourCourant ? 'var(--gold-dark)' : '#B9A06B'; ?>;"></div>
+                    <span class="bar-day"><?php echo htmlspecialchars($stat['label']); ?></span>
                 </div>
             <?php endforeach; ?>
         </div>
@@ -278,7 +274,7 @@ $couleursStatuts = [
     <div class="panel">
         <h2>Répartition par statut</h2>
         <?php if ($totalCommandesTousStatuts > 0): ?>
-            <div style="display:flex; height:26px; border-radius:8px; overflow:hidden; margin-bottom:14px;">
+            <div class="chart-stack">
                 <?php foreach ($statutRepartition as $cle => $nb): ?>
                     <?php if ($nb > 0): ?>
                         <div style="width: <?php echo round($nb / $totalCommandesTousStatuts * 100, 2); ?>%; background: <?php echo $couleursStatuts[$cle] ?? '#999'; ?>;"
@@ -286,11 +282,11 @@ $couleursStatuts = [
                     <?php endif; ?>
                 <?php endforeach; ?>
             </div>
-            <div style="display:flex; flex-wrap:wrap; gap:10px;">
+            <div class="chart-legend">
                 <?php foreach ($statutRepartition as $cle => $nb): ?>
                     <?php if ($nb > 0): ?>
-                        <span style="display:inline-flex; align-items:center; gap:6px; font-size:0.78rem;">
-                            <span style="width:10px; height:10px; border-radius:3px; background: <?php echo $couleursStatuts[$cle] ?? '#999'; ?>; display:inline-block;"></span>
+                        <span class="legend-item">
+                            <span class="legend-dot" style="background: <?php echo $couleursStatuts[$cle] ?? '#999'; ?>;"></span>
                             <?php echo STATUTS_COMMANDE[$cle]; ?> : <strong><?php echo $nb; ?></strong>
                         </span>
                     <?php endif; ?>
