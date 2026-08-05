@@ -16,6 +16,8 @@ if ($initialesParam === '') {
 
 <div class="page-profil">
 
+    <?php require ROOT_PATH . '/assets/inc/back_home.php'; ?>
+
     <div class="topbar">
         <h1>Paramètres</h1>
         <p class="profil-subtitle">Gérez vos informations personnelles, votre email et votre mot de passe.</p>

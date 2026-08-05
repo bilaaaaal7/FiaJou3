@@ -7,6 +7,8 @@ require ROOT_PATH . '/assets/inc/navbar.php';
 
 <div style="max-width: 1000px; margin: 0 auto;">
 
+    <?php require ROOT_PATH . '/assets/inc/back_home.php'; ?>
+
     <div class="topbar">
         <h1>Commande #<?php echo (int) $commande['id']; ?></h1>
         <a href="<?php echo BASE_URL; ?>/index.php?route=client/mes-commandes" class="btn btn-outline btn-sm">Retour</a>

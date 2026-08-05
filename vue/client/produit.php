@@ -7,7 +7,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
 
 <div style="max-width: 900px; margin: 0 auto;">
 
-    <a href="<?php echo BASE_URL; ?>/index.php?route=client" style="color: var(--gold-dark); text-decoration: none; font-size: 0.9rem;">&larr; Retour au menu</a>
+    <?php require ROOT_PATH . '/assets/inc/back_home.php'; ?>
 
     <?php if (isset($_GET['erreur']) && $_GET['erreur'] === 'indisponible'): ?>
         <div class="alert alert-danger py-2" role="alert" style="margin-top: 12px;">Ce plat n'est plus disponible ou la quantité maximale (20) est atteinte.</div>

@@ -18,6 +18,8 @@ $jourLabel = [
 
 <div style="max-width: 1100px; margin: 0 auto;">
 
+    <?php require ROOT_PATH . '/assets/inc/back_home.php'; ?>
+
     <div class="topbar">
         <h1>Notre Menu</h1>
     </div>

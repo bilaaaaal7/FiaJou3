@@ -469,6 +469,44 @@ a:focus-visible {
 
 .topbar-actions .profil-subtitle { margin: 0; }
 
+/* ---------- Lien "Retour à l'accueil" (espace client) ---------- */
+.back-home {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    border: 1px solid var(--border-soft);
+    background: var(--surface);
+    color: var(--text-muted);
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    font-weight: 600;
+    line-height: 1;
+    text-decoration: none;
+    transition: color .2s ease, background-color .2s ease, border-color .2s ease,
+                transform .2s ease, box-shadow .2s ease;
+}
+.back-home svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    transition: transform .2s ease;
+}
+.back-home:hover {
+    color: var(--gold-dark);
+    border-color: var(--gold);
+    background: var(--gold-light);
+    transform: translateX(-3px);
+    box-shadow: var(--shadow-sm);
+}
+.back-home:hover svg { transform: translateX(-2px); }
+.back-home:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+@media (max-width: 480px) {
+    .back-home { padding: 7px 12px; font-size: 0.82rem; }
+}
+
 /* ---------- Section de bienvenue ---------- */
 .welcome-card {
     display: flex;
@@ -1555,7 +1593,8 @@ body.profil-sans-sidebar .topheader { border-bottom-color: transparent; }
     .notif-item,
     .dish-chip,
     .menu-week-card,
-    .dish-card {
+    .dish-card,
+    .back-home {
         transition: none !important;
     }
 }

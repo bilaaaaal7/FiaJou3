@@ -24,6 +24,8 @@ $priorityDefaut = isset($_POST['priority']) && !empty($_POST['priority']);
 
 <div style="max-width: 800px; margin: 0 auto;">
 
+    <?php require ROOT_PATH . '/assets/inc/back_home.php'; ?>
+
     <div class="topbar">
         <h1>Finaliser la commande</h1>
     </div>

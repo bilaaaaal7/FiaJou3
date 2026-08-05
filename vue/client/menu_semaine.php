@@ -7,6 +7,8 @@ require ROOT_PATH . '/assets/inc/navbar.php';
 
 <div style="max-width: 1100px; margin: 0 auto;">
 
+    <?php require ROOT_PATH . '/assets/inc/back_home.php'; ?>
+
     <div class="topbar">
         <h1>Menu de la semaine</h1>
     </div>
