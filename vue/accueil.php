@@ -127,7 +127,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             align-items: center;
             justify-content: space-between;
             gap: 18px;
-            min-height: 56px;
+            min-height: 68px;
             padding: 0;
         }
         .custom_nav-container .navbar-nav {
@@ -149,7 +149,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
         .logo-mark { display: inline-flex; align-items: center; justify-content: center; }
         .logo-mark svg { display: block; width: 100%; height: 100%; }
         .logo-mark img { display: block; width: 100%; height: 100%; object-fit: contain; }
-        .navbar-brand .logo-mark { width: 38px; height: 38px; flex-shrink: 0; }
+        .navbar-brand .logo-mark { width: 60px; height: 60px; flex-shrink: 0; }
 
         .custom_nav-container .navbar-nav .nav-item .nav-link {
             position: relative;
@@ -1213,7 +1213,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
         }
 
         @media (max-width: 767px) {
-            .navbar-brand .logo-mark { width: 32px; height: 32px; }
+            .navbar-brand .logo-mark { width: 50px; height: 50px; }
             .slider_section--static { padding: 44px 0 64px; }
             .slider_section .detail-box h1 { font-size: 2.2rem; }
             .slider_section .detail-box p { font-size: 1rem; }
