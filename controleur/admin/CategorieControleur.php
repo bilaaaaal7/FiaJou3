@@ -21,11 +21,7 @@ if (isset($_POST['ajouter'])) {
     $nom = trim($_POST['nom'] ?? '');
     $description = trim($_POST['description'] ?? '');
 
-    try {
-        $image = UploadModele::enregistrer($_FILES['image'] ?? []);
-    } catch (RuntimeException $e) {
-        $error = $e->getMessage();
-    }
+    $image = trim($_POST['image'] ?? '');
 
     if (empty($error)) {
         $categorieModele->creer($nom, $description, $image);

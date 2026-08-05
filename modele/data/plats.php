@@ -10,7 +10,7 @@ return array (
   array (
     'id' => 8,
     'category_id' => 3,
-    'nom' => 'Couscous Marocain ',
+    'nom' => 'Couscous Poulet',
     'description' => 'Couscous royal avec poulet, légumes et lben.',
     'prix' => 75.0,
     'image' => 'couscous-poulet.webp',
@@ -104,6 +104,46 @@ return array (
     'description' => 'Tomates, concombre et poivrons.',
     'prix' => 20.0,
     'image' => 'salade_marocaine.webp',
+    'disponible' => 1,
+  ),
+  26 => 
+  array (
+    'id' => 26,
+    'category_id' => 3,
+    'nom' => 'Couscous Tfaya',
+    'description' => 'couscous avec tfaya ',
+    'prix' => 65.0,
+    'image' => 'ef48bbe2aa4fb13806eb604c20ce20b3.jpg',
+    'disponible' => 1,
+  ),
+  27 => 
+  array (
+    'id' => 27,
+    'category_id' => 4,
+    'nom' => 'Brochettes viandes',
+    'description' => 'brochettes de viande ',
+    'prix' => 90.0,
+    'image' => '4227959ec7e9cc3527f833b600253c38.jpg',
+    'disponible' => 1,
+  ),
+  28 => 
+  array (
+    'id' => 28,
+    'category_id' => 4,
+    'nom' => 'Boulfaf',
+    'description' => 'Boulfaf',
+    'prix' => 100.0,
+    'image' => '86f30bb381ce84ef57b78a24d07019b5.jpg',
+    'disponible' => 1,
+  ),
+  29 => 
+  array (
+    'id' => 29,
+    'category_id' => 5,
+    'nom' => 'Tajine pruneaux ',
+    'description' => 'Tajine b barqouq et viande ',
+    'prix' => 85.0,
+    'image' => '325a586bd4a8043cbe4c10fc2b597760.jpg',
     'disponible' => 1,
   ),
 );
