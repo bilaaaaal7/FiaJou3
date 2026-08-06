@@ -1,6 +1,7 @@
 <?php
 $pageTitle = "Menu - " . APP_NAME;
 $extraCss = ['admin.css'];
+$bodyClass = 'profil-sans-sidebar';
 require ROOT_PATH . '/assets/inc/header.php';
 require ROOT_PATH . '/assets/inc/navbar.php';
 
