@@ -1,1 +1,5 @@
 [2026-08-06 13:12:12] user=5 email=elbbilal00@gmail.com role=admin action=connexion.reussie details="email=elbbilal00@gmail.com" ip=::1
+[2026-08-06 13:21:04] user=5 email=elbbilal00@gmail.com role=admin action=connexion.reussie details="email=elbbilal00@gmail.com" ip=127.0.0.1
+[2026-08-06 15:57:52] user=5 email=elbbilal00@gmail.com role=admin action=connexion.reussie details="email=elbbilal00@gmail.com" ip=::1
+[2026-08-06 16:05:50] user=5 email=elbbilal00@gmail.com role=admin action=cuisinier.desactiver details="id=7" ip=::1
+[2026-08-06 16:05:52] user=5 email=elbbilal00@gmail.com role=admin action=cuisinier.activer details="id=7" ip=::1

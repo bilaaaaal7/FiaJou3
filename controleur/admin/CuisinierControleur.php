@@ -28,7 +28,7 @@ if (isset($_POST['ajouter'])) {
                 'telephone' => $telephone, 'password' => $password,
             ], ROLE_CUISINIER);
             journaliser_audit('cuisinier.creer', 'email="' . $email . '"');
-            header('Location: ' . BASE_URL . '/index.php?route=admin/cuisiniers');
+            header('Location: ' . BASE_URL . '/index.php?route=admin/cuisiniers&succes=1');
             exit;
         }
     }

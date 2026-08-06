@@ -27,7 +27,7 @@ if (isset($_POST['ajouter'])) {
                 'telephone' => $telephone, 'password' => $password,
             ], ROLE_LIVREUR);
             journaliser_audit('livreur.creer', 'email="' . $email . '"');
-            header('Location: ' . BASE_URL . '/index.php?route=admin/livreurs');
+            header('Location: ' . BASE_URL . '/index.php?route=admin/livreurs&succes=1');
             exit;
         }
     }

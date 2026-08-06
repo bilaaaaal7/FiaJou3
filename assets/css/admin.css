@@ -829,6 +829,36 @@ table.data-table tr:hover td { background: var(--table-hover); }
 
 .form-actions { margin-top: 18px; display: flex; gap: 10px; }
 
+/* ---------- Formulaire repliable (cuisiniers / livreurs) ---------- */
+.panel-head-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+}
+
+.panel-head-actions h2 { margin: 0; }
+
+.form-collapse {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition: grid-template-rows .35s cubic-bezier(.22, .61, .36, 1), opacity .35s ease;
+}
+
+.form-collapse.open {
+    grid-template-rows: 1fr;
+    opacity: 1;
+}
+
+.form-collapse__inner {
+    overflow: hidden;
+    min-height: 0;
+}
+
+
 /* Note discrète dans un panneau (menu de la semaine, etc.) */
 .panel-note {
     color: var(--text-muted);
@@ -1321,6 +1351,8 @@ body.sidebar-open .sidebar-overlay {
 
 /* ---------- Accessibilité : animations réduites ---------- */
 @media (prefers-reduced-motion: reduce) {
+    .form-collapse,
+    .form-collapse.open,
     .sidebar,
     .sidebar-overlay,
     .topheader-profile-dropdown,
