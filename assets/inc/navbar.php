@@ -90,7 +90,6 @@ $roleLabel = $roleLabels[$role] ?? $role;
                 <?php sidebar_lien('admin/plats', 'utensils', 'Produits', $routeActuelle); ?>
                 <?php sidebar_lien('admin/categories', 'tags', 'Catégories', $routeActuelle); ?>
                 <?php sidebar_lien('admin/commandes', 'shopping-bag', 'Commandes', $routeActuelle); ?>
-                <?php sidebar_lien('admin/assignation', 'arrow-right-left', 'Affectations', $routeActuelle); ?>
                 <?php sidebar_lien('admin/menu-semaine', 'calendar-days', 'Menu de la semaine', $routeActuelle); ?>
                 <?php sidebar_lien('admin/utilisateurs', 'users', 'Clients', $routeActuelle); ?>
                 <?php sidebar_lien('admin/cuisiniers', 'chef-hat', 'Cuisiniers', $routeActuelle); ?>

@@ -37,7 +37,6 @@ $quickAccessItems = [
     ['icon' => 'utensils',         'label' => 'Produits',          'route' => 'admin/plats'],
     ['icon' => 'tags',             'label' => 'Catégories',        'route' => 'admin/categories'],
     ['icon' => 'shopping-bag',     'label' => 'Commandes',         'route' => 'admin/commandes'],
-    ['icon' => 'arrow-right-left', 'label' => 'Affectations',      'route' => 'admin/assignation'],
     ['icon' => 'users',            'label' => 'Clients',           'route' => 'admin/utilisateurs'],
     ['icon' => 'chef-hat',         'label' => 'Cuisiniers',        'route' => 'admin/cuisiniers'],
     ['icon' => 'bike',             'label' => 'Livreurs',          'route' => 'admin/livreurs'],
