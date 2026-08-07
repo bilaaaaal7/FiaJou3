@@ -63,6 +63,42 @@ if (isset($_GET['supprimer'])) {
     }
 }
 
+if (isset($_POST['ajouter'])) {
+    $prenom = trim($_POST['prenom']);
+    $nom = trim($_POST['nom']);
+    $email = trim($_POST['email']);
+    $telephone = trim($_POST['telephone'] ?? '');
+    $adresse = trim($_POST['adresse'] ?? '');
+    $ville = trim($_POST['ville'] ?? '');
+    $roleUser = $_POST['role'] ?? ROLE_CLIENT;
+    $password = $_POST['password'] ?? '';
+
+    if (empty($prenom) || empty($nom) || empty($email) || empty($password)) {
+        $error = "Tous les champs obligatoires doivent être remplis.";
+    } elseif (strlen($password) < 6) {
+        $error = "Le mot de passe doit contenir au moins 6 caractères.";
+    } else {
+        $existant = $utilisateurModele->findByEmail($email);
+        if ($existant) {
+            $error = "Cet email est déjà utilisé.";
+        } else {
+            $utilisateurModele->creerCompte([
+                'prenom' => $prenom,
+                'nom' => $nom,
+                'email' => $email,
+                'telephone' => $telephone,
+                'adresse' => $adresse,
+                'ville' => $ville,
+                'role' => $roleUser,
+                'password' => $password,
+            ]);
+            journaliser_audit('client.creer', 'email="' . $email . '"');
+            header('Location: ' . BASE_URL . '/index.php?route=admin/utilisateurs&succes=1');
+            exit;
+        }
+    }
+}
+
 if (isset($_POST['modifier'])) {
     $id = (int) $_POST['id'];
 
