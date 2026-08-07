@@ -28,7 +28,7 @@ if (isset($_POST['ajouter'])) {
                 'telephone' => $telephone, 'password' => $password,
             ], ROLE_CUISINIER);
             journaliser_audit('cuisinier.creer', 'email="' . $email . '"');
-            header('Location: ' . BASE_URL . '/index.php?route=admin/cuisiniers');
+            header('Location: ' . BASE_URL . '/index.php?route=admin/cuisiniers&succes=1');
             exit;
         }
     }
@@ -59,6 +59,18 @@ if (isset($_GET['desactiver'])) {
     journaliser_audit('cuisinier.desactiver', 'id=' . (int) $_GET['desactiver']);
     header('Location: ' . BASE_URL . '/index.php?route=admin/cuisiniers');
     exit;
+}
+
+if (isset($_GET['supprimer'])) {
+    $succes = $utilisateurModele->supprimer((int) $_GET['supprimer']);
+
+    if (!$succes) {
+        $erreur = "Impossible de supprimer ce cuisinier : il a des commandes ou données associées. Vous pouvez le désactiver à la place.";
+    } else {
+        journaliser_audit('cuisinier.supprimer', 'id=' . (int) $_GET['supprimer']);
+        header('Location: ' . BASE_URL . '/index.php?route=admin/cuisiniers&supprime=1');
+        exit;
+    }
 }
 
 $cuisiniers = $utilisateurModele->getCuisiniers();

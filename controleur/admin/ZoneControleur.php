@@ -15,7 +15,7 @@ if (isset($_POST['ajouter'])) {
     } else {
         $zoneModele->creer($nom, $prix);
         journaliser_audit('zone.creer', 'nom="' . $nom . '" prix=' . $prix);
-        header('Location: ' . BASE_URL . '/index.php?route=admin/zones');
+        header('Location: ' . BASE_URL . '/index.php?route=admin/zones&succes=1');
         exit;
     }
 }

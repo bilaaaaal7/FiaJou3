@@ -20,7 +20,21 @@ $role = "";
 $idModifier = "";
 $error = "";
 
-$users = $utilisateurModele->getTousAvecProfil();
+$users = $utilisateurModele->getClients();
+
+if (isset($_GET['activer'])) {
+    $utilisateurModele->setActif((int) $_GET['activer'], true);
+    journaliser_audit('client.activer', 'id=' . (int) $_GET['activer']);
+    header('Location: ' . BASE_URL . '/index.php?route=admin/utilisateurs');
+    exit;
+}
+
+if (isset($_GET['desactiver'])) {
+    $utilisateurModele->setActif((int) $_GET['desactiver'], false);
+    journaliser_audit('client.desactiver', 'id=' . (int) $_GET['desactiver']);
+    header('Location: ' . BASE_URL . '/index.php?route=admin/utilisateurs');
+    exit;
+}
 
 if (isset($_GET['modifier'])) {
     $user = $utilisateurModele->getByIdAvecProfil((int) $_GET['modifier']);

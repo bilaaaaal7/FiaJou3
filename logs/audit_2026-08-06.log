@@ -1,27 +1,6 @@
 [2026-08-06 13:12:12] user=5 email=elbbilal00@gmail.com role=admin action=connexion.reussie details="email=elbbilal00@gmail.com" ip=::1
-[2026-08-06 14:37:35] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
-[2026-08-06 14:39:43] user=5 email=ismailsghir107@gmail.com role=admin action=commande.statut details="id=16 nouveau_statut=en_preparation cook_id=11 driver_id=" ip=::1
-[2026-08-06 14:40:20] user=5 email=ismailsghir107@gmail.com role=admin action=commande.statut details="id=17 nouveau_statut=confirmee cook_id= driver_id=" ip=::1
-[2026-08-06 14:40:52] user=5 email=ismailsghir107@gmail.com role=admin action=commande.statut details="id=16 nouveau_statut=en_preparation cook_id=11 driver_id=8" ip=::1
-[2026-08-06 14:41:07] user=5 email=ismailsghir107@gmail.com role=admin action=commande.statut details="id=16 nouveau_statut=confirmee cook_id=11 driver_id=8" ip=::1
-[2026-08-06 14:44:16] user=5 email=ismailsghir107@gmail.com role=admin action=plat.creer details="nom=Tajine poissons  prix=80" ip=::1
-[2026-08-06 14:44:27] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.supprimer_plat details="item_id=1 menu_id=1" ip=::1
-[2026-08-06 14:44:35] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=1 product_id=12 jour=lundi" ip=::1
-[2026-08-06 14:44:37] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.supprimer_plat details="item_id=63 menu_id=1" ip=::1
-[2026-08-06 14:44:42] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.supprimer_plat details="item_id=2 menu_id=1" ip=::1
-[2026-08-06 14:44:50] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=1 product_id=25 jour=mardi" ip=::1
-[2026-08-06 14:45:02] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=1 product_id=12 jour=lundi" ip=::1
-[2026-08-06 14:45:06] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.supprimer_plat details="item_id=23 menu_id=1" ip=::1
-[2026-08-06 14:45:36] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=1 product_id=10 jour=mardi" ip=::1
-[2026-08-06 14:45:52] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=1 product_id=26 jour=mardi" ip=::1
-[2026-08-06 14:46:23] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.supprimer_plat details="item_id=3 menu_id=1" ip=::1
-[2026-08-06 14:46:32] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=1 product_id=15 jour=mercredi" ip=::1
-[2026-08-06 14:46:52] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=1 product_id=24 jour=jeudi" ip=::1
-[2026-08-06 14:47:03] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.supprimer_plat details="item_id=5 menu_id=1" ip=::1
-[2026-08-06 14:47:14] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=1 product_id=9 jour=vendredi" ip=::1
-[2026-08-06 14:47:23] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=1 product_id=30 jour=lundi" ip=::1
-[2026-08-06 14:47:30] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.supprimer_plat details="item_id=71 menu_id=1" ip=::1
-[2026-08-06 14:47:42] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=1 product_id=30 jour=vendredi" ip=::1
-[2026-08-06 17:06:19] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
-[2026-08-06 17:10:12] user=5 email=ismailsghir107@gmail.com role=admin action=plat.modifier details="id=31 nom=Tajine pruneaux  prix=100 disponible=1" ip=::1
-[2026-08-06 17:16:06] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-06 13:21:04] user=5 email=elbbilal00@gmail.com role=admin action=connexion.reussie details="email=elbbilal00@gmail.com" ip=127.0.0.1
+[2026-08-06 15:57:52] user=5 email=elbbilal00@gmail.com role=admin action=connexion.reussie details="email=elbbilal00@gmail.com" ip=::1
+[2026-08-06 16:05:50] user=5 email=elbbilal00@gmail.com role=admin action=cuisinier.desactiver details="id=7" ip=::1
+[2026-08-06 16:05:52] user=5 email=elbbilal00@gmail.com role=admin action=cuisinier.activer details="id=7" ip=::1
+[2026-08-06 17:26:03] user=5 email=elbbilal00@gmail.com role=admin action=cuisinier.desactiver details="id=7" ip=::1

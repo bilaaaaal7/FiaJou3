@@ -27,7 +27,7 @@ if (isset($_POST['ajouter'])) {
                 'telephone' => $telephone, 'password' => $password,
             ], ROLE_LIVREUR);
             journaliser_audit('livreur.creer', 'email="' . $email . '"');
-            header('Location: ' . BASE_URL . '/index.php?route=admin/livreurs');
+            header('Location: ' . BASE_URL . '/index.php?route=admin/livreurs&succes=1');
             exit;
         }
     }
@@ -58,6 +58,18 @@ if (isset($_GET['desactiver'])) {
     journaliser_audit('livreur.desactiver', 'id=' . (int) $_GET['desactiver']);
     header('Location: ' . BASE_URL . '/index.php?route=admin/livreurs');
     exit;
+}
+
+if (isset($_GET['supprimer'])) {
+    $succes = $utilisateurModele->supprimer((int) $_GET['supprimer']);
+
+    if (!$succes) {
+        $erreur = "Impossible de supprimer ce livreur : il a des commandes ou données associées. Vous pouvez le désactiver à la place.";
+    } else {
+        journaliser_audit('livreur.supprimer', 'id=' . (int) $_GET['supprimer']);
+        header('Location: ' . BASE_URL . '/index.php?route=admin/livreurs&supprime=1');
+        exit;
+    }
 }
 
 $livreurs = $utilisateurModele->getLivreurs();

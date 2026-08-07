@@ -1,6 +1,6 @@
 <?php
-$pageTitle = "Gestion des utilisateurs - " . APP_NAME;
-$pageHeading = "Gestion des utilisateurs";
+$pageTitle = "Gestion des clients - " . APP_NAME;
+$pageHeading = "Gestion des clients";
 $extraCss = ['admin.css'];
 require ROOT_PATH . '/assets/inc/header.php';
 require ROOT_PATH . '/assets/inc/navbar.php';
@@ -11,19 +11,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
 <?php endif; ?>
 
 <div class="panel">
-    <div class="filter-bar">
-        <div class="form-group">
-            <label>Filtrer par rôle</label>
-            <select id="filterRole" onchange="filtrerUsers()">
-                <option value="">Tous</option>
-                <option value="admin">Admin</option>
-                <option value="client">Client</option>
-                <option value="cook">Cuisinier</option>
-                <option value="driver">Livreur</option>
-            </select>
-        </div>
-    </div>
-
+    <h2>Liste des clients</h2>
     <div class="table-wrap">
         <table class="data-table" id="tableUsers">
             <thead>
@@ -39,7 +27,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
             </thead>
             <tbody>
             <?php foreach ($users as $user): ?>
-                <tr data-role="<?php echo $user['role']; ?>">
+                <tr>
                     <td><?php echo $user['id']; ?></td>
                     <td><?php echo htmlspecialchars($user['prenom']); ?></td>
                     <td><?php echo htmlspecialchars($user['nom']); ?></td>
@@ -54,10 +42,18 @@ require ROOT_PATH . '/assets/inc/navbar.php';
                     </td>
                     <td class="actions-cell">
                         <a href="<?php echo BASE_URL; ?>/index.php?route=admin/utilisateurs&modifier=<?php echo $user['id']; ?>" class="btn btn-outline btn-sm">Modifier</a>
+                        <?php if ($user['actif']): ?>
+                            <a href="<?php echo BASE_URL; ?>/index.php?route=admin/utilisateurs&desactiver=<?php echo $user['id']; ?>" class="btn btn-danger btn-sm" data-confirm="Désactiver ce client ?">Désactiver</a>
+                        <?php else: ?>
+                            <a href="<?php echo BASE_URL; ?>/index.php?route=admin/utilisateurs&activer=<?php echo $user['id']; ?>" class="btn btn-gold btn-sm">Activer</a>
+                        <?php endif; ?>
                         <a href="<?php echo BASE_URL; ?>/index.php?route=admin/utilisateurs&supprimer=<?php echo $user['id']; ?>" class="btn btn-danger btn-sm" data-confirm="Voulez-vous vraiment supprimer cet utilisateur ?">Supprimer</a>
                     </td>
                 </tr>
             <?php endforeach; ?>
+            <?php if (empty($users)): ?>
+                <tr><td colspan="7" class="empty-state">Aucun client enregistré.</td></tr>
+            <?php endif; ?>
             </tbody>
         </table>
     </div>
@@ -110,19 +106,5 @@ require ROOT_PATH . '/assets/inc/navbar.php';
     </form>
 </div>
 <?php endif; ?>
-
-<script>
-function filtrerUsers() {
-    var filter = document.getElementById('filterRole').value;
-    var rows = document.querySelectorAll('#tableUsers tbody tr');
-    rows.forEach(function(row) {
-        if (!filter || row.getAttribute('data-role') === filter) {
-            row.style.display = '';
-        } else {
-            row.style.display = 'none';
-        }
-    });
-}
-</script>
 
 <?php require ROOT_PATH . '/assets/inc/footer.php'; ?>
