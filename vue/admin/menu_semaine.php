@@ -188,7 +188,16 @@ if (isset($_GET['erreur']) && isset($erreursAdmin[$_GET['erreur']])): ?>
                     <td><?php echo $m['id']; ?></td>
                     <td><?php echo htmlspecialchars($m['nom']); ?></td>
                     <td>
-                        <?php echo $m['week_start'] ? htmlspecialchars($m['week_start']) . ' → ' . htmlspecialchars($m['week_end']) : '<em>Non définie</em>'; ?>
+                        <?php if ($m['week_start']): ?>
+                            <?php
+                            $numeroMenu = $m['numero'] !== null ? (int) $m['numero'] : MenuSemaineModele::numeroSemaine($m['week_start']);
+                            echo 'Semaine ' . $numeroMenu . ' — '
+                                . date('d/m/Y', strtotime($m['week_start']))
+                                . ' → ' . date('d/m/Y', strtotime($m['week_end']));
+                            ?>
+                        <?php else: ?>
+                            <em>Non définie</em>
+                        <?php endif; ?>
                     </td>
                     <td><?php echo $m['date_creation']; ?></td>
                     <td>

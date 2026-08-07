@@ -26,8 +26,8 @@ $jourLabels = [
 
 // Quelques photos maison pour illustrer le hero et les mises en avant
 $photoTajine   = UPLOADS_URL . '/acceuil.png';
-$photoCouscous = UPLOADS_URL . '/couscous.jpg';
-$photoViande   = UPLOADS_URL . '/viande-hachee-poulet.jpg';
+$photoCouscous = UPLOADS_URL . '';
+$photoViande   = UPLOADS_URL . '';
 
 $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $itemsParJour)) > 0;
 ?>

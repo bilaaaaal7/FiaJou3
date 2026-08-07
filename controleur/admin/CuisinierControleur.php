@@ -74,8 +74,11 @@ if (isset($_GET['supprimer'])) {
 }
 
 $cuisiniers = $utilisateurModele->getCuisiniers();
-$idModifier = '';
-$prenom = $nom = $email = $telephone = '';
+$idModifier = $idModifier ?? '';
+$prenom = $prenom ?? '';
+$nom = $nom ?? '';
+$email = $email ?? '';
+$telephone = $telephone ?? '';
 
 if (isset($_GET['modifier'])) {
     $user = $utilisateurModele->getByIdAvecProfil((int) $_GET['modifier']);

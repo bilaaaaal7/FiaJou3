@@ -17,7 +17,12 @@ class MenuSemaineModele
 
     public function getTous(): array
     {
-        $stmt = $this->pdo->query("SELECT * FROM weekly_menus ORDER BY date_creation DESC");
+        // Tri chronologique par début de semaine (les menus hérités sans
+        // période sont rejetés en fin de liste).
+        $stmt = $this->pdo->query(
+            "SELECT * FROM weekly_menus
+             ORDER BY week_start IS NULL, week_start DESC, date_creation DESC"
+        );
         return $stmt->fetchAll();
     }
 
@@ -44,12 +49,15 @@ class MenuSemaineModele
         return $stmt->fetch();
     }
 
+    /**
+     * Menu publié affiché au public : c'est le menu de la semaine actuellement
+     * active (la semaine qui contient la date du jour). Une semaine future,
+     * même déjà publiée et préparée à l'avance par l'admin, n'est pas montrée
+     * tant que sa période n'a pas commencé.
+     */
     public function getPublie(): array|false
     {
-        $stmt = $this->pdo->query(
-            "SELECT * FROM weekly_menus WHERE statut = 'publie' ORDER BY date_creation DESC LIMIT 1"
-        );
-        return $stmt->fetch();
+        return $this->getActif();
     }
 
     public function getItems(int $menuId): array
@@ -104,20 +112,20 @@ class MenuSemaineModele
 
     public function creer(string $nom, ?string $weekStart = null, ?string $weekEnd = null): int
     {
+        $numero = null;
+        if ($weekStart !== null && $weekStart !== '') {
+            $numero = self::numeroSemaine($weekStart);
+        }
         $stmt = $this->pdo->prepare(
-            "INSERT INTO weekly_menus (nom, week_start, week_end, date_creation, statut)
-             VALUES (?, ?, ?, CURDATE(), 'brouillon')"
+            "INSERT INTO weekly_menus (numero, nom, week_start, week_end, date_creation, statut)
+             VALUES (?, ?, ?, ?, CURDATE(), 'brouillon')"
         );
-        $stmt->execute([$nom, $weekStart ?: null, $weekEnd ?: null]);
+        $stmt->execute([$numero, $nom, $weekStart ?: null, $weekEnd ?: null]);
         return (int) $this->pdo->lastInsertId();
     }
 
     public function mettreAJourStatut(int $id, string $statut): void
     {
-        if ($statut === 'publie') {
-            $stmt = $this->pdo->prepare("UPDATE weekly_menus SET statut = 'brouillon' WHERE statut = 'publie'");
-            $stmt->execute();
-        }
         $stmt = $this->pdo->prepare("UPDATE weekly_menus SET statut = ? WHERE id = ?");
         $stmt->execute([$statut, $id]);
     }
@@ -324,15 +332,19 @@ class MenuSemaineModele
     }
 
     /**
-     * Menu publié qui gouverne actuellement les commandes :
-     * le menu publié dont la semaine n'est pas encore terminée, sinon le dernier
-     * publié pour les menus hérités sans période (semaine non définie).
+     * Menu publié qui gouverne actuellement les commandes : le menu publié
+     * dont la période couvre la date du jour. Une semaine future, même déjà
+     * publiée, n'est pas considérée active tant que sa période n'a pas
+     * commencé : le client ne voit jamais une semaine non publiée à l'avance.
+     * En repli, un menu hérité sans période (semaine non définie) est renvoyé.
      */
     public function getActif(): array|false
     {
         $stmt = $this->pdo->prepare(
             "SELECT * FROM weekly_menus
-             WHERE statut = 'publie' AND week_end IS NOT NULL AND week_end >= CURDATE()
+             WHERE statut = 'publie'
+               AND week_start IS NOT NULL AND week_end IS NOT NULL
+               AND week_start <= CURDATE() AND week_end >= CURDATE()
              ORDER BY week_start DESC LIMIT 1"
         );
         $stmt->execute();
@@ -578,19 +590,26 @@ class MenuSemaineModele
     }
 
     /**
-     * Numéro de semaine ISO (1-53) d'une date donnée.
+     * Numéro de la semaine dans la numérotation propre au système de menu.
+     * La première semaine du système (DATE_PREMIERE_SEMAINE) porte le numéro 1,
+     * la suivante le numéro 2, etc. Le numéro ISO n'est jamais utilisé.
+     * Aucune limite : le calcul s'étend à 20, 50, 100 semaines et plus.
      */
     public static function numeroSemaine(string $date): int
     {
-        return (int) date('W', strtotime($date));
+        $delta = (int) ((strtotime($date) - strtotime(DATE_PREMIERE_SEMAINE)) / 86400);
+        return (int) floor($delta / 7) + 1;
     }
 
     /**
-     * Libellé lisible d'une semaine : "Semaine 32 — 03/08/2026 → 09/08/2026".
+     * Libellé lisible d'une semaine : "Semaine 1 — 03/08/2026 → 09/08/2026".
+     * Le numéro provient de l'enregistrement ($numero) lorsqu'il est connu,
+     * sinon il est calculé à partir du lundi de la semaine.
      */
-    public static function libelleSemaine(string $lundi, string $dimanche): string
+    public static function libelleSemaine(string $lundi, string $dimanche, ?int $numero = null): string
     {
-        return 'Semaine ' . self::numeroSemaine($lundi)
+        $n = $numero !== null ? $numero : self::numeroSemaine($lundi);
+        return 'Semaine ' . $n
             . ' — ' . date('d/m/Y', strtotime($lundi))
             . ' → ' . date('d/m/Y', strtotime($dimanche));
     }

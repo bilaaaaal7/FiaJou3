@@ -26,6 +26,7 @@ if (isset($_POST['modifier'])) {
     $prix = (float) $_POST['prix_livraison'];
     if (empty($nom) || $prix < 0) {
         $erreur = "Veuillez remplir tous les champs correctement.";
+        $idModifier = $id;
     } else {
         $zoneModele->mettreAJour($id, $nom, $prix);
         journaliser_audit('zone.modifier', 'id=' . $id . ' nom="' . $nom . '" prix=' . $prix);
@@ -46,9 +47,9 @@ if (isset($_GET['supprimer'])) {
 }
 
 $zones = $zoneModele->getToutes();
-$idModifier = '';
-$nom = '';
-$prix = '';
+$idModifier = $idModifier ?? '';
+$nom = $nom ?? '';
+$prix = $prix ?? '';
 
 if (isset($_GET['modifier'])) {
     $zone = $zoneModele->getParId((int) $_GET['modifier']);

@@ -44,6 +44,7 @@ if (isset($_POST['modifier'])) {
         $nouvelleImage = UploadModele::enregistrer($_FILES['image'] ?? []);
     } catch (RuntimeException $e) {
         $error = $e->getMessage();
+        $idModifier = $id;
     }
 
     if (empty($error)) {

@@ -1,4 +1,5 @@
 [2026-08-07 11:11:13] user=5 email=elbbilal00@gmail.com role=admin action=connexion.reussie details="email=elbbilal00@gmail.com" ip=::1
+<<<<<<< HEAD
 [2026-08-07 12:08:46] user=5 email=elbbilal00@gmail.com role=admin action=connexion.reussie details="email=elbbilal00@gmail.com" ip=::1
 [2026-08-07 12:54:59] user=5 email=elbbilal00@gmail.com role=admin action=cuisinier.creer details="email=pup.test.1786100099271@gmail.com" ip=::1
 [2026-08-07 12:55:24] user=5 email=elbbilal00@gmail.com role=admin action=cuisinier.modifier details="id=19 email=pup.test.1786100099271@gmail.com" ip=::1
@@ -28,3 +29,61 @@
 [2026-08-07 12:59:28] user=5 email=elbbilal00@gmail.com role=admin action=livreur.supprimer details="id=25" ip=::1
 [2026-08-07 12:59:29] user=5 email=elbbilal00@gmail.com role=admin action=zone.creer details="nom=Pup Zone 1786100369463 prix=15.5" ip=::1
 [2026-08-07 12:59:29] user=5 email=elbbilal00@gmail.com role=admin action=zone.supprimer details="id=7" ip=::1
+=======
+[2026-08-07 11:22:07] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-07 11:33:12] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-07 11:33:56] user=5 email=ismailsghir107@gmail.com role=admin action=commande.statut details="id=16 nouveau_statut=en_preparation cook_id=11 driver_id=8" ip=::1
+[2026-08-07 11:58:28] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-07 11:59:30] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.archiver details="id=28" ip=::1
+[2026-08-07 11:59:44] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.supprimer details="id=28" ip=::1
+[2026-08-07 12:08:25] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-07 12:10:51] user=20 email=saram@gmail.com role=admin action=connexion.reussie details="email=saram@gmail.com" ip=192.168.100.103
+[2026-08-07 12:13:19] user=20 email=saram@gmail.com role=admin action=menu_semaine.deplacer_plat details="item_id=64 direction=descendre menu_id=1" ip=192.168.100.103
+[2026-08-07 12:32:01] user=5 email=test@local.test role=admin action=zone.creer details="nom=ZoneTestModal prix=12.5" ip=::1
+[2026-08-07 12:32:01] user=5 email=test@local.test role=admin action=zone.supprimer details="id=5" ip=::1
+[2026-08-07 12:32:58] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-07 12:41:20] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-07 12:48:45] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-07 12:52:21] user=5 email=ismailsghir107@gmail.com role=admin action=livreur.creer details="email=adam@gmail.com" ip=::1
+[2026-08-07 13:02:11] user=1 email=admin@fiajou.com role=admin action=livreur.modifier details="id=8 email=livreur@gmail.com" ip=::1
+[2026-08-07 13:02:11] user=1 email=admin@fiajou.com role=admin action=livreur.modifier details="id=8 email=livreur@gmail.com" ip=::1
+[2026-08-07 13:02:21] user=1 email=admin@fiajou.com role=admin action=livreur.modifier details="id=8 email=livreur@gmail.com" ip=::1
+[2026-08-07 13:02:21] user=1 email=admin@fiajou.com role=admin action=livreur.creer details="email=temp.test@gmail.com" ip=::1
+[2026-08-07 13:02:21] user=1 email=admin@fiajou.com role=admin action=livreur.supprimer details="id=22" ip=::1
+[2026-08-07 13:13:06] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-07 13:13:53] user=23 email=smokeadmin@test.com role=admin action=connexion.reussie details="email=smokeadmin@test.com" ip=::1
+[2026-08-07 13:23:00] user=27 email=smokeadmin@test.com role=admin action=connexion.reussie details="email=smokeadmin@test.com" ip=::1
+[2026-08-07 13:23:40] user=27 email=smokeadmin@test.com role=admin action=connexion.reussie details="email=smokeadmin@test.com" ip=::1
+[2026-08-07 13:25:10] user=27 email=smokeadmin@test.com role=admin action=connexion.reussie details="email=smokeadmin@test.com" ip=::1
+[2026-08-07 13:26:25] user=27 email=smokeadmin@test.com role=admin action=connexion.reussie details="email=smokeadmin@test.com" ip=::1
+[2026-08-07 13:26:43] user=27 email=smokeadmin@test.com role=admin action=connexion.reussie details="email=smokeadmin@test.com" ip=::1
+[2026-08-07 13:27:16] user=27 email=smokeadmin@test.com role=admin action=connexion.reussie details="email=smokeadmin@test.com" ip=::1
+[2026-08-07 13:27:19] user=27 email=smokeadmin@test.com role=admin action=plat.modifier details="id=8 nom=Couscous Marocain  prix=1.23 disponible=1" ip=::1
+[2026-08-07 13:27:50] user=27 email=smokeadmin@test.com role=admin action=connexion.reussie details="email=smokeadmin@test.com" ip=::1
+[2026-08-07 13:29:00] user=5 email=ismailsghir107@gmail.com role=admin action=cuisinier.modifier details="id=11 email=cuisinier2@gmail.com" ip=::1
+[2026-08-07 13:29:33] user=27 email=smokeadmin@test.com role=admin action=connexion.reussie details="email=smokeadmin@test.com" ip=::1
+[2026-08-07 13:29:34] user=5 email=ismailsghir107@gmail.com role=admin action=livreur.modifier details="id=21 email=adam@gmail.com" ip=::1
+[2026-08-07 13:29:35] user=27 email=smokeadmin@test.com role=admin action=plat.modifier details="id=8 nom=Couscous Marocain  prix=1.23 disponible=1" ip=::1
+[2026-08-07 13:29:38] user=27 email=smokeadmin@test.com role=admin action=plat.modifier details="id=8 nom=Couscous Marocain  prix=1.23 disponible=1" ip=::1
+[2026-08-07 13:29:41] user=27 email=smokeadmin@test.com role=admin action=plat.creer details="nom=SmokePlat prix=9.99" ip=::1
+[2026-08-07 13:29:43] user=27 email=smokeadmin@test.com role=admin action=plat.supprimer details="id=33" ip=::1
+[2026-08-07 13:29:46] user=27 email=smokeadmin@test.com role=admin action=categorie.modifier details="id=3 nom=Couscous" ip=::1
+[2026-08-07 13:29:48] user=27 email=smokeadmin@test.com role=admin action=categorie.modifier details="id=3 nom=Couscous" ip=::1
+[2026-08-07 13:29:51] user=27 email=smokeadmin@test.com role=admin action=categorie.creer details="nom=SmokeCat" ip=::1
+[2026-08-07 13:29:53] user=27 email=smokeadmin@test.com role=admin action=categorie.supprimer details="id=13" ip=::1
+[2026-08-07 13:29:56] user=27 email=smokeadmin@test.com role=admin action=cuisinier.modifier details="id=11 email=cuisinier2@gmail.com" ip=::1
+[2026-08-07 13:29:59] user=27 email=smokeadmin@test.com role=admin action=cuisinier.modifier details="id=11 email=cuisinier2@gmail.com" ip=::1
+[2026-08-07 13:30:02] user=27 email=smokeadmin@test.com role=admin action=cuisinier.creer details="email=smokecooktest@test.com" ip=::1
+[2026-08-07 13:30:03] user=27 email=smokeadmin@test.com role=admin action=cuisinier.supprimer details="id=28" ip=::1
+[2026-08-07 13:30:06] user=27 email=smokeadmin@test.com role=admin action=livreur.modifier details="id=8 email=livreur@gmail.com" ip=::1
+[2026-08-07 13:30:09] user=27 email=smokeadmin@test.com role=admin action=livreur.modifier details="id=8 email=livreur@gmail.com" ip=::1
+[2026-08-07 13:30:12] user=27 email=smokeadmin@test.com role=admin action=livreur.creer details="email=smokedrivertest@test.com" ip=::1
+[2026-08-07 13:30:14] user=27 email=smokeadmin@test.com role=admin action=livreur.supprimer details="id=29" ip=::1
+[2026-08-07 13:30:17] user=27 email=smokeadmin@test.com role=admin action=zone.modifier details="id=2 nom=Gueliz prix=9.99" ip=::1
+[2026-08-07 13:30:20] user=27 email=smokeadmin@test.com role=admin action=zone.modifier details="id=2 nom=Gueliz prix=5" ip=::1
+[2026-08-07 13:30:23] user=27 email=smokeadmin@test.com role=admin action=zone.creer details="nom=SmokeZone prix=9.99" ip=::1
+[2026-08-07 13:30:24] user=27 email=smokeadmin@test.com role=admin action=zone.supprimer details="id=6" ip=::1
+[2026-08-07 13:31:37] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-07 13:33:33] user=30 email=smokeadmin@test.com role=admin action=connexion.reussie details="email=smokeadmin@test.com" ip=::1
+[2026-08-07 13:34:41] user=30 email=smokeadmin@test.com role=admin action=connexion.reussie details="email=smokeadmin@test.com" ip=::1
+>>>>>>> 82f4cdb1fe515253f5c0e8e2af9345e976778957

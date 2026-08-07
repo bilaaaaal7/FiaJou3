@@ -18,8 +18,6 @@ function utilisateur_role(): ?string
 
 /**
  * Convertit un rôle utilisateur en route par défaut de son espace.
- * Nécessaire car certains rôles (cook, driver) ont une valeur différente
- * du nom de leur route (cuisinier, livreur).
  */
 function route_par_defaut_pour_role(?string $role): string
 {

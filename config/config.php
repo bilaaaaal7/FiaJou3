@@ -20,6 +20,13 @@ if (!defined('BASE_URL')) {
 // Nom de l'application
 define('APP_NAME', 'FiaJou3');
 
+// Première semaine du système de planification (un lundi). Cette semaine porte
+// le numéro 1, la suivante le numéro 2, etc. Le numéro affiché par le menu
+// (Semaine 1, 2, 3…) est dérivé de cette référence — jamais du numéro ISO.
+// Chaque semaine reste un enregistrement indépendant (numero, week_start,
+// week_end, statut) ; aucune limite n'est imposée sur le nombre de semaines.
+define('DATE_PREMIERE_SEMAINE', '2026-08-03');
+
 // Dossier de destination des images de plats uploadées
 define('UPLOADS_PATH', ROOT_PATH . '/uploads');
 define('UPLOADS_URL', BASE_URL . '/uploads');
@@ -27,8 +34,8 @@ define('UPLOADS_URL', BASE_URL . '/uploads');
 // Rôles disponibles dans l'application (contrôle d'accès basé sur les rôles)
 define('ROLE_ADMIN', 'admin');
 define('ROLE_CLIENT', 'client');
-define('ROLE_CUISINIER', 'cook');
-define('ROLE_LIVREUR', 'driver');
+define('ROLE_CUISINIER', 'cuisinier');
+define('ROLE_LIVREUR', 'livreur');
 
 // Heure limite de commande pour une livraison le lendemain (cahier des charges).
 define('HEURE_LIMITE_COMMANDE', '21:00');
