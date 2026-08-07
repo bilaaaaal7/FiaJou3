@@ -115,7 +115,7 @@ class UtilisateurModele
     public function getParRole(string $role): array
     {
         $stmt = $this->pdo->prepare(
-            "SELECT users.id, users.email, users.actif, profiles.prenom, profiles.nom, profiles.telephone, profiles.role
+            "SELECT users.id, users.email, users.actif, profiles.prenom, profiles.nom, profiles.telephone, profiles.adresse, profiles.ville, profiles.role
              FROM users
              INNER JOIN profiles ON users.id = profiles.user_id
              WHERE profiles.role = ?

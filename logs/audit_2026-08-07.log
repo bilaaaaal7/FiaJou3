@@ -55,3 +55,11 @@
 [2026-08-07 13:31:37] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
 [2026-08-07 13:33:33] user=30 email=smokeadmin@test.com role=admin action=connexion.reussie details="email=smokeadmin@test.com" ip=::1
 [2026-08-07 13:34:41] user=30 email=smokeadmin@test.com role=admin action=connexion.reussie details="email=smokeadmin@test.com" ip=::1
+[2026-08-07 13:42:01] user=5 email=ismailsghir107@gmail.com role=admin action=zone.modifier details="id=2 nom=Gueliz prix=6" ip=::1
+[2026-08-07 13:50:58] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-07 13:58:48] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-07 15:42:07] user=31 email=smokeadmin@test.com role=admin action=connexion.reussie details="email=smokeadmin@test.com" ip=::1
+[2026-08-07 15:42:10] user=31 email=smokeadmin@test.com role=admin action=utilisateur.modifier details="id=6 role=client email=tariq@gmail.com" ip=::1
+[2026-08-07 15:42:13] user=31 email=smokeadmin@test.com role=admin action=utilisateur.modifier details="id=6 role=client email=tariq@gmail.com" ip=::1
+[2026-08-07 15:42:16] user=31 email=smokeadmin@test.com role=admin action=client.creer details="email=smokeclient@test.com" ip=::1
+[2026-08-07 15:42:18] user=31 email=smokeadmin@test.com role=admin action=utilisateur.supprimer details="id=32" ip=::1
