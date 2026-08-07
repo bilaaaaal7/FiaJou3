@@ -210,6 +210,6 @@ if ($menuActuel) {
 $semainePrecedente = date('Y-m-d', strtotime($lundi . ' -7 days'));
 $semaineSuivante = date('Y-m-d', strtotime($lundi . ' +7 days'));
 $estSemaineCourante = ($lundi === MenuSemaineModele::debutSemaine());
-$libelleSemaine = MenuSemaineModele::libelleSemaine($lundi, $dimanche);
+$libelleSemaine = MenuSemaineModele::libelleSemaine($lundi, $dimanche, $menuActuel ? (int) $menuActuel['numero'] : null);
 
 require ROOT_PATH . '/vue/admin/menu_semaine.php';

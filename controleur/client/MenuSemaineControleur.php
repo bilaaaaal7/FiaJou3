@@ -16,6 +16,15 @@ if ($menu) {
     $itemsParJour = $menuSemaineModele->getItemsParJour((int) $menu['id']);
 }
 
+$libelleSemaine = '';
+if ($menu && $menu['week_start'] && $menu['week_end']) {
+    $libelleSemaine = MenuSemaineModele::libelleSemaine(
+        $menu['week_start'],
+        $menu['week_end'],
+        $menu['numero'] !== null ? (int) $menu['numero'] : null
+    );
+}
+
 $datesParJour = [];
 $ouvertParJour = [];
 foreach (JOURS_LIVRAISON as $jour) {

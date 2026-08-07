@@ -38,6 +38,11 @@ $jourLabel = [
     <?php if ($menu && array_sum(array_map('count', $itemsParJour)) > 0): ?>
     <div class="panel" style="border: 2px solid var(--gold);">
         <h2 style="color: var(--gold-dark);">Menu de la semaine — <?php echo htmlspecialchars($menu['nom']); ?></h2>
+        <?php if ($libelleSemaine !== ''): ?>
+            <p style="color: var(--gold-dark); font-weight: 600; margin: 0 0 4px;">
+                <?php echo htmlspecialchars($libelleSemaine); ?>
+            </p>
+        <?php endif; ?>
         <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 16px;">
             Commandez avant <?php echo HEURE_LIMITE_COMMANDE; ?> pour une livraison le lendemain (7j/7).
             Le samedi, le menu est libre : tous les plats de la semaine sont commandables.

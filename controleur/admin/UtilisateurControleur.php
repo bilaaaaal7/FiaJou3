@@ -16,7 +16,7 @@ $email = "";
 $telephone = "";
 $adresse = "";
 $ville = "";
-$role = "";
+$roleUser = "";
 $idModifier = "";
 $error = "";
 
@@ -47,7 +47,7 @@ if (isset($_GET['modifier'])) {
         $telephone = $user['telephone'];
         $adresse = $user['adresse'];
         $ville = $user['ville'];
-        $role = $user['role'];
+        $roleUser = $user['role'];
     }
 }
 

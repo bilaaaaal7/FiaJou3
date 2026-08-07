@@ -16,6 +16,11 @@ require ROOT_PATH . '/assets/inc/navbar.php';
     <?php if ($menu): ?>
         <div class="panel" style="margin-bottom: 26px;">
             <h2><?php echo htmlspecialchars($menu['nom']); ?></h2>
+            <?php if ($libelleSemaine !== ''): ?>
+                <p style="color: var(--gold-dark); font-weight: 600; margin: 4px 0 0;">
+                    <?php echo htmlspecialchars($libelleSemaine); ?>
+                </p>
+            <?php endif; ?>
             <p style="color: var(--text-muted); margin: 0;">
                 Publié le <?php echo htmlspecialchars($menu['date_creation']); ?>
             </p>

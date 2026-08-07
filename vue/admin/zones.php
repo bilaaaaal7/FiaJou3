@@ -2,9 +2,11 @@
 $pageTitle = "Zones de livraison - " . APP_NAME;
 $pageHeading = "Zones de livraison";
 $extraCss = ['admin.css'];
+$extraJs = ['modal-form.js'];
 require ROOT_PATH . '/assets/inc/header.php';
 require ROOT_PATH . '/assets/inc/navbar.php';
 $formOuvert = !empty($idModifier) || !empty($erreur);
+$formMode = !empty($idModifier) ? 'edit' : 'add';
 ?>
 
 <?php if (!empty($erreur)): ?>
@@ -18,11 +20,7 @@ $formOuvert = !empty($idModifier) || !empty($erreur);
 <div class="panel">
     <div class="panel-head-actions">
         <h2>Liste des zones</h2>
-        <button type="button" id="btnToggleFormZone"
-                class="btn <?php echo $formOuvert ? 'btn-outline' : 'btn-gold'; ?>"
-                aria-expanded="<?php echo $formOuvert ? 'true' : 'false'; ?>">
-            <?php echo $formOuvert ? 'Annuler' : 'Ajouter une zone'; ?>
-        </button>
+        <button type="button" class="btn btn-gold" data-modal-open="modalFormZone" data-mode="add">Ajouter une zone</button>
     </div>
     <div class="table-wrap">
         <table class="data-table">
@@ -41,7 +39,12 @@ $formOuvert = !empty($idModifier) || !empty($erreur);
                     <td><?php echo htmlspecialchars($zone['nom']); ?></td>
                     <td><?php echo number_format($zone['prix_livraison'], 2); ?> DH</td>
                     <td class="actions-cell">
-                        <a href="<?php echo BASE_URL; ?>/index.php?route=admin/zones&modifier=<?php echo $zone['id']; ?>" class="btn btn-outline btn-sm">Modifier</a>
+                        <button type="button" class="btn btn-outline btn-sm" data-modal-open="modalFormZone" data-mode="edit"
+                            data-fields='<?php echo htmlspecialchars(json_encode([
+                                'id' => (int) $zone['id'],
+                                'nom' => $zone['nom'],
+                                'prix_livraison' => $zone['prix_livraison'],
+                            ], JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP), ENT_QUOTES); ?>'>Modifier</button>
                         <a href="<?php echo BASE_URL; ?>/index.php?route=admin/zones&supprimer=<?php echo $zone['id']; ?>" class="btn btn-danger btn-sm" data-confirm="Supprimer cette zone ?">Supprimer</a>
                     </td>
                 </tr>
@@ -54,54 +57,43 @@ $formOuvert = !empty($idModifier) || !empty($erreur);
     </div>
 </div>
 
-<div class="form-collapse <?php echo $formOuvert ? 'open' : ''; ?>" id="collapseFormZone">
-    <div class="form-collapse__inner">
-        <div class="panel">
-            <h2><?php echo $idModifier ? 'Modifier la zone' : 'Ajouter une zone'; ?></h2>
-            <form method="POST" action="<?php echo BASE_URL; ?>/index.php?route=admin/zones">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Nom</label>
-                        <input type="text" name="nom" value="<?php echo htmlspecialchars($nom); ?>" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Prix de livraison (DH)</label>
-                        <input type="number" step="0.01" min="0" name="prix_livraison" value="<?php echo htmlspecialchars($prix); ?>" required>
-                    </div>
-                </div>
-                <input type="hidden" name="id" value="<?php echo $idModifier; ?>">
-                <div class="form-actions">
-                    <?php if ($idModifier): ?>
-                        <button type="submit" name="modifier" class="btn btn-gold">Modifier</button>
-                        <a href="<?php echo BASE_URL; ?>/index.php?route=admin/zones" class="btn btn-outline">Annuler</a>
-                    <?php else: ?>
-                        <button type="submit" name="ajouter" class="btn btn-gold">Ajouter</button>
-                    <?php endif; ?>
-                </div>
-            </form>
+<div class="modal-overlay" id="modalFormZone" hidden>
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalFormZoneTitle">
+        <div class="modal-head">
+            <h3 id="modalFormZoneTitle" data-title-add="Ajouter une zone" data-title-edit="Modifier la zone"><?php echo $formMode === 'edit' ? 'Modifier la zone' : 'Ajouter une zone'; ?></h3>
+            <button type="button" class="modal-close" data-modal-close aria-label="Fermer">&times;</button>
         </div>
+        <form method="POST" action="<?php echo BASE_URL; ?>/index.php?route=admin/zones">
+            <div class="form-stack">
+                <div class="form-group">
+                    <label>Nom</label>
+                    <input type="text" name="nom" value="<?php echo htmlspecialchars($nom); ?>" required>
+                </div>
+                <div class="form-group">
+                    <label>Prix de livraison (DH)</label>
+                    <input type="number" step="0.01" min="0" name="prix_livraison" value="<?php echo htmlspecialchars($prix); ?>" required>
+                </div>
+            </div>
+            <input type="hidden" name="id" value="<?php echo $idModifier; ?>">
+            <p class="modal-error" hidden><?php echo htmlspecialchars($erreur ?? ''); ?></p>
+            <div class="form-actions">
+                <button type="submit" name="<?php echo $formMode === 'edit' ? 'modifier' : 'ajouter'; ?>" class="btn btn-gold"
+                    data-name-add="ajouter" data-name-edit="modifier"
+                    data-label-add="Ajouter" data-label-edit="Modifier"><?php echo $formMode === 'edit' ? 'Modifier' : 'Ajouter'; ?></button>
+                <button type="button" class="btn btn-outline" data-modal-close>Annuler</button>
+            </div>
+        </form>
     </div>
 </div>
 
+<?php if ($formOuvert): ?>
 <script>
-(function () {
-    var btn = document.getElementById('btnToggleFormZone');
-    var collapse = document.getElementById('collapseFormZone');
-    if (!btn || !collapse) { return; }
-    var labelOuvert = 'Annuler';
-    var labelFerme = 'Ajouter une zone';
-
-    function majBouton(open) {
-        btn.textContent = open ? labelOuvert : labelFerme;
-        btn.classList.toggle('btn-outline', open);
-        btn.classList.toggle('btn-gold', !open);
-        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    }
-
-    btn.addEventListener('click', function () {
-        majBouton(collapse.classList.toggle('open'));
+    window.addEventListener('DOMContentLoaded', function () {
+        if (window.ouvrirModalForm) {
+            window.ouvrirModalForm('modalFormZone', '<?php echo $formMode; ?>', null, <?php echo json_encode($erreur ?? '', JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP); ?>);
+        }
     });
-})();
 </script>
+<?php endif; ?>
 
 <?php require ROOT_PATH . '/assets/inc/footer.php'; ?>

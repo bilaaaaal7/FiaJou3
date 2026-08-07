@@ -58,7 +58,7 @@ if (est_connecte() && !headers_sent()) {
 
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/app.css">
     <?php foreach ($extraCss as $css): ?>
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/<?php echo htmlspecialchars($css); ?>">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/<?php echo htmlspecialchars($css); ?>?v=<?php echo (int) @filemtime(ROOT_PATH . '/assets/css/' . $css); ?>">
     <?php endforeach; ?>
 </head>
 <body class="<?php echo htmlspecialchars($bodyClass); ?>">

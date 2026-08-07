@@ -2,9 +2,11 @@
 $pageTitle = "Gestion des livreurs - " . APP_NAME;
 $pageHeading = "Gestion des livreurs";
 $extraCss = ['admin.css'];
+$extraJs = ['modal-form.js'];
 require ROOT_PATH . '/assets/inc/header.php';
 require ROOT_PATH . '/assets/inc/navbar.php';
 $formOuvert = !empty($idModifier) || !empty($erreur);
+$formMode = !empty($idModifier) ? 'edit' : 'add';
 ?>
 
 <?php if (!empty($erreur)): ?>
@@ -22,11 +24,7 @@ $formOuvert = !empty($idModifier) || !empty($erreur);
 <div class="panel">
     <div class="panel-head-actions">
         <h2>Liste des livreurs</h2>
-        <button type="button" id="btnToggleFormLivreur"
-                class="btn <?php echo $formOuvert ? 'btn-outline' : 'btn-gold'; ?>"
-                aria-expanded="<?php echo $formOuvert ? 'true' : 'false'; ?>">
-            <?php echo $formOuvert ? 'Annuler' : 'Ajouter un livreur'; ?>
-        </button>
+        <button type="button" class="btn btn-gold" data-modal-open="modalFormLivreur" data-mode="add">Ajouter un livreur</button>
     </div>
     <div class="table-wrap">
         <table class="data-table">
@@ -55,7 +53,14 @@ $formOuvert = !empty($idModifier) || !empty($erreur);
                         <?php endif; ?>
                     </td>
                     <td class="actions-cell">
-                        <a href="<?php echo BASE_URL; ?>/index.php?route=admin/livreurs&modifier=<?php echo $l['id']; ?>" class="btn btn-outline btn-sm">Modifier</a>
+                        <button type="button" class="btn btn-outline btn-sm" data-modal-open="modalFormLivreur" data-mode="edit"
+                            data-fields='<?php echo htmlspecialchars(json_encode([
+                                'id' => (int) $l['id'],
+                                'prenom' => $l['prenom'],
+                                'nom' => $l['nom'],
+                                'email' => $l['email'],
+                                'telephone' => $l['telephone'] ?? '',
+                            ], JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP), ENT_QUOTES); ?>'>Modifier</button>
                         <?php if ($l['actif']): ?>
                             <a href="<?php echo BASE_URL; ?>/index.php?route=admin/livreurs&desactiver=<?php echo $l['id']; ?>" class="btn btn-danger btn-sm" data-confirm="Désactiver ce livreur ?">Désactiver</a>
                         <?php else: ?>
@@ -73,68 +78,55 @@ $formOuvert = !empty($idModifier) || !empty($erreur);
     </div>
 </div>
 
-<div class="form-collapse <?php echo $formOuvert ? 'open' : ''; ?>" id="collapseFormLivreur">
-    <div class="form-collapse__inner">
-        <div class="panel">
-            <h2><?php echo $idModifier ? 'Modifier le livreur' : 'Ajouter un livreur'; ?></h2>
-            <form method="POST" action="<?php echo BASE_URL; ?>/index.php?route=admin/livreurs">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Prénom</label>
-                        <input type="text" name="prenom" value="<?php echo htmlspecialchars($prenom); ?>" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Nom</label>
-                        <input type="text" name="nom" value="<?php echo htmlspecialchars($nom); ?>" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Téléphone</label>
-                        <input type="text" name="telephone" value="<?php echo htmlspecialchars($telephone); ?>">
-                    </div>
-                    <?php if (!$idModifier): ?>
-                    <div class="form-group">
-                        <label>Mot de passe</label>
-                        <input type="password" name="password" minlength="6" required>
-                    </div>
-                    <?php endif; ?>
-                </div>
-                <input type="hidden" name="id" value="<?php echo $idModifier; ?>">
-                <div class="form-actions">
-                    <?php if ($idModifier): ?>
-                        <button type="submit" name="modifier" class="btn btn-gold">Modifier</button>
-                        <a href="<?php echo BASE_URL; ?>/index.php?route=admin/livreurs" class="btn btn-outline">Annuler</a>
-                    <?php else: ?>
-                        <button type="submit" name="ajouter" class="btn btn-gold">Ajouter</button>
-                    <?php endif; ?>
-                </div>
-            </form>
+<div class="modal-overlay" id="modalFormLivreur" hidden>
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalFormLivreurTitle">
+        <div class="modal-head">
+            <h3 id="modalFormLivreurTitle" data-title-add="Ajouter un livreur" data-title-edit="Modifier le livreur"><?php echo $formMode === 'edit' ? 'Modifier le livreur' : 'Ajouter un livreur'; ?></h3>
+            <button type="button" class="modal-close" data-modal-close aria-label="Fermer">&times;</button>
         </div>
+        <form method="POST" action="<?php echo BASE_URL; ?>/index.php?route=admin/livreurs">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Prénom</label>
+                    <input type="text" name="prenom" value="<?php echo htmlspecialchars($prenom); ?>" required>
+                </div>
+                <div class="form-group">
+                    <label>Nom</label>
+                    <input type="text" name="nom" value="<?php echo htmlspecialchars($nom); ?>" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
+                </div>
+                <div class="form-group">
+                    <label>Téléphone</label>
+                    <input type="text" name="telephone" value="<?php echo htmlspecialchars($telephone); ?>">
+                </div>
+                <div class="form-group" data-only-add>
+                    <label>Mot de passe</label>
+                    <input type="password" name="password" minlength="6" required>
+                </div>
+            </div>
+            <input type="hidden" name="id" value="<?php echo $idModifier; ?>">
+            <p class="modal-error" hidden><?php echo htmlspecialchars($erreur ?? ''); ?></p>
+            <div class="form-actions">
+                <button type="submit" name="<?php echo $formMode === 'edit' ? 'modifier' : 'ajouter'; ?>" class="btn btn-gold"
+                    data-name-add="ajouter" data-name-edit="modifier"
+                    data-label-add="Ajouter" data-label-edit="Modifier"><?php echo $formMode === 'edit' ? 'Modifier' : 'Ajouter'; ?></button>
+                <button type="button" class="btn btn-outline" data-modal-close>Annuler</button>
+            </div>
+        </form>
     </div>
 </div>
 
+<?php if ($formOuvert): ?>
 <script>
-(function () {
-    var btn = document.getElementById('btnToggleFormLivreur');
-    var collapse = document.getElementById('collapseFormLivreur');
-    if (!btn || !collapse) { return; }
-    var labelOuvert = 'Annuler';
-    var labelFerme = 'Ajouter un livreur';
-
-    function majBouton(open) {
-        btn.textContent = open ? labelOuvert : labelFerme;
-        btn.classList.toggle('btn-outline', open);
-        btn.classList.toggle('btn-gold', !open);
-        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    }
-
-    btn.addEventListener('click', function () {
-        majBouton(collapse.classList.toggle('open'));
+    window.addEventListener('DOMContentLoaded', function () {
+        if (window.ouvrirModalForm) {
+            window.ouvrirModalForm('modalFormLivreur', '<?php echo $formMode; ?>', null, <?php echo json_encode($erreur ?? '', JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP); ?>);
+        }
     });
-})();
 </script>
+<?php endif; ?>
 
 <?php require ROOT_PATH . '/assets/inc/footer.php'; ?>

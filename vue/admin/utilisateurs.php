@@ -91,10 +91,10 @@ require ROOT_PATH . '/assets/inc/navbar.php';
             <div class="form-group">
                 <label>Rôle</label>
                 <select name="role">
-                    <option value="admin" <?php if ($role == "admin") echo "selected"; ?>>Admin</option>
-                    <option value="client" <?php if ($role == "client") echo "selected"; ?>>Client</option>
-                    <option value="cook" <?php if ($role == "cook") echo "selected"; ?>>Cuisinier</option>
-                    <option value="driver" <?php if ($role == "driver") echo "selected"; ?>>Livreur</option>
+                    <option value="admin" <?php if ($roleUser == "admin") echo "selected"; ?>>Admin</option>
+                    <option value="client" <?php if ($roleUser == "client") echo "selected"; ?>>Client</option>
+                    <option value="cuisinier" <?php if ($roleUser == "cuisinier") echo "selected"; ?>>Cuisinier</option>
+                    <option value="livreur" <?php if ($roleUser == "livreur") echo "selected"; ?>>Livreur</option>
                 </select>
             </div>
         </div>

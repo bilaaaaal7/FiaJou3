@@ -60,8 +60,8 @@ $roleLabels = [
     ROLE_CUISINIER => 'Cuisinier',
     ROLE_LIVREUR   => 'Livreur',
 ];
-$prenom = trim((string) ($_SESSION['prenom'] ?? ''));
-$initial = $prenom !== '' ? mb_strtoupper(mb_substr($prenom, 0, 1)) : '?';
+$prenomNavbar = trim((string) ($_SESSION['prenom'] ?? ''));
+$initial = $prenomNavbar !== '' ? mb_strtoupper(mb_substr($prenomNavbar, 0, 1)) : '?';
 $roleLabel = $roleLabels[$role] ?? $role;
 ?>
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar(false)" aria-hidden="true"></div>
@@ -143,7 +143,7 @@ $roleLabel = $roleLabels[$role] ?? $role;
                 <div class="topheader-profile" data-profile-menu>
                     <button type="button" class="topheader-profile-trigger" data-profile-trigger aria-haspopup="true" aria-expanded="false">
                         <span class="avatar"><?php echo htmlspecialchars($initial); ?></span>
-                        <span class="topheader-profile-name"><?php echo htmlspecialchars($prenom); ?></span>
+                        <span class="topheader-profile-name"><?php echo htmlspecialchars($prenomNavbar); ?></span>
                         <i data-lucide="chevron-down" class="topheader-profile-caret" aria-hidden="true"></i>
                     </button>
 
@@ -151,7 +151,7 @@ $roleLabel = $roleLabels[$role] ?? $role;
                         <div class="topheader-profile-dropdown-head">
                             <span class="avatar avatar-lg"><?php echo htmlspecialchars($initial); ?></span>
                             <div class="topheader-profile-dropdown-identity">
-                                <strong><?php echo htmlspecialchars($prenom); ?></strong>
+                                <strong><?php echo htmlspecialchars($prenomNavbar); ?></strong>
                                 <span><?php echo htmlspecialchars($roleLabel); ?></span>
                             </div>
                         </div>

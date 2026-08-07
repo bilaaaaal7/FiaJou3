@@ -2,7 +2,7 @@
 require_once "../includes/admin_auth.php";
 require_once "../config/db.php";
 
-$ROLE = 'driver';
+$ROLE = 'livreur';
 $prenom = ""; $nom = ""; $email = ""; $telephone = "";
 $idModifier = "";
 $message = ""; $messageType = "info";

@@ -287,25 +287,27 @@ class CommandeModele
 
     public function getCuisiniersDisponibles(): array
     {
-        $stmt = $this->pdo->query(
+        $stmt = $this->pdo->prepare(
             "SELECT users.id, profiles.prenom, profiles.nom
              FROM users
              INNER JOIN profiles ON users.id = profiles.user_id
-             WHERE profiles.role = 'cook' AND users.actif = 1
+             WHERE profiles.role = ? AND users.actif = 1
              ORDER BY profiles.nom"
         );
+        $stmt->execute([ROLE_CUISINIER]);
         return $stmt->fetchAll();
     }
 
     public function getLivreursDisponibles(): array
     {
-        $stmt = $this->pdo->query(
+        $stmt = $this->pdo->prepare(
             "SELECT users.id, profiles.prenom, profiles.nom
              FROM users
              INNER JOIN profiles ON users.id = profiles.user_id
-             WHERE profiles.role = 'driver' AND users.actif = 1
+             WHERE profiles.role = ? AND users.actif = 1
              ORDER BY profiles.nom"
         );
+        $stmt->execute([ROLE_LIVREUR]);
         return $stmt->fetchAll();
     }
 

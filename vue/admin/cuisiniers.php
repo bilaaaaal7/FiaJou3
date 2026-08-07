@@ -2,9 +2,11 @@
 $pageTitle = "Gestion des cuisiniers - " . APP_NAME;
 $pageHeading = "Gestion des cuisiniers";
 $extraCss = ['admin.css'];
+$extraJs = ['modal-form.js'];
 require ROOT_PATH . '/assets/inc/header.php';
 require ROOT_PATH . '/assets/inc/navbar.php';
 $formOuvert = !empty($idModifier) || !empty($erreur);
+$formMode = !empty($idModifier) ? 'edit' : 'add';
 ?>
 
 <?php if (!empty($erreur)): ?>
@@ -22,11 +24,7 @@ $formOuvert = !empty($idModifier) || !empty($erreur);
 <div class="panel" id="panelListeCuisiniers">
     <div class="panel-head-actions">
         <h2>Liste des cuisiniers</h2>
-        <button type="button" id="btnToggleFormCuisinier"
-                class="btn <?php echo $formOuvert ? 'btn-outline' : 'btn-gold'; ?>"
-                aria-expanded="<?php echo $formOuvert ? 'true' : 'false'; ?>">
-            <?php echo $formOuvert ? 'Annuler' : 'Ajouter un cuisinier'; ?>
-        </button>
+        <button type="button" class="btn btn-gold" data-modal-open="modalFormCuisinier" data-mode="add">Ajouter un cuisinier</button>
     </div>
     <div class="table-wrap">
         <table class="data-table">
@@ -55,7 +53,14 @@ $formOuvert = !empty($idModifier) || !empty($erreur);
                         <?php endif; ?>
                     </td>
                     <td class="actions-cell">
-                        <a href="<?php echo BASE_URL; ?>/index.php?route=admin/cuisiniers&modifier=<?php echo $c['id']; ?>" class="btn btn-outline btn-sm">Modifier</a>
+                        <button type="button" class="btn btn-outline btn-sm" data-modal-open="modalFormCuisinier" data-mode="edit"
+                            data-fields='<?php echo htmlspecialchars(json_encode([
+                                'id' => (int) $c['id'],
+                                'prenom' => $c['prenom'],
+                                'nom' => $c['nom'],
+                                'email' => $c['email'],
+                                'telephone' => $c['telephone'] ?? '',
+                            ], JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP), ENT_QUOTES); ?>'>Modifier</button>
                         <?php if ($c['actif']): ?>
                             <a href="<?php echo BASE_URL; ?>/index.php?route=admin/cuisiniers&desactiver=<?php echo $c['id']; ?>" class="btn btn-danger btn-sm" data-confirm="Désactiver ce cuisinier ?">Désactiver</a>
                         <?php else: ?>
@@ -73,69 +78,55 @@ $formOuvert = !empty($idModifier) || !empty($erreur);
     </div>
 </div>
 
-<div class="form-collapse <?php echo $formOuvert ? 'open' : ''; ?>" id="collapseFormCuisinier">
-    <div class="form-collapse__inner">
-        <div class="panel" id="panelFormCuisinier">
-            <h2><?php echo $idModifier ? 'Modifier le cuisinier' : 'Ajouter un cuisinier'; ?></h2>
-            <form method="POST" action="<?php echo BASE_URL; ?>/index.php?route=admin/cuisiniers">
-                <div class="form-stack">
-                    <div class="form-group">
-                        <label>Prénom</label>
-                        <input type="text" name="prenom" value="<?php echo htmlspecialchars($prenom); ?>" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Nom</label>
-                        <input type="text" name="nom" value="<?php echo htmlspecialchars($nom); ?>" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Téléphone</label>
-                        <input type="text" name="telephone" value="<?php echo htmlspecialchars($telephone); ?>">
-                    </div>
-                    <?php if (!$idModifier): ?>
-                    <div class="form-group">
-                        <label>Mot de passe</label>
-                        <input type="password" name="password" minlength="6" required>
-                    </div>
-                    <?php endif; ?>
-                </div>
-                <input type="hidden" name="id" value="<?php echo $idModifier; ?>">
-                <div class="form-actions form-actions-end">
-                    <?php if ($idModifier): ?>
-                        <button type="submit" name="modifier" class="btn btn-gold">Modifier</button>
-                        <a href="<?php echo BASE_URL; ?>/index.php?route=admin/cuisiniers" class="btn btn-outline">Annuler</a>
-                    <?php else: ?>
-                        <button type="submit" name="ajouter" class="btn btn-gold">Ajouter</button>
-                        <a href="<?php echo BASE_URL; ?>/index.php?route=admin/cuisiniers" class="btn btn-outline">Annuler</a>
-                    <?php endif; ?>
-                </div>
-            </form>
+<div class="modal-overlay" id="modalFormCuisinier" hidden>
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalFormCuisinierTitle">
+        <div class="modal-head">
+            <h3 id="modalFormCuisinierTitle" data-title-add="Ajouter un cuisinier" data-title-edit="Modifier le cuisinier"><?php echo $formMode === 'edit' ? 'Modifier le cuisinier' : 'Ajouter un cuisinier'; ?></h3>
+            <button type="button" class="modal-close" data-modal-close aria-label="Fermer">&times;</button>
         </div>
+        <form method="POST" action="<?php echo BASE_URL; ?>/index.php?route=admin/cuisiniers">
+            <div class="form-stack">
+                <div class="form-group">
+                    <label>Prénom</label>
+                    <input type="text" name="prenom" value="<?php echo htmlspecialchars($prenom); ?>" required>
+                </div>
+                <div class="form-group">
+                    <label>Nom</label>
+                    <input type="text" name="nom" value="<?php echo htmlspecialchars($nom); ?>" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
+                </div>
+                <div class="form-group">
+                    <label>Téléphone</label>
+                    <input type="text" name="telephone" value="<?php echo htmlspecialchars($telephone); ?>">
+                </div>
+                <div class="form-group" data-only-add>
+                    <label>Mot de passe</label>
+                    <input type="password" name="password" minlength="6" required>
+                </div>
+            </div>
+            <input type="hidden" name="id" value="<?php echo $idModifier; ?>">
+            <p class="modal-error" hidden><?php echo htmlspecialchars($erreur ?? ''); ?></p>
+            <div class="form-actions">
+                <button type="submit" name="<?php echo $formMode === 'edit' ? 'modifier' : 'ajouter'; ?>" class="btn btn-gold"
+                    data-name-add="ajouter" data-name-edit="modifier"
+                    data-label-add="Ajouter" data-label-edit="Modifier"><?php echo $formMode === 'edit' ? 'Modifier' : 'Ajouter'; ?></button>
+                <button type="button" class="btn btn-outline" data-modal-close>Annuler</button>
+            </div>
+        </form>
     </div>
 </div>
 
+<?php if ($formOuvert): ?>
 <script>
-(function () {
-    var btn = document.getElementById('btnToggleFormCuisinier');
-    var collapse = document.getElementById('collapseFormCuisinier');
-    if (!btn || !collapse) { return; }
-    var labelOuvert = 'Annuler';
-    var labelFerme = 'Ajouter un cuisinier';
-
-    function majBouton(open) {
-        btn.textContent = open ? labelOuvert : labelFerme;
-        btn.classList.toggle('btn-outline', open);
-        btn.classList.toggle('btn-gold', !open);
-        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    }
-
-    btn.addEventListener('click', function () {
-        majBouton(collapse.classList.toggle('open'));
+    window.addEventListener('DOMContentLoaded', function () {
+        if (window.ouvrirModalForm) {
+            window.ouvrirModalForm('modalFormCuisinier', '<?php echo $formMode; ?>', null, <?php echo json_encode($erreur ?? '', JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP); ?>);
+        }
     });
-})();
 </script>
+<?php endif; ?>
 
 <?php require ROOT_PATH . '/assets/inc/footer.php'; ?>
