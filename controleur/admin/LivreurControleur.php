@@ -60,6 +60,18 @@ if (isset($_GET['desactiver'])) {
     exit;
 }
 
+if (isset($_GET['supprimer'])) {
+    $succes = $utilisateurModele->supprimer((int) $_GET['supprimer']);
+
+    if (!$succes) {
+        $erreur = "Impossible de supprimer ce livreur : il a des commandes ou données associées. Vous pouvez le désactiver à la place.";
+    } else {
+        journaliser_audit('livreur.supprimer', 'id=' . (int) $_GET['supprimer']);
+        header('Location: ' . BASE_URL . '/index.php?route=admin/livreurs&supprime=1');
+        exit;
+    }
+}
+
 $livreurs = $utilisateurModele->getLivreurs();
 $idModifier = '';
 $prenom = $nom = $email = $telephone = '';

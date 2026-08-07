@@ -829,6 +829,42 @@ table.data-table tr:hover td { background: var(--table-hover); }
 
 .form-actions { margin-top: 18px; display: flex; gap: 10px; }
 
+/* ---------- Formulaire vertical moderne (cuisiniers) ---------- */
+.form-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+}
+
+.form-stack .form-group { gap: 6px; }
+
+.form-stack .form-group input,
+.form-stack .form-group select,
+.form-stack .form-group textarea {
+    width: 100%;
+    padding: 9px 12px;
+    font-size: 0.9rem;
+    border-radius: 10px;
+}
+
+.form-actions-end { justify-content: flex-end; }
+
+/* ---------- Page cuisiniers : masquage de la liste quand le formulaire est ouvert ---------- */
+#panelListeCuisiniers:has(+ #collapseFormCuisinier.open) { display: none; }
+
+#panelFormCuisinier { padding: 18px 20px; }
+
+#panelFormCuisinier h2 { margin-bottom: 14px; }
+
+#panelFormCuisinier .form-actions {
+    max-width: 560px;
+    margin: 16px auto 0;
+}
+
+
 /* ---------- Formulaire repliable (cuisiniers / livreurs) ---------- */
 .panel-head-actions {
     display: flex;

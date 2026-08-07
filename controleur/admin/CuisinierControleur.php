@@ -61,6 +61,18 @@ if (isset($_GET['desactiver'])) {
     exit;
 }
 
+if (isset($_GET['supprimer'])) {
+    $succes = $utilisateurModele->supprimer((int) $_GET['supprimer']);
+
+    if (!$succes) {
+        $erreur = "Impossible de supprimer ce cuisinier : il a des commandes ou données associées. Vous pouvez le désactiver à la place.";
+    } else {
+        journaliser_audit('cuisinier.supprimer', 'id=' . (int) $_GET['supprimer']);
+        header('Location: ' . BASE_URL . '/index.php?route=admin/cuisiniers&supprime=1');
+        exit;
+    }
+}
+
 $cuisiniers = $utilisateurModele->getCuisiniers();
 $idModifier = '';
 $prenom = $nom = $email = $telephone = '';

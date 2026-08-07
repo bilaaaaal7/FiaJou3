@@ -15,6 +15,10 @@ $formOuvert = !empty($idModifier) || !empty($erreur);
     <div class="alert-box alert-success">Livreur ajouté avec succès.</div>
 <?php endif; ?>
 
+<?php if (isset($_GET['supprime'])): ?>
+    <div class="alert-box alert-success">Livreur supprimé avec succès.</div>
+<?php endif; ?>
+
 <div class="panel">
     <div class="panel-head-actions">
         <h2>Liste des livreurs</h2>
@@ -57,6 +61,7 @@ $formOuvert = !empty($idModifier) || !empty($erreur);
                         <?php else: ?>
                             <a href="<?php echo BASE_URL; ?>/index.php?route=admin/livreurs&activer=<?php echo $l['id']; ?>" class="btn btn-gold btn-sm">Activer</a>
                         <?php endif; ?>
+                        <a href="<?php echo BASE_URL; ?>/index.php?route=admin/livreurs&supprimer=<?php echo $l['id']; ?>" class="btn btn-danger btn-sm" data-confirm="Voulez-vous vraiment supprimer ce livreur ?">Supprimer</a>
                     </td>
                 </tr>
             <?php endforeach; ?>

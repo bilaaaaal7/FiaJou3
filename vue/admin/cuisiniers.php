@@ -15,7 +15,11 @@ $formOuvert = !empty($idModifier) || !empty($erreur);
     <div class="alert-box alert-success">Cuisinier ajouté avec succès.</div>
 <?php endif; ?>
 
-<div class="panel">
+<?php if (isset($_GET['supprime'])): ?>
+    <div class="alert-box alert-success">Cuisinier supprimé avec succès.</div>
+<?php endif; ?>
+
+<div class="panel" id="panelListeCuisiniers">
     <div class="panel-head-actions">
         <h2>Liste des cuisiniers</h2>
         <button type="button" id="btnToggleFormCuisinier"
@@ -57,6 +61,7 @@ $formOuvert = !empty($idModifier) || !empty($erreur);
                         <?php else: ?>
                             <a href="<?php echo BASE_URL; ?>/index.php?route=admin/cuisiniers&activer=<?php echo $c['id']; ?>" class="btn btn-gold btn-sm">Activer</a>
                         <?php endif; ?>
+                        <a href="<?php echo BASE_URL; ?>/index.php?route=admin/cuisiniers&supprimer=<?php echo $c['id']; ?>" class="btn btn-danger btn-sm" data-confirm="Voulez-vous vraiment supprimer ce cuisinier ?">Supprimer</a>
                     </td>
                 </tr>
             <?php endforeach; ?>
@@ -70,10 +75,10 @@ $formOuvert = !empty($idModifier) || !empty($erreur);
 
 <div class="form-collapse <?php echo $formOuvert ? 'open' : ''; ?>" id="collapseFormCuisinier">
     <div class="form-collapse__inner">
-        <div class="panel">
+        <div class="panel" id="panelFormCuisinier">
             <h2><?php echo $idModifier ? 'Modifier le cuisinier' : 'Ajouter un cuisinier'; ?></h2>
             <form method="POST" action="<?php echo BASE_URL; ?>/index.php?route=admin/cuisiniers">
-                <div class="form-grid">
+                <div class="form-stack">
                     <div class="form-group">
                         <label>Prénom</label>
                         <input type="text" name="prenom" value="<?php echo htmlspecialchars($prenom); ?>" required>
@@ -98,12 +103,13 @@ $formOuvert = !empty($idModifier) || !empty($erreur);
                     <?php endif; ?>
                 </div>
                 <input type="hidden" name="id" value="<?php echo $idModifier; ?>">
-                <div class="form-actions">
+                <div class="form-actions form-actions-end">
                     <?php if ($idModifier): ?>
                         <button type="submit" name="modifier" class="btn btn-gold">Modifier</button>
                         <a href="<?php echo BASE_URL; ?>/index.php?route=admin/cuisiniers" class="btn btn-outline">Annuler</a>
                     <?php else: ?>
                         <button type="submit" name="ajouter" class="btn btn-gold">Ajouter</button>
+                        <a href="<?php echo BASE_URL; ?>/index.php?route=admin/cuisiniers" class="btn btn-outline">Annuler</a>
                     <?php endif; ?>
                 </div>
             </form>
