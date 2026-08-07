@@ -2,10 +2,24 @@
 $pageTitle = "Gestion des livreurs - " . APP_NAME;
 $pageHeading = "Gestion des livreurs";
 $extraCss = ['admin.css'];
+$fjFormPrenom = $prenom ?? '';
 require ROOT_PATH . '/assets/inc/header.php';
 require ROOT_PATH . '/assets/inc/navbar.php';
 $formOuvert = !empty($idModifier) || !empty($erreur);
+
+$fjItems = [];
+foreach ($livreurs as $fjItem) {
+    $fjItems[(string) $fjItem['id']] = [
+        'prenom' => $fjItem['prenom'],
+        'nom' => $fjItem['nom'],
+        'email' => $fjItem['email'],
+        'telephone' => $fjItem['telephone'],
+    ];
+}
+$fjItemsJson = json_encode($fjItems, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
 ?>
+
+<div id="adminPageContent">
 
 <?php if (!empty($erreur)): ?>
     <div class="alert-box alert-error"><?php echo htmlspecialchars($erreur); ?></div>
@@ -19,13 +33,13 @@ $formOuvert = !empty($idModifier) || !empty($erreur);
     <div class="alert-box alert-success">Livreur supprimé avec succès.</div>
 <?php endif; ?>
 
-<div class="panel">
+<div class="panel panel-list<?php echo $formOuvert ? ' is-hidden' : ''; ?>" id="panelListeLivreurs">
     <div class="panel-head-actions">
         <h2>Liste des livreurs</h2>
         <button type="button" id="btnToggleFormLivreur"
-                class="btn <?php echo $formOuvert ? 'btn-outline' : 'btn-gold'; ?>"
+                class="btn btn-gold"
                 aria-expanded="<?php echo $formOuvert ? 'true' : 'false'; ?>">
-            <?php echo $formOuvert ? 'Annuler' : 'Ajouter un livreur'; ?>
+            Ajouter un livreur
         </button>
     </div>
     <div class="table-wrap">
@@ -55,13 +69,13 @@ $formOuvert = !empty($idModifier) || !empty($erreur);
                         <?php endif; ?>
                     </td>
                     <td class="actions-cell">
-                        <a href="<?php echo BASE_URL; ?>/index.php?route=admin/livreurs&modifier=<?php echo $l['id']; ?>" class="btn btn-outline btn-sm">Modifier</a>
+                        <a href="<?php echo BASE_URL; ?>/index.php?route=admin/livreurs&modifier=<?php echo $l['id']; ?>" class="btn btn-outline btn-sm js-modifier-livreur" data-id="<?php echo $l['id']; ?>">Modifier</a>
                         <?php if ($l['actif']): ?>
-                            <a href="<?php echo BASE_URL; ?>/index.php?route=admin/livreurs&desactiver=<?php echo $l['id']; ?>" class="btn btn-danger btn-sm" data-confirm="Désactiver ce livreur ?">Désactiver</a>
+                            <a href="<?php echo BASE_URL; ?>/index.php?route=admin/livreurs&desactiver=<?php echo $l['id']; ?>" class="btn btn-danger btn-sm js-fj-ajax" data-confirm="Désactiver ce livreur ?">Désactiver</a>
                         <?php else: ?>
-                            <a href="<?php echo BASE_URL; ?>/index.php?route=admin/livreurs&activer=<?php echo $l['id']; ?>" class="btn btn-gold btn-sm">Activer</a>
+                            <a href="<?php echo BASE_URL; ?>/index.php?route=admin/livreurs&activer=<?php echo $l['id']; ?>" class="btn btn-gold btn-sm js-fj-ajax">Activer</a>
                         <?php endif; ?>
-                        <a href="<?php echo BASE_URL; ?>/index.php?route=admin/livreurs&supprimer=<?php echo $l['id']; ?>" class="btn btn-danger btn-sm" data-confirm="Voulez-vous vraiment supprimer ce livreur ?">Supprimer</a>
+                        <a href="<?php echo BASE_URL; ?>/index.php?route=admin/livreurs&supprimer=<?php echo $l['id']; ?>" class="btn btn-danger btn-sm js-fj-ajax" data-confirm="Voulez-vous vraiment supprimer ce livreur ?">Supprimer</a>
                     </td>
                 </tr>
             <?php endforeach; ?>
@@ -76,12 +90,15 @@ $formOuvert = !empty($idModifier) || !empty($erreur);
 <div class="form-collapse <?php echo $formOuvert ? 'open' : ''; ?>" id="collapseFormLivreur">
     <div class="form-collapse__inner">
         <div class="panel">
-            <h2><?php echo $idModifier ? 'Modifier le livreur' : 'Ajouter un livreur'; ?></h2>
-            <form method="POST" action="<?php echo BASE_URL; ?>/index.php?route=admin/livreurs">
-                <div class="form-grid">
+            <h2>
+                <span data-title-add <?php echo $idModifier ? 'hidden' : ''; ?>>Ajouter un livreur</span>
+                <span data-title-edit <?php echo $idModifier ? '' : 'hidden'; ?>>Modifier le livreur</span>
+            </h2>
+            <form method="POST" action="<?php echo BASE_URL; ?>/index.php?route=admin/livreurs" id="formLivreur">
+                <div class="form-stack">
                     <div class="form-group">
                         <label>Prénom</label>
-                        <input type="text" name="prenom" value="<?php echo htmlspecialchars($prenom); ?>" required>
+                        <input type="text" name="prenom" value="<?php echo htmlspecialchars($fjFormPrenom); ?>" required>
                     </div>
                     <div class="form-group">
                         <label>Nom</label>
@@ -95,46 +112,46 @@ $formOuvert = !empty($idModifier) || !empty($erreur);
                         <label>Téléphone</label>
                         <input type="text" name="telephone" value="<?php echo htmlspecialchars($telephone); ?>">
                     </div>
-                    <?php if (!$idModifier): ?>
-                    <div class="form-group">
+                    <div class="form-group" data-field-password <?php echo $idModifier ? 'hidden' : ''; ?>>
                         <label>Mot de passe</label>
-                        <input type="password" name="password" minlength="6" required>
+                        <input type="password" name="password" minlength="6" <?php echo $idModifier ? '' : 'required'; ?>>
                     </div>
-                    <?php endif; ?>
                 </div>
                 <input type="hidden" name="id" value="<?php echo $idModifier; ?>">
-                <div class="form-actions">
-                    <?php if ($idModifier): ?>
-                        <button type="submit" name="modifier" class="btn btn-gold">Modifier</button>
-                        <a href="<?php echo BASE_URL; ?>/index.php?route=admin/livreurs" class="btn btn-outline">Annuler</a>
-                    <?php else: ?>
-                        <button type="submit" name="ajouter" class="btn btn-gold">Ajouter</button>
-                    <?php endif; ?>
+                <div class="form-actions form-actions-end">
+                    <button type="submit" name="<?php echo $idModifier ? 'modifier' : 'ajouter'; ?>" data-btn-submit class="btn btn-gold"><?php echo $idModifier ? 'Modifier' : 'Ajouter'; ?></button>
+                    <a href="<?php echo BASE_URL; ?>/index.php?route=admin/livreurs" class="btn btn-outline" data-btn-annuler>Annuler</a>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
+<script src="<?php echo BASE_URL; ?>/assets/js/admin_form.js"></script>
 <script>
-(function () {
-    var btn = document.getElementById('btnToggleFormLivreur');
-    var collapse = document.getElementById('collapseFormLivreur');
-    if (!btn || !collapse) { return; }
-    var labelOuvert = 'Annuler';
-    var labelFerme = 'Ajouter un livreur';
-
-    function majBouton(open) {
-        btn.textContent = open ? labelOuvert : labelFerme;
-        btn.classList.toggle('btn-outline', open);
-        btn.classList.toggle('btn-gold', !open);
-        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+fjInitFormPanel({
+    contentId: 'adminPageContent',
+    listId: 'panelListeLivreurs',
+    toggleId: 'btnToggleFormLivreur',
+    collapseId: 'collapseFormLivreur',
+    formId: 'formLivreur',
+    editSelector: '.js-modifier-livreur',
+    ajaxSelector: '.js-fj-ajax',
+    labels: {
+        addSubmit: 'Ajouter',
+        editSubmit: 'Modifier'
+    },
+    initialMode: <?php echo $idModifier ? "'edit'" : "'add'"; ?>,
+    items: <?php echo $fjItemsJson; ?>,
+    populate: function (form, item) {
+        form.querySelector('[name="prenom"]').value = item.prenom;
+        form.querySelector('[name="nom"]').value = item.nom;
+        form.querySelector('[name="email"]').value = item.email;
+        form.querySelector('[name="telephone"]').value = item.telephone;
     }
-
-    btn.addEventListener('click', function () {
-        majBouton(collapse.classList.toggle('open'));
-    });
-})();
+});
 </script>
+
+</div>
 
 <?php require ROOT_PATH . '/assets/inc/footer.php'; ?>

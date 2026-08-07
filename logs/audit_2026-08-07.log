@@ -1,1 +1,30 @@
 [2026-08-07 11:11:13] user=5 email=elbbilal00@gmail.com role=admin action=connexion.reussie details="email=elbbilal00@gmail.com" ip=::1
+[2026-08-07 12:08:46] user=5 email=elbbilal00@gmail.com role=admin action=connexion.reussie details="email=elbbilal00@gmail.com" ip=::1
+[2026-08-07 12:54:59] user=5 email=elbbilal00@gmail.com role=admin action=cuisinier.creer details="email=pup.test.1786100099271@gmail.com" ip=::1
+[2026-08-07 12:55:24] user=5 email=elbbilal00@gmail.com role=admin action=cuisinier.modifier details="id=19 email=pup.test.1786100099271@gmail.com" ip=::1
+[2026-08-07 12:55:39] user=5 email=elbbilal00@gmail.com role=admin action=cuisinier.desactiver details="id=19" ip=::1
+[2026-08-07 12:55:55] user=5 email=elbbilal00@gmail.com role=admin action=cuisinier.activer details="id=19" ip=::1
+[2026-08-07 12:56:10] user=5 email=elbbilal00@gmail.com role=admin action=cuisinier.supprimer details="id=19" ip=::1
+[2026-08-07 12:56:11] user=5 email=elbbilal00@gmail.com role=admin action=livreur.creer details="email=pup.livreur.1786100171182@gmail.com" ip=::1
+[2026-08-07 12:56:26] user=5 email=elbbilal00@gmail.com role=admin action=livreur.supprimer details="id=20" ip=::1
+[2026-08-07 12:56:27] user=5 email=elbbilal00@gmail.com role=admin action=zone.creer details="nom=Pup Zone 1786100187281 prix=15.5" ip=::1
+[2026-08-07 12:56:42] user=5 email=elbbilal00@gmail.com role=admin action=zone.supprimer details="id=5" ip=::1
+[2026-08-07 12:57:36] user=5 email=elbbilal00@gmail.com role=admin action=cuisinier.creer details="email=curltest.1786100256@gmail.com" ip=::1
+[2026-08-07 12:58:26] user=5 email=elbbilal00@gmail.com role=admin action=cuisinier.creer details="email=pup.test.1786100305916@gmail.com" ip=::1
+[2026-08-07 12:58:26] user=5 email=elbbilal00@gmail.com role=admin action=cuisinier.modifier details="id=22 email=pup.test.1786100305916@gmail.com" ip=::1
+[2026-08-07 12:58:26] user=5 email=elbbilal00@gmail.com role=admin action=cuisinier.desactiver details="id=22" ip=::1
+[2026-08-07 12:58:26] user=5 email=elbbilal00@gmail.com role=admin action=cuisinier.activer details="id=22" ip=::1
+[2026-08-07 12:58:26] user=5 email=elbbilal00@gmail.com role=admin action=cuisinier.supprimer details="id=22" ip=::1
+[2026-08-07 12:58:28] user=5 email=elbbilal00@gmail.com role=admin action=livreur.creer details="email=pup.livreur.1786100308042@gmail.com" ip=::1
+[2026-08-07 12:58:28] user=5 email=elbbilal00@gmail.com role=admin action=livreur.supprimer details="id=23" ip=::1
+[2026-08-07 12:58:29] user=5 email=elbbilal00@gmail.com role=admin action=zone.creer details="nom=Pup Zone 1786100309115 prix=15.5" ip=::1
+[2026-08-07 12:58:29] user=5 email=elbbilal00@gmail.com role=admin action=zone.supprimer details="id=6" ip=::1
+[2026-08-07 12:59:26] user=5 email=elbbilal00@gmail.com role=admin action=cuisinier.creer details="email=pup.test.1786100365870@gmail.com" ip=::1
+[2026-08-07 12:59:26] user=5 email=elbbilal00@gmail.com role=admin action=cuisinier.modifier details="id=24 email=pup.test.1786100365870@gmail.com" ip=::1
+[2026-08-07 12:59:26] user=5 email=elbbilal00@gmail.com role=admin action=cuisinier.desactiver details="id=24" ip=::1
+[2026-08-07 12:59:26] user=5 email=elbbilal00@gmail.com role=admin action=cuisinier.activer details="id=24" ip=::1
+[2026-08-07 12:59:26] user=5 email=elbbilal00@gmail.com role=admin action=cuisinier.supprimer details="id=24" ip=::1
+[2026-08-07 12:59:28] user=5 email=elbbilal00@gmail.com role=admin action=livreur.creer details="email=pup.livreur.1786100367950@gmail.com" ip=::1
+[2026-08-07 12:59:28] user=5 email=elbbilal00@gmail.com role=admin action=livreur.supprimer details="id=25" ip=::1
+[2026-08-07 12:59:29] user=5 email=elbbilal00@gmail.com role=admin action=zone.creer details="nom=Pup Zone 1786100369463 prix=15.5" ip=::1
+[2026-08-07 12:59:29] user=5 email=elbbilal00@gmail.com role=admin action=zone.supprimer details="id=7" ip=::1
