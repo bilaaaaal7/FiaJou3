@@ -63,3 +63,20 @@
 [2026-08-07 15:42:13] user=31 email=smokeadmin@test.com role=admin action=utilisateur.modifier details="id=6 role=client email=tariq@gmail.com" ip=::1
 [2026-08-07 15:42:16] user=31 email=smokeadmin@test.com role=admin action=client.creer details="email=smokeclient@test.com" ip=::1
 [2026-08-07 15:42:18] user=31 email=smokeadmin@test.com role=admin action=utilisateur.supprimer details="id=32" ip=::1
+[2026-08-07 17:15:02] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-07 17:15:22] user=5 email=ismailsghir107@gmail.com role=admin action=commande.statut details="id=16 nouveau_statut=en_livraison cook_id=11 driver_id=8" ip=::1
+[2026-08-07 17:15:28] user=5 email=ismailsghir107@gmail.com role=admin action=commande.statut details="id=16 nouveau_statut=livree cook_id=11 driver_id=8" ip=::1
+[2026-08-07 18:26:57] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.creer_semaine details="semaine=2026-08-10 -> 2026-08-16" ip=::1
+[2026-08-07 18:27:05] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=34 product_id=31 jour=lundi" ip=::1
+[2026-08-07 18:27:27] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=34 product_id=24 jour=lundi" ip=::1
+[2026-08-07 18:27:35] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=34 product_id=11 jour=mardi" ip=::1
+[2026-08-07 18:27:42] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=34 product_id=26 jour=mardi" ip=::1
+[2026-08-07 18:27:55] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=34 product_id=12 jour=mercredi" ip=::1
+[2026-08-07 18:28:14] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=34 product_id=15 jour=jeudi" ip=::1
+[2026-08-07 18:28:43] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=34 product_id=8 jour=vendredi" ip=::1
+[2026-08-07 18:28:49] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=34 product_id=30 jour=vendredi" ip=::1
+[2026-08-07 18:28:57] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=34 product_id=11 jour=dimanche" ip=::1
+[2026-08-07 18:29:06] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=34 product_id=25 jour=dimanche" ip=::1
+[2026-08-07 18:29:13] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=34 product_id=27 jour=dimanche" ip=::1
+[2026-08-07 18:29:22] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.supprimer_plat details="item_id=99 menu_id=34" ip=::1
+[2026-08-07 18:29:35] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=34 product_id=32 jour=jeudi" ip=::1
