@@ -225,9 +225,11 @@ html[dir="rtl"] .theme-toggle-fixed {
    même diamant, mais avec un mot ("ou") au centre au lieu de deux points. */
 .divider-diamond--or {
     color: var(--muted);
-    font-size: 0.8rem;
+    font-size: 0.76rem;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
+    margin: 18px 0 16px;
+    gap: 12px;
 }
 
 .divider-diamond--or span {
@@ -238,22 +240,27 @@ html[dir="rtl"] .theme-toggle-fixed {
     padding: 0 2px;
 }
 
-/* ---------- Bouton "Continuer avec Google" ---------- */
+/* ---------- Bouton "Continuer avec Google" ----------
+   Reprise du modèle SyoManager (.google-btn) :
+   bouton secondaire "outlined", bordure discrète, fond légèrement
+   distinct de la carte (input-bg), rayon de 12px (identique à
+   l'ancien --auth-radius), logo Google officiel à gauche du texte. */
 .btn-google {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
     width: 100%;
-    padding: 11px 16px;
-    border-radius: 999px;
+    padding: 12px;
+    border-radius: 12px;
     border: 1px solid var(--border-soft);
-    background: var(--surface);
+    background: var(--input-bg);
     color: var(--text);
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     text-decoration: none;
-    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    transition: border-color 0.15s, transform 0.1s, background 0.15s;
 }
 
 .btn-google:hover,
@@ -263,17 +270,20 @@ html[dir="rtl"] .theme-toggle-fixed {
     color: var(--text);
     text-decoration: none;
     transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(23, 23, 23, 0.10);
+}
+
+.btn-google:active {
+    transform: translateY(0);
 }
 
 .btn-google-logo {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     flex-shrink: 0;
 }
 
 [data-theme="dark"] .btn-google {
-    background: var(--surface);
+    background: var(--input-bg);
     border-color: var(--border-soft);
     color: var(--text);
 }
@@ -282,7 +292,6 @@ html[dir="rtl"] .theme-toggle-fixed {
 [data-theme="dark"] .btn-google:focus-visible {
     background: var(--gold-light);
     border-color: var(--gold);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
 }
 
 [data-theme="dark"] .divider-diamond--or { color: var(--muted); }
@@ -403,8 +412,8 @@ html[dir="rtl"] .theme-toggle-fixed {
     }
 
     .btn-google {
-        padding: 10px 14px;
-        font-size: 0.88rem;
+        padding: 11px 12px;
+        font-size: 0.9rem;
     }
 }
 
