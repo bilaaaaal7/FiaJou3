@@ -2,6 +2,7 @@
 $pageTitle = "Mon profil - " . APP_NAME;
 $extraCss = ['admin.css'];
 $bodyClass = 'profil-sans-sidebar';
+$i18nPage = 'profil';
 require ROOT_PATH . '/assets/inc/header.php';
 require ROOT_PATH . '/assets/inc/navbar.php';
 
@@ -19,7 +20,7 @@ if ($initialesProfil === '') {
     <?php require ROOT_PATH . '/assets/inc/back_home.php'; ?>
 
     <div class="topbar">
-        <h1>Mon profil</h1>
+        <h1 data-i18n="profil.titre">Mon profil</h1>
         <p class="profil-subtitle">Gérez vos informations personnelles et votre mot de passe.</p>
     </div>
 
@@ -42,51 +43,51 @@ if ($initialesProfil === '') {
     <div class="panel profil-card">
         <div class="profil-card-head">
             <i data-lucide="user" aria-hidden="true"></i>
-            <h2>Informations personnelles</h2>
+            <h2 data-i18n="parametres.infosTitre">Informations personnelles</h2>
         </div>
 
         <form method="POST" action="<?php echo BASE_URL; ?>/index.php?route=client/profil">
             <div class="form-grid">
                 <div class="form-group">
-                    <label for="prenom">Prénom</label>
+                    <label for="prenom" data-i18n="parametres.prenomLabel">Prénom</label>
                     <input type="text" id="prenom" name="prenom"
                            value="<?php echo htmlspecialchars($profil['prenom'] ?? ''); ?>" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="nom">Nom</label>
+                    <label for="nom" data-i18n="parametres.nomLabel">Nom</label>
                     <input type="text" id="nom" name="nom"
                            value="<?php echo htmlspecialchars($profil['nom'] ?? ''); ?>" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="telephone">Téléphone</label>
+                    <label for="telephone" data-i18n="parametres.telephoneLabel">Téléphone</label>
                     <input type="tel" id="telephone" name="telephone"
                            value="<?php echo htmlspecialchars($profil['telephone'] ?? ''); ?>">
                 </div>
 
                 <div class="form-group">
-                    <label for="email">Email</label>
+                    <label for="email" data-i18n="parametres.emailLabel">Email</label>
                     <input type="email" id="email"
                            value="<?php echo htmlspecialchars($profil['email'] ?? ''); ?>" disabled>
                 </div>
 
                 <div class="form-group">
-                    <label for="adresse">Adresse</label>
+                    <label for="adresse" data-i18n="parametres.adresseLabel">Adresse</label>
                     <input type="text" id="adresse" name="adresse"
                            value="<?php echo htmlspecialchars($profil['adresse'] ?? ''); ?>">
                 </div>
 
                 <div class="form-group">
-                    <label for="ville">Ville</label>
+                    <label for="ville" data-i18n="parametres.villeLabel">Ville</label>
                     <input type="text" id="ville" name="ville"
                            value="<?php echo htmlspecialchars($profil['ville'] ?? ''); ?>">
                 </div>
             </div>
 
             <div class="form-actions">
-                <button type="submit" name="modifier" class="btn btn-gold">Enregistrer les modifications</button>
-                <a href="<?php echo BASE_URL; ?>/index.php?route=client/profil" class="btn btn-outline">Annuler</a>
+                <button type="submit" name="modifier" class="btn btn-gold" data-i18n="parametres.enregistrerInfos">Enregistrer les modifications</button>
+                <a href="<?php echo BASE_URL; ?>/index.php?route=client/profil" class="btn btn-outline" data-i18n="common.annuler">Annuler</a>
             </div>
         </form>
     </div>
@@ -94,29 +95,29 @@ if ($initialesProfil === '') {
     <div class="panel profil-card">
         <div class="profil-card-head">
             <i data-lucide="lock" aria-hidden="true"></i>
-            <h2>Changer le mot de passe</h2>
+            <h2 data-i18n="parametres.mdpTitre">Changer le mot de passe</h2>
         </div>
 
         <form method="POST" action="<?php echo BASE_URL; ?>/index.php?route=client/profil">
             <div class="form-grid">
                 <div class="form-group">
-                    <label for="ancien_mdp">Mot de passe actuel</label>
+                    <label for="ancien_mdp" data-i18n="parametres.mdpActuel">Mot de passe actuel</label>
                     <input type="password" id="ancien_mdp" name="ancien_mdp" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="nouveau_mdp">Nouveau mot de passe</label>
+                    <label for="nouveau_mdp" data-i18n="parametres.nouveauMdp">Nouveau mot de passe</label>
                     <input type="password" id="nouveau_mdp" name="nouveau_mdp" minlength="6" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="confirmation_mdp">Confirmer le nouveau mot de passe</label>
+                    <label for="confirmation_mdp" data-i18n="parametres.confirmationMdp">Confirmer le nouveau mot de passe</label>
                     <input type="password" id="confirmation_mdp" name="confirmation_mdp" minlength="6" required>
                 </div>
             </div>
 
             <div class="form-actions">
-                <button type="submit" name="changer_mdp" class="btn btn-gold">Changer le mot de passe</button>
+                <button type="submit" name="changer_mdp" class="btn btn-gold" data-i18n="parametres.changerMdp">Changer le mot de passe</button>
             </div>
         </form>
     </div>

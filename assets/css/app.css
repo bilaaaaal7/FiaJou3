@@ -352,3 +352,211 @@ hr { border-color: var(--border-soft); }
     .fiajou-navbar .navbar-collapse { padding: 10px 0; }
     .fiajou-navbar .nav-link { padding: 6px 0; }
 }
+
+/* ============================ SÉLECTEUR DE LANGUE (i18n) ============================
+   Deux rendus partagés depuis assets/inc/lang_switcher.php :
+   - « dropdown » : icône globe dorée + menu déroulant (header de l'accueil,
+     barre supérieure topheader, pages d'authentification) ;
+   - « inline » : cartes sélectionnables (page Paramètres). */
+
+/* --- Variante « dropdown » : icône globe dorée + menu --- */
+.lang-switcher--dropdown {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    background: none;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+}
+
+.lang-switcher--dropdown .lang-switcher-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    color: var(--gold);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    transition: background-color .2s ease-in-out, color .2s ease-in-out, box-shadow .2s ease-in-out;
+}
+
+.lang-switcher--dropdown .lang-switcher-toggle:hover,
+.lang-switcher--dropdown .lang-switcher-toggle:focus-visible {
+    background: color-mix(in srgb, var(--gold) 12%, transparent);
+    color: var(--gold-dark);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 18%, transparent);
+    outline: none;
+}
+
+.lang-switcher--dropdown .lang-switcher-toggle svg {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2;
+}
+
+.lang-switcher--dropdown .lang-switcher-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    inset-inline-end: 0;
+    z-index: 1200;
+    min-width: 180px;
+    padding: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: 14px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    transition: opacity .18s ease-in-out, transform .18s ease-in-out, visibility .18s ease-in-out;
+}
+
+.lang-switcher--dropdown.is-open .lang-switcher-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.lang-switcher--dropdown .lang-switcher-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 8px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+    text-align: start;
+    transition: background-color .15s ease-in-out, color .15s ease-in-out;
+}
+
+.lang-switcher--dropdown .lang-switcher-option .lang-code {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: var(--border-soft);
+    color: var(--muted);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    transition: background-color .15s ease-in-out, color .15s ease-in-out;
+}
+
+.lang-switcher--dropdown .lang-switcher-option:hover {
+    background: color-mix(in srgb, var(--gold) 12%, transparent);
+    color: var(--text);
+}
+
+.lang-switcher--dropdown .lang-switcher-option:hover .lang-code {
+    background: color-mix(in srgb, var(--gold) 18%, var(--border-soft));
+    color: var(--gold-dark);
+}
+
+.lang-switcher--dropdown .lang-switcher-option.active {
+    color: var(--gold-dark);
+    background: var(--gold-light);
+}
+
+.lang-switcher--dropdown .lang-switcher-option.active .lang-code {
+    background: var(--gold);
+    color: var(--on-gold);
+}
+
+.lang-switcher--dropdown .lang-switcher-option.active::after {
+    content: '✓';
+    margin-inline-start: auto;
+    font-weight: 800;
+    color: var(--gold-dark);
+}
+
+html[dir="rtl"] .lang-switcher--dropdown .lang-switcher-option {
+    font-family: 'Tajawal', var(--font-body);
+}
+
+/* Placement dans la barre supérieure (topheader). */
+.topheader-actions .lang-switcher--dropdown {
+    flex-shrink: 0;
+    margin-inline-end: 8px;
+}
+
+/* --- Variante « inline » (page Paramètres) : cartes sélectionnables --- */
+.lang-switcher--inline {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    width: 100%;
+    margin-top: 16px;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+}
+
+.lang-switcher--inline button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    justify-content: flex-start;
+    border: 1px solid var(--border-soft);
+    background: var(--surface);
+    color: var(--muted);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 12px 14px;
+    border-radius: 12px;
+    text-align: start;
+    cursor: pointer;
+    transition: background-color .2s ease-in-out, color .2s ease-in-out, border-color .2s ease-in-out, box-shadow .2s ease-in-out;
+}
+
+.lang-switcher--inline .lang-code {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 34px;
+    height: 34px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: var(--border-soft);
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    transition: background-color .2s ease-in-out, color .2s ease-in-out;
+}
+
+.lang-switcher--inline button.active {
+    border-color: var(--gold);
+    background: var(--gold-light);
+    color: var(--gold-dark);
+    box-shadow: 0 4px 14px rgba(184, 134, 24, 0.18);
+}
+
+.lang-switcher--inline button.active .lang-code {
+    background: var(--gold);
+    color: var(--on-gold);
+}
+
+.lang-switcher--inline button.active::after {
+    content: '✓';
+    margin-inline-start: auto;
+    font-weight: 800;
+}

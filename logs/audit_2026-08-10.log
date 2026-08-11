@@ -1,0 +1,53 @@
+[2026-08-10 11:27:36] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-10 11:27:53] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.publier details="id=34" ip=::1
+[2026-08-10 11:32:07] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-10 11:32:38] user=5 email=ismailsghir107@gmail.com role=admin action=commande.statut details="id=17 nouveau_statut=prete cook_id=11 driver_id=" ip=::1
+[2026-08-10 11:32:49] user=5 email=ismailsghir107@gmail.com role=admin action=commande.statut details="id=17 nouveau_statut=en_livraison cook_id=11 driver_id=8" ip=::1
+[2026-08-10 11:32:56] user=5 email=ismailsghir107@gmail.com role=admin action=commande.statut details="id=17 nouveau_statut=livree cook_id=11 driver_id=8" ip=::1
+[2026-08-10 12:07:36] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-10 12:15:22] user=0 email= role=anonyme action=partenaire.demande details="email=ismailsghir107@gmail.com role=cuisinier" ip=::1
+[2026-08-10 12:15:48] user=0 email= role=anonyme action=partenaire.demande details="email=chef.test@example.com role=cuisinier" ip=::1
+[2026-08-10 12:17:30] user=0 email= role=anonyme action=partenaire.completer details="email=chef.test@example.com role=cuisinier user_id=33" ip=::1
+[2026-08-10 12:17:40] user=0 email= role=anonyme action=partenaire.demande details="email=livreur.test@example.com role=livreur" ip=::1
+[2026-08-10 12:18:12] user=0 email= role=anonyme action=partenaire.demande details="email=ismailsghir107@gmail.com role=cuisinier" ip=::1
+[2026-08-10 12:19:29] user=0 email= role=anonyme action=partenaire.demande details="email=ismailsghir107@gmail.com role=livreur" ip=::1
+[2026-08-10 12:19:40] user=0 email= role=anonyme action=partenaire.completer details="email=livreur.test@example.com role=livreur user_id=34" ip=::1
+[2026-08-10 12:20:56] user=0 email= role=anonyme action=partenaire.demande details="email=client.existant@example.com role=cuisinier" ip=::1
+[2026-08-10 12:21:00] user=0 email= role=anonyme action=partenaire.completer details="email=client.existant@example.com role=cuisinier user_id=35" ip=::1
+[2026-08-10 12:22:51] user=0 email= role=anonyme action=partenaire.demande details="email=expire.test@example.com role=livreur" ip=::1
+[2026-08-10 12:25:47] user=0 email= role=anonyme action=partenaire.demande details="email=smoke.cuisine@example.com role=cuisinier" ip=::1
+[2026-08-10 12:25:53] user=0 email= role=anonyme action=partenaire.completer details="email=smoke.cuisine@example.com role=cuisinier user_id=36" ip=::1
+[2026-08-10 12:30:16] user=0 email= role=anonyme action=partenaire.demande details="email=ismailsghir107@gmail.com role=cuisinier" ip=::1
+[2026-08-10 12:38:59] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-10 12:52:00] user=38 email=testmodif@fiajou3.test role=admin action=connexion.reussie details="email=testmodif@fiajou3.test" ip=::1
+[2026-08-10 12:52:15] user=38 email=testmodif@fiajou3.test role=admin action=menu_semaine.modifier_plat details="item_id=107 product_id=10 menu_id=1" ip=::1
+[2026-08-10 12:52:53] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-10 12:53:41] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-10 13:00:18] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-10 13:15:50] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-10 13:19:57] user=39 email=testi18n@fiajou3.test role=admin action=connexion.reussie details="email=testi18n@fiajou3.test" ip=::1
+[2026-08-10 13:20:51] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-10 13:46:16] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-10 13:46:35] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.modifier_plat details="item_id=102 product_id=13 menu_id=34" ip=::1
+[2026-08-10 13:47:00] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-10 13:59:37] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-10 14:16:09] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-10 14:16:39] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-10 14:23:21] user=0 email= role=anonyme action=partenaire.demande details="email=ismailsghir107@gmail.com role=livreur" ip=::1
+[2026-08-10 14:27:10] user=0 email= role=anonyme action=partenaire.demande details="email=ismailsghir107@gmail.com role=cuisinier" ip=::1
+[2026-08-10 14:27:23] user=0 email= role=anonyme action=partenaire.demande details="email=billal@gmail.com role=livreur" ip=::1
+[2026-08-10 15:01:38] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-10 15:16:05] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-10 18:36:33] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-10 18:39:19] user=20 email=saram@gmail.com role=admin action=connexion.reussie details="email=saram@gmail.com" ip=192.168.100.103
+[2026-08-10 18:42:31] user=20 email=saram@gmail.com role=admin action=menu_semaine.deplacer_plat details="item_id=94 direction=descendre menu_id=34" ip=192.168.100.103
+[2026-08-10 18:45:18] user=20 email=saram@gmail.com role=admin action=menu_semaine.deplacer_plat details="item_id=96 direction=descendre menu_id=34" ip=192.168.100.103
+[2026-08-10 18:46:07] user=20 email=saram@gmail.com role=admin action=menu_semaine.creer_semaine details="semaine=2026-08-17 -> 2026-08-23" ip=192.168.100.103
+[2026-08-10 18:46:52] user=20 email=saram@gmail.com role=admin action=menu_semaine.creer_semaine details="semaine=2026-08-24 -> 2026-08-30" ip=192.168.100.103
+[2026-08-10 18:50:25] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-10 18:52:32] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-10 18:52:49] user=20 email=saram@gmail.com role=admin action=connexion.reussie details="email=saram@gmail.com" ip=192.168.100.103
+[2026-08-10 18:53:49] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-10 18:54:08] user=5 email=ismailsghir107@gmail.com role=admin action=commande.statut details="id=17 nouveau_statut=en_preparation cook_id=11 driver_id=" ip=::1
+[2026-08-10 18:54:17] user=5 email=ismailsghir107@gmail.com role=admin action=commande.statut details="id=17 nouveau_statut=en_livraison cook_id=11 driver_id=8" ip=::1
+[2026-08-10 18:54:26] user=5 email=ismailsghir107@gmail.com role=admin action=commande.statut details="id=17 nouveau_statut=livree cook_id=11 driver_id=8" ip=::1

@@ -41,13 +41,13 @@ $parentParDetail = [
     'client/commande'        => 'client/mes-commandes',
 ];
 
-function sidebar_lien(string $route, string $icone, string $label, string $routeActuelle, $badge = null, array $parents = []): void
+function sidebar_lien(string $route, string $icone, string $label, string $routeActuelle, $badge = null, array $parents = [], string $cleI18n = ''): void
 {
     $parent = $parents[$routeActuelle] ?? null;
     $actif = ($routeActuelle === $route || $parent === $route) ? ' class="active"' : '';
     echo '<a' . $actif . ' href="' . BASE_URL . '/index.php?route=' . htmlspecialchars($route) . '">';
     echo '<i data-lucide="' . htmlspecialchars($icone) . '" aria-hidden="true"></i>';
-    echo '<span>' . htmlspecialchars($label);
+    echo '<span' . ($cleI18n !== '' ? ' data-i18n="' . htmlspecialchars($cleI18n) . '"' : '') . '>' . htmlspecialchars($label);
     if ($badge) {
         echo ' <span class="nav-badge">' . htmlspecialchars((string) $badge) . '</span>';
     }
@@ -60,9 +60,16 @@ $roleLabels = [
     ROLE_CUISINIER => 'Cuisinier',
     ROLE_LIVREUR   => 'Livreur',
 ];
+$roleI18n = [
+    ROLE_ADMIN     => 'nav.roleAdmin',
+    ROLE_CLIENT    => 'nav.roleClient',
+    ROLE_CUISINIER => 'nav.roleCuisinier',
+    ROLE_LIVREUR   => 'nav.roleLivreur',
+];
 $prenomNavbar = trim((string) ($_SESSION['prenom'] ?? ''));
 $initial = $prenomNavbar !== '' ? mb_strtoupper(mb_substr($prenomNavbar, 0, 1)) : '?';
 $roleLabel = $roleLabels[$role] ?? $role;
+$roleCleI18n = $roleI18n[$role] ?? '';
 ?>
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar(false)" aria-hidden="true"></div>
 <div class="app-shell">
@@ -80,31 +87,31 @@ $roleLabel = $roleLabels[$role] ?? $role;
            href="<?php echo BASE_URL; ?>/index.php?route=<?php echo htmlspecialchars($dashboardRoute); ?>"
            aria-current="<?php echo $dashboardActif ? 'page' : 'false'; ?>">
             <span class="dc-icon"><i data-lucide="home" aria-hidden="true"></i></span>
-            <span class="dc-label">Tableau de bord</span>
+            <span class="dc-label" data-i18n="nav.tableauBord">Tableau de bord</span>
             <span class="dc-arrow"><i data-lucide="chevron-right" aria-hidden="true"></i></span>
         </a>
         <?php endif; ?>
 
         <nav>
             <?php if ($role === ROLE_ADMIN): ?>
-                <?php sidebar_lien('admin/plats', 'utensils', 'Produits', $routeActuelle); ?>
-                <?php sidebar_lien('admin/categories', 'tags', 'Catégories', $routeActuelle); ?>
-                <?php sidebar_lien('admin/commandes', 'shopping-bag', 'Commandes', $routeActuelle); ?>
-                <?php sidebar_lien('admin/menu-semaine', 'calendar-days', 'Menu de la semaine', $routeActuelle); ?>
-                <?php sidebar_lien('admin/utilisateurs', 'users', 'Clients', $routeActuelle); ?>
-                <?php sidebar_lien('admin/cuisiniers', 'chef-hat', 'Cuisiniers', $routeActuelle); ?>
-                <?php sidebar_lien('admin/livreurs', 'bike', 'Livreurs', $routeActuelle); ?>
-                <?php sidebar_lien('admin/zones', 'map-pin', 'Zones de livraison', $routeActuelle); ?>
+                <?php sidebar_lien('admin/plats', 'utensils', 'Produits', $routeActuelle, null, [], 'nav.produits'); ?>
+                <?php sidebar_lien('admin/categories', 'tags', 'Catégories', $routeActuelle, null, [], 'nav.categories'); ?>
+                <?php sidebar_lien('admin/commandes', 'shopping-bag', 'Commandes', $routeActuelle, null, [], 'nav.commandes'); ?>
+                <?php sidebar_lien('admin/menu-semaine', 'calendar-days', 'Menu de la semaine', $routeActuelle, null, [], 'nav.menuSemaine'); ?>
+                <?php sidebar_lien('admin/utilisateurs', 'users', 'Clients', $routeActuelle, null, [], 'nav.clients'); ?>
+                <?php sidebar_lien('admin/cuisiniers', 'chef-hat', 'Cuisiniers', $routeActuelle, null, [], 'nav.cuisiniers'); ?>
+                <?php sidebar_lien('admin/livreurs', 'bike', 'Livreurs', $routeActuelle, null, [], 'nav.livreurs'); ?>
+                <?php sidebar_lien('admin/zones', 'map-pin', 'Zones de livraison', $routeActuelle, null, [], 'nav.zones'); ?>
             <?php elseif ($role === ROLE_CLIENT): ?>
-                <?php sidebar_lien('accueil', 'home', 'Accueil', $routeActuelle); ?>
-                <?php sidebar_lien('client', 'utensils-crossed', 'Menu', $routeActuelle); ?>
-                <?php sidebar_lien('client/menu-semaine', 'calendar-days', 'Menu de la semaine', $routeActuelle); ?>
-                <?php sidebar_lien('client/mes-commandes', 'package', 'Mes commandes', $routeActuelle, null, $parentParDetail); ?>
-                <?php sidebar_lien('client/profil', 'user', 'Profil', $routeActuelle); ?>
+                <?php sidebar_lien('accueil', 'home', 'Accueil', $routeActuelle, null, [], 'nav.accueil'); ?>
+                <?php sidebar_lien('client', 'utensils-crossed', 'Menu', $routeActuelle, null, [], 'nav.menu'); ?>
+                <?php sidebar_lien('client/menu-semaine', 'calendar-days', 'Menu de la semaine', $routeActuelle, null, [], 'nav.menuSemaine'); ?>
+                <?php sidebar_lien('client/mes-commandes', 'package', 'Mes commandes', $routeActuelle, null, $parentParDetail, 'nav.mesCommandes'); ?>
+                <?php sidebar_lien('client/profil', 'user', 'Profil', $routeActuelle, null, [], 'nav.profil'); ?>
             <?php elseif ($role === ROLE_CUISINIER): ?>
-                <?php sidebar_lien('cuisinier/historique', 'history', 'Historique', $routeActuelle); ?>
+                <?php sidebar_lien('cuisinier/historique', 'history', 'Historique', $routeActuelle, null, [], 'nav.historique'); ?>
             <?php elseif ($role === ROLE_LIVREUR): ?>
-                <?php sidebar_lien('livreur/historique', 'history', 'Historique', $routeActuelle); ?>
+                <?php sidebar_lien('livreur/historique', 'history', 'Historique', $routeActuelle, null, [], 'nav.historique'); ?>
             <?php endif; ?>
         </nav>
     </aside>
@@ -118,14 +125,15 @@ $roleLabel = $roleLabels[$role] ?? $role;
         ?>
         <div class="topheader">
             <div class="topheader-left">
-                <button type="button" class="menu-toggle" onclick="toggleSidebar()" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="sidebar">&#9776;</button>
+                <button type="button" class="menu-toggle" onclick="toggleSidebar()" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="sidebar" data-i18n-aria="nav.ouvrirMenu">&#9776;</button>
                 <?php if ($pageHeading !== ''): ?>
                     <h1 class="topheader-title"><?php echo htmlspecialchars($pageHeading); ?></h1>
                 <?php endif; ?>
             </div>
 
             <div class="topheader-actions">
-                <a class="topheader-notif" href="<?php echo BASE_URL; ?>/index.php?route=client/notifications" aria-label="Notifications">
+                <?php $langSwitcherCompact = true; require ROOT_PATH . '/assets/inc/lang_switcher.php'; unset($langSwitcherCompact); ?>
+                <a class="topheader-notif" href="<?php echo BASE_URL; ?>/index.php?route=client/notifications" aria-label="Notifications" data-i18n-aria="nav.notifications">
                     <i data-lucide="bell" aria-hidden="true"></i>
                     <?php if ($nbNotifs > 0): ?>
                         <span class="topheader-notif-badge"><?php echo $nbNotifs > 9 ? '9+' : $nbNotifs; ?></span>
@@ -134,7 +142,7 @@ $roleLabel = $roleLabels[$role] ?? $role;
 
                 <?php if ($role === ROLE_CLIENT): ?>
                 <button type="button" class="topheader-notif" onclick="fjCartOuvrir()"
-                        aria-label="Ouvrir mon panier" title="Mon panier">
+                        aria-label="Ouvrir mon panier" title="Mon panier" data-i18n-aria="nav.ouvrirMonPanier">
                     <i data-lucide="shopping-cart" aria-hidden="true"></i>
                     <span class="topheader-notif-badge" data-fj-cart-badge<?php echo $panierModele->nombreArticles() > 0 ? '' : ' hidden'; ?>><?php echo $panierModele->nombreArticles() > 9 ? '9+' : $panierModele->nombreArticles(); ?></span>
                 </button>
@@ -152,28 +160,28 @@ $roleLabel = $roleLabels[$role] ?? $role;
                             <span class="avatar avatar-lg"><?php echo htmlspecialchars($initial); ?></span>
                             <div class="topheader-profile-dropdown-identity">
                                 <strong><?php echo htmlspecialchars($prenomNavbar); ?></strong>
-                                <span><?php echo htmlspecialchars($roleLabel); ?></span>
+                                <span<?php echo $roleCleI18n !== '' ? ' data-i18n="' . htmlspecialchars($roleCleI18n) . '"' : ''; ?>><?php echo htmlspecialchars($roleLabel); ?></span>
                             </div>
                         </div>
                         <div class="topheader-profile-dropdown-divider"></div>
                         <a role="menuitem" class="topheader-profile-dropdown-item" href="<?php echo BASE_URL; ?>/index.php?route=<?php echo $role === ROLE_CLIENT ? 'client/profil' : 'profil'; ?>">
                             <i data-lucide="user" aria-hidden="true"></i>
-                            <span>Mon profil</span>
+                            <span data-i18n="nav.monProfil">Mon profil</span>
                         </a>
                         <?php if ($role === ROLE_CLIENT): ?>
                         <a role="menuitem" class="topheader-profile-dropdown-item" href="<?php echo BASE_URL; ?>/index.php?route=client/mes-commandes">
                             <i data-lucide="package" aria-hidden="true"></i>
-                            <span>Mes commandes</span>
+                            <span data-i18n="nav.mesCommandes">Mes commandes</span>
                         </a>
                         <?php endif; ?>
                         <a role="menuitem" class="topheader-profile-dropdown-item" href="<?php echo BASE_URL; ?>/index.php?route=parametres">
                             <i data-lucide="settings" aria-hidden="true"></i>
-                            <span>Paramètres</span>
+                            <span data-i18n="nav.parametres">Paramètres</span>
                         </a>
                         <div class="topheader-profile-dropdown-divider"></div>
                         <a role="menuitem" class="topheader-profile-dropdown-logout" href="<?php echo BASE_URL; ?>/index.php?route=deconnexion">
                             <i data-lucide="log-out" aria-hidden="true"></i>
-                            <span>Déconnexion</span>
+                            <span data-i18n="nav.deconnexion">Déconnexion</span>
                         </a>
                     </div>
                 </div>

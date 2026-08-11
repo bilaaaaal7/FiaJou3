@@ -6,6 +6,7 @@
 
 require_once ROOT_PATH . '/modele/UtilisateurModele.php';
 require_once ROOT_PATH . '/modele/RateLimiterModele.php';
+require_once ROOT_PATH . '/assets/inc/langue.php';
 
 $error = "";
 $limiteur = new RateLimiterModele('connexion');
@@ -37,6 +38,14 @@ if (isset($_POST['login'])) {
             $_SESSION['prenom']  = $profile['prenom'];
             $_SESSION['role']    = $profile['role'];
             $_SESSION['email']   = $email;
+
+            // Langue du compte (profiles.langue) si définie, sinon celle
+            // choisie sur le navigateur (cookie posé par le sélecteur).
+            if (langue_valide($profile['langue'] ?? null)) {
+                $_SESSION['langue'] = $profile['langue'];
+            } elseif (langue_valide($_COOKIE['fiajou3_lang'] ?? null)) {
+                $_SESSION['langue'] = $_COOKIE['fiajou3_lang'];
+            }
 
             if ($profile['role'] === ROLE_ADMIN) {
                 journaliser_audit('connexion.reussie', 'email="' . $email . '"');

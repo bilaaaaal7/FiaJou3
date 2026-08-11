@@ -9,7 +9,7 @@ pour le détail complet de la migration.
 FiaJou3/
 ├── assets/
 │   ├── css/        Feuilles de style (app.css, auth.css)
-│   ├── js/          Scripts JS (lang-switch.js)
+│   ├── js/          Scripts JS (i18n.js — moteur FR/EN/AR, theme.js, modals…)
 │   ├── inc/         Composants réutilisables (header, footer, navbar, session, auth_guard)
 │   └── images/      Logo, favicons
 ├── controleur/
@@ -114,3 +114,66 @@ CREATE TABLE order_items (
 Il n'existe aucun compte par défaut : utilisez la page d'inscription pour créer un
 compte client, puis changez son rôle directement en base (`UPDATE profiles SET role =
 'admin' WHERE user_id = ...;`) ou depuis l'espace admin une fois un premier admin créé.
+
+## Devenir partenaire (cuisinier / livreur)
+
+La section "Rejoignez FiaJou3" de la page d'accueil propose deux boutons
+"Je m'inscris" (cuisinier / livreur) qui utilisent un flux DÉDIÉ, distinct du
+Register client :
+
+1. L'utilisateur clique sur "Je m'inscris" → une modale lui demande uniquement
+   son email (boutons Continuer / Annuler + X).
+2. Un lien sécurisé et temporaire est envoyé à cet email. Le lien porte le type
+   de partenariat choisi (cuisinier ou livreur) et contient un jeton unique
+   (64 caractères hexadécimaux, impossible à deviner) stocké dans la table
+   `partenaire_invitations` avec une date d'expiration (48 h, usage unique).
+3. En cliquant sur le lien, le candidat ouvre le formulaire de complétion
+   correspondant (prénom, nom, email pré-rempli non modifiable, téléphone,
+   adresse, ville, mot de passe).
+4. À la soumission, si l'email correspond déjà à un compte existant, celui-ci
+   est mis à jour et promu au rôle partenaire (aucun doublon créé) ; sinon un
+   compte partenaire est créé. L'utilisateur est ensuite connecté et redirigé
+   vers son espace (cuisinier ou livreur).
+
+Le Register classique des clients (`/inscription`) est totalement inchangé.
+
+### Migration requise
+
+```sql
+-- database/migrations/20260810_000000_create_partenaire_invitations.sql
+CREATE TABLE IF NOT EXISTS `partenaire_invitations` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `email` VARCHAR(190) NOT NULL,
+    `role` ENUM('cuisinier', 'livreur') NOT NULL,
+    `token` VARCHAR(64) NOT NULL,
+    `expire_le` DATETIME NOT NULL,
+    `utilise` TINYINT(1) NOT NULL DEFAULT 0,
+    `cree_le` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `user_id` INT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uniq_token` (`token`),
+    KEY `idx_email` (`email`),
+    CONSTRAINT `fk_partenaire_invitations_user`
+        FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+```
+
+### Envoi d'emails (config/email.php)
+
+L'envoi est géré par `modele/MailerModele.php`.
+
+- **Par défaut (`EMAIL_ENABLED = false`)** : aucun email réel n'est expédié.
+  Chaque message est écrit dans `logs/emails/emails_YYYY-MM-DD.log` (lien
+  inclus) : le flux partenaire reste 100 % testable en local.
+- **Pour activer l'envoi réel** :
+  1. passer `EMAIL_ENABLED` à `true` ;
+  2. fournir un transport d'envoi : soit un serveur de messagerie local
+     accepté par `mail()` (sous XAMPP : configurer
+     `C:\xampp\sendmail\sendmail.ini` et décommenter `sendmail_path` dans
+     `php.ini`), soit un relais SMTP réel en passant `EMAIL_UTILISER_SMTP`
+     à `true` et en renseignant `EMAIL_SMTP_HOST/PORT/SECURE/USER/PASS` ;
+  3. renseigner `EMAIL_FROM` / `EMAIL_FROM_NAME` avec une adresse d'expéditeur
+     valide.
+
+Même avec l'envoi actif, une copie est toujours conservée dans
+`logs/emails/` pour la traçabilité.
