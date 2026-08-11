@@ -22,6 +22,13 @@ $dirHtml     = $langueHtml === 'ar' ? 'rtl' : 'ltr';
 $estClientConnecte = est_connecte() && utilisateur_role() === ROLE_CLIENT;
 $panierNb = (int) ($panierNb ?? 0);
 
+// Cible des boutons « Commander » / « Commencer à commander » : l'espace de
+// commande pour un client déjà connecté, sinon la page de connexion (avec un
+// retour vers cet espace après authentification — jamais l'inscription).
+$lienCommander = $estClientConnecte
+    ? BASE_URL . '/index.php?route=client'
+    : url_connexion_avec_retour('client');
+
 $jourLabels = [
     'lundi'     => 'Lundi',
     'mardi'     => 'Mardi',
@@ -1623,7 +1630,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                                 </button>
                                 <?php $profileMenuVariant = 'light'; require ROOT_PATH . '/assets/inc/profile_menu.php'; ?>
                             <?php else: ?>
-                                <a href="<?php echo BASE_URL; ?>/index.php?route=inscription" class="order_online">
+                                <a href="<?php echo $lienCommander; ?>" class="order_online">
                                     <span data-i18n="accueil.commander">Commander</span>
                                 </a>
                             <?php endif; ?>
@@ -1647,7 +1654,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                                 et recevez-les chauds directement à votre porte, en quelques clics.
                             </p>
                             <div class="btn-box fj-reveal fj-reveal-delay-3">
-                                <a href="<?php echo BASE_URL; ?>/index.php?route=<?php echo $estClientConnecte ? 'client' : 'inscription'; ?>" class="btn1">
+                                <a href="<?php echo $lienCommander; ?>" class="btn1">
                                     <span data-i18n="accueil.consulterMenu"<?php echo $estClientConnecte ? '' : ' hidden'; ?>>Consulter le menu</span>
                                     <span data-i18n="accueil.commencerCommander"<?php echo $estClientConnecte ? ' hidden' : ''; ?>>Commencer à commander</span>
                                 </a>
@@ -1678,7 +1685,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                             <div class="detail-box">
                                 <h5 data-i18n="accueil.offre1Titre">Cuisine 100% locale</h5>
                                 <h6 data-i18n="accueil.offre1Sous"><span>Fait</span> maison</h6>
-                                <a href="<?php echo BASE_URL; ?>/index.php?route=<?php echo $estClientConnecte ? 'client' : 'inscription'; ?>">
+                                <a href="<?php echo $lienCommander; ?>">
                                     <span data-i18n="accueil.commander">Commander</span> <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
                                 </a>
                             </div>
@@ -1692,7 +1699,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                             <div class="detail-box">
                                 <h5 data-i18n="accueil.offre2Titre">Livraison rapide</h5>
                                 <h6 data-i18n="accueil.offre2Sous"><span>Chaud</span> et à l'heure</h6>
-                                <a href="<?php echo BASE_URL; ?>/index.php?route=<?php echo $estClientConnecte ? 'client' : 'inscription'; ?>">
+                                <a href="<?php echo $lienCommander; ?>">
                                     <span data-i18n="accueil.commander">Commander</span> <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
                                 </a>
                             </div>
@@ -1820,10 +1827,10 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                                     <a class="menu-add-btn"
                                        href="<?php echo $estClientConnecte
                                            ? BASE_URL . '/index.php?route=client&ajouter=' . (int) $item['product_id'] . '&date=' . $dateParJour[$jourKey]
-                                           : BASE_URL . '/index.php?route=inscription'; ?>"
+                                           : url_connexion_avec_retour('client', ['ajouter' => (int) $item['product_id'], 'date' => $dateParJour[$jourKey]]); ?>"
                                        title="<?php echo $estClientConnecte
                                            ? 'Ajouter au panier · livraison le ' . date('d/m/Y', strtotime($dateParJour[$jourKey]))
-                                           : 'Créez un compte pour commander'; ?>"
+                                           : 'Connectez-vous pour commander'; ?>"
                                        aria-label="Ajouter au panier" data-i18n-aria="common.ajouterPanier">+</a>
                                 <?php endif; ?>
                             </footer>
@@ -1874,7 +1881,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             <?php endif; ?>
 
             <div class="btn-box fj-reveal">
-                <a href="<?php echo BASE_URL; ?>/index.php?route=<?php echo $estClientConnecte ? 'client' : 'inscription'; ?>">
+                <a href="<?php echo $lienCommander; ?>">
                     <span data-i18n="accueil.consulterMenuComplet"<?php echo $estClientConnecte ? '' : ' hidden'; ?>>Consulter le menu complet</span>
                     <span data-i18n="accueil.creerCompte"<?php echo $estClientConnecte ? ' hidden' : ''; ?>>Créer un compte pour commander</span>
                 </a>

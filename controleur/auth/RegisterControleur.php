@@ -60,6 +60,15 @@ if (isset($_POST['register'])) {
             $_SESSION['role']    = $profile['role'];
             $_SESSION['email']   = $email;
 
+            // Si l'utilisateur venait d'un bouton « Commander » (retour
+            // mémorisé depuis la page de connexion), on le renvoie vers la
+            // page de commande initiale une fois le compte créé.
+            $retour = retour_connexion_valide($_GET['retour'] ?? null);
+            if ($retour !== null) {
+                header('Location: ' . BASE_URL . '/' . $retour);
+                exit;
+            }
+
             $route = route_par_defaut_pour_role($profile['role']);
 
             header('Location: ' . BASE_URL . '/index.php?route=' . $route);
