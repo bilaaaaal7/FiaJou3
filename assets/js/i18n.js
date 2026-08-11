@@ -61,6 +61,8 @@
             /* ---- Mot de passe oublié ---- */
             'mdp.title': 'Mot de passe oublié',
             'mdp.subtitle': 'Entrez votre email pour réinitialiser votre mot de passe',
+            'mdp.resetTitle': 'Nouveau mot de passe',
+            'mdp.resetSubtitle': 'Choisissez un nouveau mot de passe pour votre compte',
             'mdp.emailLabel': 'Email',
             'mdp.newPasswordLabel': 'Nouveau mot de passe',
             'mdp.confirmPasswordLabel': 'Confirmer le mot de passe',
@@ -378,6 +380,8 @@
 
             'mdp.title': 'Forgot Password',
             'mdp.subtitle': 'Enter your email to reset your password',
+            'mdp.resetTitle': 'New password',
+            'mdp.resetSubtitle': 'Choose a new password for your account',
             'mdp.emailLabel': 'Email',
             'mdp.newPasswordLabel': 'New password',
             'mdp.confirmPasswordLabel': 'Confirm password',
@@ -692,6 +696,8 @@
 
             'mdp.title': 'نسيت كلمة المرور',
             'mdp.subtitle': 'أدخل بريدك الإلكتروني لإعادة تعيين كلمة المرور',
+            'mdp.resetTitle': 'كلمة مرور جديدة',
+            'mdp.resetSubtitle': 'اختر كلمة مرور جديدة لحسابك',
             'mdp.emailLabel': 'البريد الإلكتروني',
             'mdp.newPasswordLabel': 'كلمة المرور الجديدة',
             'mdp.confirmPasswordLabel': 'تأكيد كلمة المرور',

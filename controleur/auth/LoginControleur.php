@@ -12,6 +12,11 @@ $error = "";
 $limiteur = new RateLimiterModele('connexion');
 $blocageRestant = $limiteur->tempsRestantBlocage();
 
+// Message flash à usage unique (ex : posé par MotDePasseOublieControleur
+// après une réinitialisation de mot de passe réussie).
+$flashSucces = $_SESSION['flash_succes'] ?? '';
+unset($_SESSION['flash_succes']);
+
 if (isset($_POST['login'])) {
     if (!$limiteur->peutTenter()) {
         $error = "Trop de tentatives échouées. Réessayez dans " . ceil($blocageRestant / 60) . " minute(s).";

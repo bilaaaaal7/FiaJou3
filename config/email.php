@@ -31,19 +31,24 @@
  */
 
 // Active l'envoi réel des emails (false = mode dev, les messages sont logués)
-define('EMAIL_ENABLED', false);
+define('EMAIL_ENABLED', true);
 
-// Expéditeur des emails
-define('EMAIL_FROM', 'no-reply@fiajou3.local');
+// Expéditeur des emails — avec Gmail, l'expéditeur DOIT être la même adresse
+// que EMAIL_SMTP_USER, sinon Gmail rejette l'envoi.
+define('EMAIL_FROM', 'elbbilal00@gmail.com');
 define('EMAIL_FROM_NAME', 'FiaJou3');
 
 // Utiliser un relais SMTP explicite (requires EMAIL_ENABLED = true)
-define('EMAIL_UTILISER_SMTP', false);
-define('EMAIL_SMTP_HOST', 'smtp.example.com');
+define('EMAIL_UTILISER_SMTP', true);
+define('EMAIL_SMTP_HOST', 'smtp.gmail.com');
 define('EMAIL_SMTP_PORT', 587);
 define('EMAIL_SMTP_SECURE', 'tls'); // tls | ssl | '' (aucun)
-define('EMAIL_SMTP_USER', '');
-define('EMAIL_SMTP_PASS', '');
+define('EMAIL_SMTP_USER', 'elbbilal00@gmail.com');
+define('EMAIL_SMTP_PASS', 'cqblvjgygwcyjkic'); // code à 16 caractères, sans espaces
 
 // Durée de validité d'un lien d'invitation partenaire (en secondes) : 48 h.
 define('PARTENAIRE_INVITATION_DUREE', 172800);
+
+// Durée de validité d'un lien de réinitialisation de mot de passe (en
+// secondes) : 1 h. Lien temporaire et à usage unique (voir PasswordResetModele).
+define('PASSWORD_RESET_DUREE', 3600);

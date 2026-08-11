@@ -21,6 +21,12 @@ require ROOT_PATH . '/assets/inc/header.php';
                 <h2 class="login-title" data-i18n="login.title">Connexion</h2>
                 <p class="login-subtitle" data-i18n="login.subtitle">Ravis de vous revoir, connectez-vous à votre compte</p>
 
+                <?php if (!empty($flashSucces)): ?>
+                    <div class="alert alert-success py-2" role="alert">
+                        <?php echo htmlspecialchars($flashSucces); ?>
+                    </div>
+                <?php endif; ?>
+
                 <?php if (!empty($error)): ?>
                     <div class="alert alert-danger py-2" role="alert">
                         <?php echo htmlspecialchars($error); ?>

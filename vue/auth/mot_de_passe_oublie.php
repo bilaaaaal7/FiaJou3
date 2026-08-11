@@ -1,4 +1,14 @@
 <?php
+/**
+ * Vue : Mot de passe oublié / Réinitialisation du mot de passe
+ * Même habillage que la page de connexion (auth-card, thème noir/or).
+ *
+ * Deux formulaires possibles selon le contexte fourni par
+ * MotDePasseOublieControleur :
+ *   - $modeReset = false : formulaire "Email" (demande de lien) ;
+ *   - $modeReset = true  : formulaire "Nouveau mot de passe" (lien reçu par
+ *     email valide, jeton dans $tokenActuel).
+ */
 $pageTitle = "Mot de passe oublié - " . APP_NAME;
 $extraCss = ['auth.css'];
 $extraJs = ['i18n.js'];
@@ -18,33 +28,20 @@ require ROOT_PATH . '/assets/inc/header.php';
             </div>
 
             <div class="card-body-custom">
-                <h2 class="login-title" data-i18n="mdp.title">Mot de passe oublié</h2>
-                <p class="login-subtitle" data-i18n="mdp.subtitle">Entrez votre email pour réinitialiser votre mot de passe</p>
 
-                <?php if (!empty($erreur)): ?>
-                    <div class="alert alert-danger py-2" role="alert">
-                        <?php echo htmlspecialchars($erreur); ?>
-                    </div>
-                <?php endif; ?>
+                <?php if ($modeReset): ?>
 
-                <?php if (!empty($message) && !$modeReset): ?>
-                    <div class="alert alert-success py-2" role="alert">
-                        <?php echo htmlspecialchars($message); ?>
-                    </div>
-                    <p class="register-link">
-                        <a href="<?php echo BASE_URL; ?>/index.php?route=connexion">Retour à la connexion</a>
-                    </p>
-                <?php elseif ($modeReset && empty($erreur)): ?>
+                    <h2 class="login-title" data-i18n="mdp.resetTitle">Nouveau mot de passe</h2>
+                    <p class="login-subtitle" data-i18n="mdp.resetSubtitle">Choisissez un nouveau mot de passe pour votre compte</p>
 
-                    <?php if ($message): ?>
-                    <div class="alert alert-success py-2" role="alert">
-                        <?php echo htmlspecialchars($message); ?>
-                    </div>
+                    <?php if (!empty($erreur)): ?>
+                        <div class="alert alert-danger py-2" role="alert">
+                            <?php echo htmlspecialchars($erreur); ?>
+                        </div>
                     <?php endif; ?>
 
                     <form method="POST" action="<?php echo BASE_URL; ?>/index.php?route=mot-de-passe-oublie">
-                        <input type="hidden" name="token" value="<?php echo htmlspecialchars($_SESSION['reset_token'] ?? ''); ?>">
-                        <input type="hidden" name="email" value="<?php echo htmlspecialchars($emailReset); ?>">
+                        <input type="hidden" name="token" value="<?php echo htmlspecialchars($tokenActuel); ?>">
 
                         <div class="mb-3">
                             <label for="nouveau_mdp" class="form-label" data-i18n="mdp.newPasswordLabel">Nouveau mot de passe</label>
@@ -63,7 +60,24 @@ require ROOT_PATH . '/assets/inc/header.php';
                         </div>
                     </form>
 
+                <?php elseif ($message !== ''): ?>
+
+                    <h2 class="login-title" data-i18n="mdp.title">Mot de passe oublié</h2>
+
+                    <div class="alert alert-success py-2" role="alert">
+                        <?php echo htmlspecialchars($message); ?>
+                    </div>
+
                 <?php else: ?>
+
+                    <h2 class="login-title" data-i18n="mdp.title">Mot de passe oublié</h2>
+                    <p class="login-subtitle" data-i18n="mdp.subtitle">Entrez votre email pour réinitialiser votre mot de passe</p>
+
+                    <?php if (!empty($erreur)): ?>
+                        <div class="alert alert-danger py-2" role="alert">
+                            <?php echo htmlspecialchars($erreur); ?>
+                        </div>
+                    <?php endif; ?>
 
                     <form method="POST" action="<?php echo BASE_URL; ?>/index.php?route=mot-de-passe-oublie">
                         <div class="mb-3">
