@@ -93,6 +93,34 @@ function dispatch(): void
             return;
 
         /* =========================
+           PARTENARIAT (cuisinier / livreur)
+           Deux flows distincts du Register client :
+             - partenaire/demande : AJAX, reçoit l'email + le rôle depuis la
+               modale "Rejoignez FiaJou3", crée l'invitation et envoie l'email.
+             - partenaire : page de complétion du dossier ouverte depuis le
+               lien sécurisé reçu par email (GET) et soumission du dossier (POST).
+        ========================= */
+
+        case 'partenaire/demande':
+            // Point d'action AJAX : aucune page n'est rendue, pas de métadonnées.
+            require ROOT_PATH . '/controleur/PartenaireDemandeControleur.php';
+            return;
+
+        case 'partenaire':
+            reset_meta();
+            $_SESSION['pr_title'] = 'Devenir partenaire - ' . APP_NAME;
+            $_SESSION['meta_description'] = 'Complétez votre dossier de candidature pour rejoindre ' . APP_NAME . ' en tant que cuisinier ou livreur partenaire.';
+            $_SESSION['meta_keywords'] = 'devenir partenaire, cuisinier partenaire, livreur partenaire, ' . APP_NAME;
+            require ROOT_PATH . '/controleur/PartenaireControleur.php';
+            return;
+
+        case 'langue':
+            // Point d'action AJAX : persistance de la langue choisie par le
+            // sélecteur (session + compte connecté + cookie). Aucune page rendue.
+            require ROOT_PATH . '/controleur/LangueControleur.php';
+            return;
+
+        /* =========================
            ESPACE PERSONNEL
            (accessible à tout rôle connecté via exiger_connexion)
         ========================= */

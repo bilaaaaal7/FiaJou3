@@ -33,6 +33,14 @@ if (!empty($_SESSION['user_id'])) {
     require_once ROOT_PATH . '/modele/NotificationModele.php';
     $nbNotifsNonLues = (new NotificationModele())->compterNonLues((int) $_SESSION['user_id']);
 }
+
+$roleI18n = [
+    ROLE_ADMIN     => 'nav.roleAdmin',
+    ROLE_CLIENT    => 'nav.roleClient',
+    ROLE_CUISINIER => 'nav.roleCuisinier',
+    ROLE_LIVREUR   => 'nav.roleLivreur',
+];
+$roleCleI18n = $roleI18n[utilisateur_role()] ?? '';
 ?>
 <div class="profile-menu profile-menu--<?php echo htmlspecialchars($profileMenuVariant); ?>" data-profile-menu>
     <button type="button" class="profile-menu__trigger" data-profile-trigger aria-haspopup="true" aria-expanded="false">
@@ -44,27 +52,27 @@ if (!empty($_SESSION['user_id'])) {
             <span class="profile-menu__avatar profile-menu__avatar--lg"><?php echo htmlspecialchars($initiales); ?></span>
             <div>
                 <div class="profile-menu__name"><?php echo htmlspecialchars(trim($prenomUser . ' ' . $nomUser)); ?></div>
-                <div class="profile-menu__role"><?php echo htmlspecialchars(utilisateur_role() ?? ''); ?></div>
+                <div class="profile-menu__role"<?php echo $roleCleI18n !== '' ? ' data-i18n="' . htmlspecialchars($roleCleI18n) . '"' : ''; ?>><?php echo htmlspecialchars(utilisateur_role() ?? ''); ?></div>
             </div>
         </div>
         <a role="menuitem" href="<?php echo BASE_URL; ?>/index.php?route=client/profil">
-            <i class="fa fa-user" aria-hidden="true"></i> Mon Profil
+            <i class="fa fa-user" aria-hidden="true"></i> <span data-i18n="nav.monProfil">Mon Profil</span>
         </a>
         <a role="menuitem" href="<?php echo BASE_URL; ?>/index.php?route=client/mes-commandes">
-            <i class="fa fa-shopping-bag" aria-hidden="true"></i> Mes Commandes
+            <i class="fa fa-shopping-bag" aria-hidden="true"></i> <span data-i18n="nav.mesCommandes">Mes Commandes</span>
         </a>
         <a role="menuitem" href="<?php echo BASE_URL; ?>/index.php?route=client/notifications">
-            <i class="fa fa-bell" aria-hidden="true"></i> Notifications
+            <i class="fa fa-bell" aria-hidden="true"></i> <span data-i18n="nav.notifications">Notifications</span>
             <?php if ($nbNotifsNonLues > 0): ?>
                 <span class="profile-menu__badge"><?php echo $nbNotifsNonLues > 9 ? '9+' : $nbNotifsNonLues; ?></span>
             <?php endif; ?>
         </a>
         <a role="menuitem" href="<?php echo BASE_URL; ?>/index.php?route=parametres">
-            <i class="fa fa-cog" aria-hidden="true"></i> Paramètres
+            <i class="fa fa-cog" aria-hidden="true"></i> <span data-i18n="nav.parametres">Paramètres</span>
         </a>
         <div class="profile-menu__divider"></div>
         <a role="menuitem" href="<?php echo BASE_URL; ?>/index.php?route=deconnexion" class="profile-menu__logout">
-            <i class="fa fa-sign-out" aria-hidden="true"></i> Déconnexion
+            <i class="fa fa-sign-out" aria-hidden="true"></i> <span data-i18n="nav.deconnexion">Déconnexion</span>
         </a>
     </div>
 </div>

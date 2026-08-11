@@ -11,6 +11,13 @@
 
 $pageTitle = APP_NAME . " - Repas faits maison, livrés chez vous";
 
+// Participation au système i18n (FR/EN/AR) : langue résolue côté serveur pour
+// éviter tout « flash », data-fj-page pour le titre de l'onglet par page.
+require_once ROOT_PATH . '/assets/inc/langue.php';
+$i18nPage    = 'accueil';
+$langueHtml  = langue_actuelle();
+$dirHtml     = $langueHtml === 'ar' ? 'rtl' : 'ltr';
+
 // Client connecté : la Home reste accessible et affiche Panier + Profil.
 $estClientConnecte = est_connecte() && utilisateur_role() === ROLE_CLIENT;
 $panierNb = (int) ($panierNb ?? 0);
@@ -32,7 +39,7 @@ $photoViande   = UPLOADS_URL . '/livraison_rapide.png';
 $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $itemsParJour)) > 0;
 ?>
 <!DOCTYPE html>
-<html lang="fr" dir="ltr">
+<html lang="<?php echo $langueHtml; ?>" dir="<?php echo $dirHtml; ?>">
 <head>
     <script>
         (function () {
@@ -42,12 +49,19 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             document.documentElement.setAttribute('data-theme', t);
         })();
     </script>
+    <script>
+        window.FJ_I18N = {
+            lang: '<?php echo $langueHtml; ?>',
+            connecte: <?php echo est_connecte() ? 'true' : 'false'; ?>,
+            url: '<?php echo BASE_URL; ?>/index.php?route=langue'
+        };
+    </script>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Commandez des repas faits maison préparés par des cuisiniers locaux et faites-vous livrer rapidement avec <?php echo APP_NAME; ?>.">
     <meta name="keywords" content="repas maison, livraison de repas, cuisine locale, commande de repas, <?php echo APP_NAME; ?>">
-    <title><?php echo htmlspecialchars($pageTitle); ?></title>
+    <title id="pageTitle"><?php echo htmlspecialchars($pageTitle); ?></title>
 
     <link rel="icon" type="image/png" sizes="32x32" href="<?php echo BASE_URL; ?>/assets/images/favicon-32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="<?php echo BASE_URL; ?>/assets/images/favicon-16.png">
@@ -80,6 +94,32 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             --fj-blanc: #ffffff;
             --fj-ombre: 0 14px 30px rgba(23, 23, 23, 0.10);
             --fj-ombre-or: 0 10px 24px rgba(184, 134, 24, 0.30);
+
+            /* Jetons sémantiques du sélecteur de langue (identiques à
+               assets/css/app.css, source unique du site). */
+            --gold: #B88618;
+            --gold-hover: #976e14;
+            --gold-light: #f4ecd8;
+            --gold-dark: #7a5810;
+            --surface: #ffffff;
+            --border-soft: #e4dfd3;
+            --muted: #706B62;
+            --text: #171717;
+            --on-gold: #171717;
+            --font-body: 'Open Sans', Arial, sans-serif;
+        }
+
+        /* Jetons sémantiques du sélecteur de langue — mode sombre. */
+        [data-theme="dark"] {
+            --gold: #B88618;
+            --gold-hover: #a67a1a;
+            --gold-light: #3a3120;
+            --gold-dark: #e0b14d;
+            --surface: #18181e;
+            --border-soft: #2b2b32;
+            --muted: #a49d92;
+            --text: #f2efe8;
+            --on-gold: #171717;
         }
 
         /* ---------- Base ---------- */
@@ -224,6 +264,129 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             color: #ffffff;
             transform: translateY(-2px);
             box-shadow: 0 6px 16px rgba(184, 134, 24, 0.25);
+        }
+
+        /* ---------- Sélecteur de langue (header) : icône globe + menu ---------- */
+        /* Règles identiques à celles d'assets/css/app.css (page Admin) :
+           icône globe dorée seule dans le header, menu déroulant masqué
+           par défaut et ouvert au clic. */
+        .header_section .lang-switcher--dropdown {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            background: none;
+            border: none;
+            border-radius: 0;
+            padding: 0;
+            box-shadow: none;
+            margin-inline-end: 8px;
+        }
+        .header_section .lang-switcher--dropdown .lang-switcher-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            padding: 6px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.30);
+            background: rgba(255, 255, 255, 0.07);
+            color: #e0b14d;
+            box-shadow: none;
+            cursor: pointer;
+            transition: background-color .2s ease-in-out, color .2s ease-in-out, box-shadow .2s ease-in-out;
+        }
+        .header_section .lang-switcher--dropdown .lang-switcher-toggle svg {
+            width: 20px;
+            height: 20px;
+        }
+        .header_section .lang-switcher--dropdown .lang-switcher-toggle:hover,
+        .header_section .lang-switcher--dropdown .lang-switcher-toggle:focus-visible {
+            background: rgba(184, 134, 24, 0.22);
+            border-color: var(--fj-or);
+            color: #f0ca6d;
+            box-shadow: 0 6px 16px rgba(184, 134, 24, 0.25);
+        }
+        .header_section .lang-switcher--dropdown .lang-switcher-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            inset-inline-end: 0;
+            z-index: 1200;
+            min-width: 180px;
+            padding: 6px;
+            background: var(--surface);
+            border: 1px solid var(--border-soft);
+            border-radius: 14px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-4px);
+            transition: opacity .18s ease-in-out, transform .18s ease-in-out, visibility .18s ease-in-out;
+        }
+        .header_section .lang-switcher--dropdown.is-open .lang-switcher-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .header_section .lang-switcher--dropdown .lang-switcher-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: none;
+            background: transparent;
+            color: var(--muted);
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 8px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            text-align: start;
+            transition: background-color .15s ease-in-out, color .15s ease-in-out;
+        }
+        .header_section .lang-switcher--dropdown .lang-switcher-option .lang-code {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 24px;
+            height: 24px;
+            padding: 0 5px;
+            border-radius: 999px;
+            background: var(--border-soft);
+            color: var(--muted);
+            font-size: 0.68rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            transition: background-color .15s ease-in-out, color .15s ease-in-out;
+        }
+        .header_section .lang-switcher--dropdown .lang-switcher-option:hover {
+            background: color-mix(in srgb, var(--gold) 12%, transparent);
+            color: var(--text);
+        }
+        .header_section .lang-switcher--dropdown .lang-switcher-option:hover .lang-code {
+            background: color-mix(in srgb, var(--gold) 18%, var(--border-soft));
+            color: var(--gold-dark);
+        }
+        .header_section .lang-switcher--dropdown .lang-switcher-option.active {
+            color: var(--gold-dark);
+            background: var(--gold-light);
+        }
+        .header_section .lang-switcher--dropdown .lang-switcher-option.active .lang-code {
+            background: var(--gold);
+            color: var(--on-gold);
+        }
+        .header_section .lang-switcher--dropdown .lang-switcher-option.active::after {
+            content: '✓';
+            margin-inline-start: auto;
+            font-weight: 800;
+            color: var(--gold-dark);
+        }
+        html[dir="rtl"] .header_section .lang-switcher--dropdown .lang-switcher-option {
+            font-family: 'Tajawal', var(--font-body);
         }
 
         /* ---------- Bouton "Commander" (header) ---------- */
@@ -384,7 +547,8 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
         .offer_section .box .detail-box a,
         .food_section .btn-box a,
         .about_section .detail-box a,
-        .partner_section .box a.btn1 {
+        .partner_section .box a.btn1,
+        .partner_section .box button.btn1 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -393,19 +557,23 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             margin-top: 0;
             border: none;
             border-radius: 50px;
+            font-family: 'Poppins', 'Open Sans', sans-serif;
             font-weight: 700;
             font-size: 1rem;
             letter-spacing: 0.3px;
+            line-height: 1.2;
             color: #ffffff;
             background: linear-gradient(135deg, #c8931f, var(--fj-or) 55%, var(--fj-or-sombre));
             box-shadow: var(--fj-ombre-or);
+            cursor: pointer;
             transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease;
         }
         .slider_section .detail-box a.btn1:hover,
         .offer_section .box .detail-box a:hover,
         .food_section .btn-box a:hover,
         .about_section .detail-box a:hover,
-        .partner_section .box a.btn1:hover {
+        .partner_section .box a.btn1:hover,
+        .partner_section .box button.btn1:hover {
             transform: translateY(-3px);
             background: linear-gradient(135deg, #d8a52b, #c8931f 55%, #a37209);
             box-shadow: 0 14px 30px rgba(184, 134, 24, 0.5);
@@ -415,7 +583,8 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
         .offer_section .box .detail-box a:active,
         .food_section .btn-box a:active,
         .about_section .detail-box a:active,
-        .partner_section .box a.btn1:active { transform: translateY(-1px); }
+        .partner_section .box a.btn1:active,
+        .partner_section .box button.btn1:active { transform: translateY(-1px); }
 
         /* ---------- Titres de section : filet or sous le titre ---------- */
         .heading_container h2 {
@@ -904,6 +1073,108 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
         }
         .fj-modal-add .ico-plus { font-size: 1.1rem; font-weight: 600; line-height: 1; }
 
+        /* ---------- Modale "Devenir partenaire" (email + envoi du lien) ---------- */
+        .fj-modal-dialog--sm { max-width: 460px; }
+        .fj-partenaire-sub { margin: 6px 0 0; color: #8a8478; font-size: 0.92rem; line-height: 1.5; }
+        .fj-partenaire-intro { margin: 0 0 16px; color: #5f5a50; font-size: 0.92rem; line-height: 1.6; }
+        .fj-partenaire-champ label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.9rem; color: #171717; }
+        .fj-partenaire-champ .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e0d8c6;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            color: #171717;
+            background: #fbfaf6;
+            transition: border-color .2s ease, box-shadow .2s ease;
+        }
+        .fj-partenaire-champ .form-control:focus {
+            border-color: var(--fj-or);
+            box-shadow: 0 0 0 3px rgba(184, 134, 24, 0.18);
+            outline: none;
+        }
+        .fj-partenaire-erreur {
+            margin-top: 10px;
+            padding: 9px 12px;
+            border-radius: 10px;
+            background: #fdecea;
+            border: 1px solid #f5c6c2;
+            color: #b23b2e;
+            font-size: 0.86rem;
+            line-height: 1.5;
+        }
+        .fj-partenaire-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .fj-partenaire-annuler {
+            padding: 12px 22px;
+            border: 1px solid #d8d2c4;
+            border-radius: 50px;
+            background: #ffffff;
+            color: #5f5a50;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: border-color .2s ease, color .2s ease, background .2s ease;
+        }
+        .fj-partenaire-annuler:hover { border-color: #b23b2e; color: #b23b2e; background: #fdf3f2; }
+        .fj-partenaire-continuer {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: 0.3px;
+            color: #ffffff;
+            background: linear-gradient(135deg, #c8931f, var(--fj-or) 55%, var(--fj-or-sombre));
+            box-shadow: var(--fj-ombre-or);
+            cursor: pointer;
+            transition: transform .25s ease, box-shadow .25s ease, background .25s ease;
+        }
+        .fj-partenaire-continuer:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #d8a52b, #c8931f 55%, #a37209);
+            box-shadow: 0 14px 30px rgba(184, 134, 24, 0.5);
+        }
+        .fj-partenaire-continuer:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+        .fj-partenaire-ok { text-align: center; font-size: 3rem; color: #2e7d32; margin: 8px 0 6px; }
+        .fj-partenaire-message { margin: 0; color: #5f5a50; line-height: 1.7; font-size: 0.95rem; }
+        .fj-partenaire-message strong { color: #171717; }
+        .fj-partenaire-fermer {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #ffffff;
+            background: linear-gradient(135deg, #c8931f, var(--fj-or) 55%, var(--fj-or-sombre));
+            box-shadow: var(--fj-ombre-or);
+            cursor: pointer;
+            transition: transform .25s ease, box-shadow .25s ease;
+        }
+        .fj-partenaire-fermer:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(184, 134, 24, 0.5); }
+
+        [data-theme="dark"] .fj-partenaire-sub { color: #b9b2a6; }
+        [data-theme="dark"] .fj-partenaire-intro { color: #b9b2a6; }
+        [data-theme="dark"] .fj-partenaire-champ label { color: #f2efe8; }
+        [data-theme="dark"] .fj-partenaire-champ .form-control { background: #232329; border-color: #2e2e36; color: #f2efe8; }
+        [data-theme="dark"] .fj-partenaire-erreur { background: rgba(178, 59, 46, 0.15); border-color: rgba(178, 59, 46, 0.4); color: #ff9a8d; }
+        [data-theme="dark"] .fj-partenaire-annuler { background: #1b1b21; border-color: #2e2e36; color: #b9b2a6; }
+        [data-theme="dark"] .fj-partenaire-annuler:hover { border-color: #ff9a8d; color: #ff9a8d; background: rgba(178, 59, 46, 0.12); }
+        [data-theme="dark"] .fj-partenaire-message { color: #b9b2a6; }
+        [data-theme="dark"] .fj-partenaire-message strong { color: #f2efe8; }
+
         [data-theme="dark"] .fj-modal-dialog { background: #1b1b21; }
         [data-theme="dark"] .fj-modal-title { color: #f2efe8; }
         [data-theme="dark"] .fj-modal-close { background: rgba(255, 255, 255, 0.08); color: #f2efe8; }
@@ -983,7 +1254,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
         }
         .partner_section .box h5 { margin: 18px 0 10px; font-weight: 700; }
         .partner_section .box p { color: #5f5a50; line-height: 1.7; }
-        .partner_section .box a.btn1 { margin-top: 14px; }
+        .partner_section .box a.btn1, .partner_section .box button.btn1 { margin-top: 14px; }
 
         /* ---------- Témoignages ---------- */
         .client_section .heading_container { margin-bottom: 30px; }
@@ -1300,7 +1571,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
     </style>
 </head>
 
-<body>
+<body data-fj-page="accueil">
 
     <div class="hero_area hero_area--branded">
         <div class="hero_pattern" aria-hidden="true">
@@ -1329,30 +1600,31 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav mx-auto">
                             <li class="nav-item active">
-                                <a class="nav-link" href="<?php echo BASE_URL; ?>/index.php?route=accueil">Accueil <span class="sr-only">(current)</span></a>
+                                <a class="nav-link" href="<?php echo BASE_URL; ?>/index.php?route=accueil"><span data-i18n="accueil.navAccueil">Accueil</span> <span class="sr-only">(current)</span></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#menu">Menu de la semaine</a>
+                                <a class="nav-link" href="#menu"><span data-i18n="accueil.navMenuSemaine">Menu de la semaine</span></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#about">À propos</a>
+                                <a class="nav-link" href="#about"><span data-i18n="accueil.navAPropos">À propos</span></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#partenaire">Devenir partenaire</a>
+                                <a class="nav-link" href="#partenaire"><span data-i18n="accueil.navPartenaire">Devenir partenaire</span></a>
                             </li>
                         </ul>
                         <div class="user_option">
+                            <?php require ROOT_PATH . '/assets/inc/lang_switcher.php'; ?>
                             <?php $themeToggleClass = 'header-theme-toggle'; require ROOT_PATH . '/assets/inc/theme_toggle.php'; ?>
                             <?php if ($estClientConnecte): ?>
                                 <button type="button" class="fj-cart-nav" onclick="fjCartOuvrir()"
-                                        aria-label="Ouvrir mon panier" title="Mon panier">
+                                        aria-label="Ouvrir mon panier" title="Mon panier" data-i18n-aria="nav.ouvrirMonPanier">
                                     <i data-lucide="shopping-cart" aria-hidden="true"></i>
                                     <span class="fj-cart-badge" data-fj-cart-badge<?php echo $panierNb > 0 ? '' : ' hidden'; ?>><?php echo $panierNb > 9 ? '9+' : $panierNb; ?></span>
                                 </button>
                                 <?php $profileMenuVariant = 'light'; require ROOT_PATH . '/assets/inc/profile_menu.php'; ?>
                             <?php else: ?>
                                 <a href="<?php echo BASE_URL; ?>/index.php?route=inscription" class="order_online">
-                                    Commander
+                                    <span data-i18n="accueil.commander">Commander</span>
                                 </a>
                             <?php endif; ?>
                         </div>
@@ -1368,15 +1640,16 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                 <div class="row align-items-center">
                     <div class="col-md-7 col-lg-6">
                         <div class="detail-box">
-                            <span class="hero-eyebrow fj-reveal">Repas marocain chaud, livré à l'heure</span>
-                            <h1 class="fj-reveal fj-reveal-delay-1">Des repas faits maison, livrés chez vous</h1>
-                            <p class="fj-reveal fj-reveal-delay-2">
+                            <span class="hero-eyebrow fj-reveal" data-i18n="accueil.heroEyebrow">Repas marocain chaud, livré à l'heure</span>
+                            <h1 class="fj-reveal fj-reveal-delay-1" data-i18n="accueil.heroTitre">Des repas faits maison, livrés chez vous</h1>
+                            <p class="fj-reveal fj-reveal-delay-2" data-i18n="accueil.heroSousTitre">
                                 Commandez des plats préparés avec soin par des cuisiniers locaux
                                 et recevez-les chauds directement à votre porte, en quelques clics.
                             </p>
                             <div class="btn-box fj-reveal fj-reveal-delay-3">
                                 <a href="<?php echo BASE_URL; ?>/index.php?route=<?php echo $estClientConnecte ? 'client' : 'inscription'; ?>" class="btn1">
-                                    <?php echo $estClientConnecte ? 'Consulter le menu' : 'Commencer à commander'; ?>
+                                    <span data-i18n="accueil.consulterMenu"<?php echo $estClientConnecte ? '' : ' hidden'; ?>>Consulter le menu</span>
+                                    <span data-i18n="accueil.commencerCommander"<?php echo $estClientConnecte ? ' hidden' : ''; ?>>Commencer à commander</span>
                                 </a>
                             </div>
                         </div>
@@ -1403,10 +1676,10 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                                 <img src="<?php echo $photoCouscous; ?>" alt="Cuisine locale">
                             </div>
                             <div class="detail-box">
-                                <h5>Cuisine 100% locale</h5>
-                                <h6><span>Fait</span> maison</h6>
+                                <h5 data-i18n="accueil.offre1Titre">Cuisine 100% locale</h5>
+                                <h6 data-i18n="accueil.offre1Sous"><span>Fait</span> maison</h6>
                                 <a href="<?php echo BASE_URL; ?>/index.php?route=<?php echo $estClientConnecte ? 'client' : 'inscription'; ?>">
-                                    Commander <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+                                    <span data-i18n="accueil.commander">Commander</span> <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
                                 </a>
                             </div>
                         </div>
@@ -1417,10 +1690,10 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                                 <img src="<?php echo $photoViande; ?>" alt="Livraison rapide">
                             </div>
                             <div class="detail-box">
-                                <h5>Livraison rapide</h5>
-                                <h6><span>Chaud</span> et à l'heure</h6>
+                                <h5 data-i18n="accueil.offre2Titre">Livraison rapide</h5>
+                                <h6 data-i18n="accueil.offre2Sous"><span>Chaud</span> et à l'heure</h6>
                                 <a href="<?php echo BASE_URL; ?>/index.php?route=<?php echo $estClientConnecte ? 'client' : 'inscription'; ?>">
-                                    Commander <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+                                    <span data-i18n="accueil.commander">Commander</span> <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
                                 </a>
                             </div>
                         </div>
@@ -1435,11 +1708,11 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
     <section class="food_section layout_padding-bottom" id="menu">
         <div class="container">
             <div class="heading_container heading_center fj-reveal">
-                <h2>Menu de la semaine</h2>
+                <h2 data-i18n="accueil.menuTitre">Menu de la semaine</h2>
             </div>
 
             <?php if (!$hasMenu): ?>
-                <div class="menu-empty-state fj-reveal">
+                <div class="menu-empty-state fj-reveal" data-i18n="accueil.menuVide">
                     Aucun menu n'est publié pour le moment. Revenez bientôt !
                 </div>
             <?php else: ?>
@@ -1524,8 +1797,8 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                         <?php $nbPlatsJour = count($itemsJour); ?>
                         <article class="menu-day-card" data-fj-modal-open="<?php echo $jourKey; ?>" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Voir le menu du <?php echo $jourLabel; ?>">
                             <header class="menu-day-card-head">
-                                <span class="menu-day-name"><?php echo $jourLabel; ?></span>
-                                <span class="menu-day-status menu-day-status-<?php echo $statutJour[$jourKey]; ?>">
+                                <span class="menu-day-name" data-i18n="jours.<?php echo $jourKey; ?>"><?php echo $jourLabel; ?></span>
+                                <span class="menu-day-status menu-day-status-<?php echo $statutJour[$jourKey]; ?>" data-i18n="common.<?php echo $statutJour[$jourKey] === 'ouvert' ? 'ouvert' : ($statutJour[$jourKey] === 'cloture' ? 'cloture' : 'indisponible'); ?>">
                                     <?php echo $statutJour[$jourKey] === 'ouvert' ? 'Ouvert' : ($statutJour[$jourKey] === 'cloture' ? 'Clôturé' : 'Indisponible'); ?>
                                 </span>
                             </header>
@@ -1536,7 +1809,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                                 <?php endif; ?>
                                 <?php if ($nbPlatsJour > 1): ?>
                                     <?php $autresPlats = $nbPlatsJour - 1; ?>
-                                    <span class="menu-day-more">+ <?php echo $autresPlats; ?> autre<?php echo $autresPlats > 1 ? 's' : ''; ?> plat<?php echo $autresPlats > 1 ? 's' : ''; ?></span>
+                                    <span class="menu-day-more">+ <?php echo $autresPlats; ?> <span data-i18n="accueil.autresPlats">autre(s) plat(s)</span></span>
                                 <?php endif; ?>
                             </div>
                             <footer class="menu-day-card-foot">
@@ -1551,7 +1824,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                                        title="<?php echo $estClientConnecte
                                            ? 'Ajouter au panier · livraison le ' . date('d/m/Y', strtotime($dateParJour[$jourKey]))
                                            : 'Créez un compte pour commander'; ?>"
-                                       aria-label="Ajouter au panier">+</a>
+                                       aria-label="Ajouter au panier" data-i18n-aria="common.ajouterPanier">+</a>
                                 <?php endif; ?>
                             </footer>
                         </article>
@@ -1561,9 +1834,9 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                 <?php if (!empty($itemsSamedi)): ?>
                 <section class="menu-samedi" data-fj-modal-open="samedi" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Voir le menu libre du samedi">
                     <header class="menu-samedi-head">
-                        <h3 class="menu-samedi-title">Samedi — Menu libre</h3>
+                        <h3 class="menu-samedi-title" data-i18n="jours.samediMenuLibre">Samedi — Menu libre</h3>
                         <?php if ($samediOuvert && $dateSamedi): ?>
-                            <span class="menu-samedi-date">Livraison le <?php echo date('d/m/Y', strtotime($dateSamedi)); ?></span>
+                            <span class="menu-samedi-date"><span data-i18n="common.livraisonLe">Livraison le</span> <?php echo date('d/m/Y', strtotime($dateSamedi)); ?></span>
                         <?php endif; ?>
                     </header>
                     <p class="menu-samedi-desc">
@@ -1587,11 +1860,11 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                                        title="<?php echo $estClientConnecte
                                            ? 'Ajouter au panier · livraison le ' . date('d/m/Y', strtotime($dateSamedi))
                                            : 'Créez un compte pour commander'; ?>"
-                                       aria-label="Ajouter au panier">+</a>
+                                       aria-label="Ajouter au panier" data-i18n-aria="common.ajouterPanier">+</a>
                                 <?php elseif (!$samediOuvert): ?>
-                                    <span class="menu-samedi-badge menu-samedi-badge-closed">Clôturé</span>
+                                    <span class="menu-samedi-badge menu-samedi-badge-closed" data-i18n="common.cloture">Clôturé</span>
                                 <?php else: ?>
-                                    <span class="menu-samedi-badge menu-samedi-badge-unavailable">Indisponible</span>
+                                    <span class="menu-samedi-badge menu-samedi-badge-unavailable" data-i18n="common.indisponible">Indisponible</span>
                                 <?php endif; ?>
                             </div>
                         <?php endforeach; ?>
@@ -1602,7 +1875,8 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
 
             <div class="btn-box fj-reveal">
                 <a href="<?php echo BASE_URL; ?>/index.php?route=<?php echo $estClientConnecte ? 'client' : 'inscription'; ?>">
-                    <?php echo $estClientConnecte ? 'Consulter le menu complet' : 'Créer un compte pour commander'; ?>
+                    <span data-i18n="accueil.consulterMenuComplet"<?php echo $estClientConnecte ? '' : ' hidden'; ?>>Consulter le menu complet</span>
+                    <span data-i18n="accueil.creerCompte"<?php echo $estClientConnecte ? ' hidden' : ''; ?>>Créer un compte pour commander</span>
                 </a>
             </div>
         </div>
@@ -1619,13 +1893,13 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             <?php foreach ($panneauxModale as $jourKey => $panneau): ?>
                 <div class="fj-modal-panel" data-fj-modal-panel="<?php echo $jourKey; ?>">
                     <div class="fj-modal-head">
-                        <h3 class="fj-modal-title"><?php echo htmlspecialchars($panneau['titre']); ?></h3>
+                        <h3 class="fj-modal-title" data-i18n="<?php echo $jourKey === 'samedi' ? 'jours.samediMenuLibre' : 'jours.' . $jourKey; ?>"><?php echo htmlspecialchars($panneau['titre']); ?></h3>
                         <?php if ($panneau['date']): ?>
-                            <span class="fj-modal-date">Livraison le <?php echo date('d/m/Y', strtotime($panneau['date'])); ?></span>
+                            <span class="fj-modal-date"><span data-i18n="common.livraisonLe">Livraison le</span> <?php echo date('d/m/Y', strtotime($panneau['date'])); ?></span>
                         <?php endif; ?>
                     </div>
                     <?php if ($panneau['cloture']): ?>
-                        <span class="fj-modal-closed">Clôturé</span>
+                        <span class="fj-modal-closed" data-i18n="common.cloture">Clôturé</span>
                     <?php endif; ?>
                     <div class="fj-modal-list">
                         <?php foreach ($panneau['items'] as $item): ?>
@@ -1650,7 +1924,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                                         <span class="fj-modal-dish-price">
                                             <?php echo isset($item['prix']) ? number_format((float) $item['prix'], 2) . ' MAD' : ''; ?>
                                         </span>
-                                        <span class="fj-modal-dish-status <?php echo $item['disponible'] ? 'fj-modal-dish-status-ok' : 'fj-modal-dish-status-ko'; ?>">
+                                        <span class="fj-modal-dish-status <?php echo $item['disponible'] ? 'fj-modal-dish-status-ok' : 'fj-modal-dish-status-ko'; ?>" data-i18n="<?php echo $item['disponible'] ? 'common.disponible' : 'common.indisponible'; ?>">
                                             <?php echo $item['disponible'] ? 'Disponible' : 'Indisponible'; ?>
                                         </span>
                                         <?php if ($panneau['ouvert'] && $item['disponible']): ?>
@@ -1661,7 +1935,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                                                title="<?php echo $estClientConnecte
                                                    ? 'Ajouter au panier · livraison le ' . date('d/m/Y', strtotime($panneau['date']))
                                                    : 'Créez un compte pour commander'; ?>">
-                                                <span class="ico-plus">+</span> Ajouter
+                                                <span class="ico-plus">+</span> <span data-i18n="menu.ajouter">Ajouter</span>
                                             </a>
                                         <?php endif; ?>
                                     </div>
@@ -1675,6 +1949,46 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
     </div>
     <?php endif; ?>
 
+    <!-- modale "Devenir partenaire" : saisie de l'email (cuisinier / livreur) -->
+    <div class="fj-modal" id="fj-modal-partenaire" role="dialog" aria-modal="true" aria-label="Devenir partenaire" aria-hidden="true" data-i18n-aria="accueil.partenaireModalTitre">
+        <div class="fj-modal-overlay" data-fj-partenaire-close></div>
+        <div class="fj-modal-dialog fj-modal-dialog--sm">
+            <button type="button" class="fj-modal-close" data-fj-partenaire-close aria-label="Fermer" data-i18n-aria="common.fermer">&times;</button>
+
+            <div class="fj-modal-panel is-active">
+                <div class="fj-modal-head">
+                    <h3 class="fj-modal-title" id="fj-partenaire-titre" data-i18n="accueil.partenaireModalTitre">Devenir partenaire</h3>
+                    <p class="fj-partenaire-sub" id="fj-partenaire-sous-titre" data-i18n="accueil.partenaireModalSub">Rejoignez FiaJou3 et complétez votre dossier.</p>
+                </div>
+
+                <div id="fj-partenaire-forme">
+                    <p class="fj-partenaire-intro" data-i18n="accueil.partenaireModalIntro">Indiquez votre email : nous vous enverrons un lien sécurisé pour compléter votre dossier.</p>
+                    <form id="fj-partenaire-form" novalidate>
+                        <input type="hidden" name="role" id="fj-partenaire-role" value="">
+                        <div class="fj-partenaire-champ">
+                            <label for="fj-partenaire-email" data-i18n="accueil.partenaireModalEmail">Email</label>
+                            <input type="email" class="form-control" id="fj-partenaire-email" name="email"
+                                   placeholder="votre@email.fr" required autocomplete="email">
+                        </div>
+                        <div class="fj-partenaire-erreur" id="fj-partenaire-erreur" hidden></div>
+                        <div class="fj-partenaire-actions">
+                            <button type="button" class="btn fj-partenaire-annuler" data-fj-partenaire-close data-i18n="accueil.partenaireModalAnnuler">Annuler</button>
+                            <button type="submit" class="btn1 fj-partenaire-continuer" data-i18n="accueil.partenaireModalContinuer">Continuer</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="fj-partenaire-succes" hidden>
+                    <p class="fj-partenaire-ok"><i class="fa fa-check-circle" aria-hidden="true"></i></p>
+                    <p class="fj-partenaire-message" id="fj-partenaire-message"></p>
+                    <div class="fj-partenaire-actions">
+                        <button type="button" class="btn1 fj-partenaire-fermer" data-fj-partenaire-close data-i18n="accueil.partenaireModalFermer">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- about section -->
     <section class="about_section layout_padding" id="about">
         <div class="container">
@@ -1687,14 +2001,14 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                 <div class="col-md-6 fj-reveal fj-reveal-delay-1">
                     <div class="detail-box">
                         <div class="heading_container">
-                            <h2>Qui sommes-nous</h2>
+                            <h2 data-i18n="accueil.aboutTitre">Qui sommes-nous</h2>
                         </div>
                         <p>
                             <?php echo htmlspecialchars(APP_NAME); ?> met en relation des cuisiniers locaux passionnés
                             avec des gourmands pressés. Chaque plat est préparé à la commande, comme à la maison,
                             puis livré rapidement par nos livreurs partenaires près de chez vous.
                         </p>
-                        <a href="#partenaire">
+                        <a href="#partenaire" data-i18n="accueil.aboutEnSavoirPlus">
                             En savoir plus
                         </a>
                     </div>
@@ -1708,23 +2022,23 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
     <section class="book_section layout_padding partner_section" id="partenaire">
         <div class="container">
             <div class="heading_container fj-reveal">
-                <h2>Rejoignez FiaJou3</h2>
+                <h2 data-i18n="accueil.partenaireTitre">Rejoignez FiaJou3</h2>
             </div>
             <div class="row">
                 <div class="col-md-6 fj-reveal">
                     <div class="box">
                         <i class="fa fa-cutlery fa-3x" aria-hidden="true" style="color:#B88618;"></i>
-                        <h5>Devenir cuisinier partenaire</h5>
+                        <h5 data-i18n="accueil.partenaireCuisinier">Devenir cuisinier partenaire</h5>
                         <p>Partagez vos recettes faites maison et vendez vos plats à de nouveaux clients chaque semaine.</p>
-                        <a href="<?php echo BASE_URL; ?>/index.php?route=inscription" class="btn1">Je m'inscris</a>
+                        <button type="button" class="btn1" data-fj-partenaire="cuisinier" data-i18n="accueil.partenaireJeMinscris">Je m'inscris</button>
                     </div>
                 </div>
                 <div class="col-md-6 fj-reveal fj-reveal-delay-1">
                     <div class="box">
                         <i class="fa fa-motorcycle fa-3x" aria-hidden="true" style="color:#B88618;"></i>
-                        <h5>Devenir livreur partenaire</h5>
+                        <h5 data-i18n="accueil.partenaireLivreur">Devenir livreur partenaire</h5>
                         <p>Livrez les commandes dans votre zone et organisez vos tournées selon vos disponibilités.</p>
-                        <a href="<?php echo BASE_URL; ?>/index.php?route=inscription" class="btn1">Je m'inscris</a>
+                        <button type="button" class="btn1" data-fj-partenaire="livreur" data-i18n="accueil.partenaireJeMinscris">Je m'inscris</button>
                     </div>
                 </div>
             </div>
@@ -1736,7 +2050,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
     <section class="client_section layout_padding-bottom">
         <div class="container">
             <div class="heading_container heading_center psudo_white_primary mb_45 fj-reveal">
-                <h2>Ce que disent nos clients</h2>
+                <h2 data-i18n="accueil.clientsTitre">Ce que disent nos clients</h2>
             </div>
             <div class="carousel-wrap row fj-reveal fj-reveal-delay-1">
                 <div class="owl-carousel client_owl-carousel">
@@ -1748,7 +2062,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                                     en moins de 40 minutes. Je recommande vivement !
                                 </p>
                                 <h6>Salma B.</h6>
-                                <p>Cliente régulière</p>
+                                <p data-i18n="accueil.clientsRegulier">Cliente régulière</p>
                             </div>
                             <div class="img-box">
                                 <img src="<?php echo BASE_URL; ?>/assets/feane/images/mik.jpg" alt="" class="box-img">
@@ -1763,7 +2077,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                                     du vendredi est devenu un rituel chez nous.
                                 </p>
                                 <h6>Dictator K.</h6>
-                                <p>Client régulier</p>
+                                <p data-i18n="accueil.clientsRegulier">Client régulier</p>
                             </div>
                             <div class="img-box">
                                 <img src="<?php echo BASE_URL; ?>/assets/feane/images/dic.jpg" alt="" class="box-img">
@@ -1782,7 +2096,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             <div class="row">
                 <div class="col-md-4 footer-col">
                     <div class="footer_contact">
-                        <h4>Contactez-nous</h4>
+                        <h4 data-i18n="accueil.footerContact">Contactez-nous</h4>
                         <div class="contact_link_box">
                             <a href="#">
                                 <i class="fa fa-map-marker" aria-hidden="true"></i>
@@ -1816,14 +2130,14 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                     </div>
                 </div>
                 <div class="col-md-4 footer-col">
-                    <h4>Horaires de commande</h4>
-                    <p>Tous les jours</p>
+                    <h4 data-i18n="accueil.footerHoraires">Horaires de commande</h4>
+                    <p data-i18n="accueil.footerTousLesJours">Tous les jours</p>
                     <p>11h00 - 22h00</p>
                 </div>
             </div>
             <div class="footer-info">
                 <p>
-                    &copy; <span id="displayYear"></span> <?php echo htmlspecialchars(APP_NAME); ?>. Tous droits réservés.
+                    &copy; <span id="displayYear"></span> <?php echo htmlspecialchars(APP_NAME); ?>. <span data-i18n="accueil.footerDroits">Tous droits réservés.</span>
                 </p>
             </div>
         </div>
@@ -1841,6 +2155,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
     <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/theme.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/profile-menu.js"></script>
+    <script src="<?php echo BASE_URL; ?>/assets/js/i18n.js?<?php echo (int) @filemtime(ROOT_PATH . '/assets/js/i18n.js'); ?>"></script>
     <script>if (window.lucide) { lucide.createIcons(); }</script>
 
     <script>
@@ -1966,6 +2281,122 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                     var declencheur = e.target.closest('[data-fj-modal-open]');
                     ouvrir(declencheur.getAttribute('data-fj-modal-open'), declencheur);
                 }
+            });
+        })();
+    </script>
+
+    <script>
+        // Modale "Devenir partenaire" : demande d'email (cuisinier / livreur).
+        // Ouverture depuis les deux boutons "Je m'inscris" de la section
+        // "Rejoignez FiaJou3". Envoi AJAX vers la route partenaire/demande,
+        // puis affichage du message de confirmation (email avec lien envoyé).
+        (function () {
+            var BASE_URL = '<?php echo BASE_URL; ?>';
+            var modale = document.getElementById('fj-modal-partenaire');
+            if (!modale) return;
+
+            var titre = document.getElementById('fj-partenaire-titre');
+            var sousTitre = document.getElementById('fj-partenaire-sous-titre');
+            var champRole = document.getElementById('fj-partenaire-role');
+            var email = document.getElementById('fj-partenaire-email');
+            var formulaire = document.getElementById('fj-partenaire-form');
+            var forme = document.getElementById('fj-partenaire-forme');
+            var succes = document.getElementById('fj-partenaire-succes');
+            var message = document.getElementById('fj-partenaire-message');
+            var erreur = document.getElementById('fj-partenaire-erreur');
+            var boutonContinuer = formulaire.querySelector('.fj-partenaire-continuer');
+
+            var libelles = {
+                cuisinier: { titre: 'Devenir cuisinier partenaire', sub: 'Rejoignez FiaJou3 en tant que cuisinier.' },
+                livreur:   { titre: 'Devenir livreur partenaire',   sub: 'Rejoignez FiaJou3 en tant que livreur.' }
+            };
+
+            function ouvrir(role) {
+                var l = libelles[role] || libelles.cuisinier;
+                if (titre) titre.textContent = l.titre;
+                if (sousTitre) sousTitre.textContent = l.sub;
+                if (champRole) champRole.value = role;
+                formulaire.reset();
+                if (email) email.value = '';
+                if (erreur) { erreur.hidden = true; erreur.textContent = ''; }
+                forme.hidden = false;
+                succes.hidden = true;
+                modale.classList.add('is-open');
+                modale.setAttribute('aria-hidden', 'false');
+                document.body.classList.add('fj-modal-ouvert');
+                if (email) email.focus();
+            }
+
+            function fermer() {
+                modale.classList.remove('is-open');
+                modale.setAttribute('aria-hidden', 'true');
+                document.body.classList.remove('fj-modal-ouvert');
+            }
+
+            document.addEventListener('click', function (e) {
+                if (e.target.closest('[data-fj-partenaire]')) {
+                    var role = e.target.closest('[data-fj-partenaire]').getAttribute('data-fj-partenaire');
+                    ouvrir(role);
+                    return;
+                }
+                if (e.target === modale || (e.target.closest && e.target.closest('[data-fj-partenaire-close]'))) {
+                    fermer();
+                }
+            });
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && modale.classList.contains('is-open')) {
+                    fermer();
+                }
+            });
+
+            formulaire.addEventListener('submit', function (e) {
+                e.preventDefault();
+                var role = champRole.value;
+                var valeur = email.value.trim();
+                if (!valeur || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valeur)) {
+                    if (erreur) {
+                        erreur.textContent = "Veuillez saisir une adresse email valide.";
+                        erreur.hidden = false;
+                    }
+                    return;
+                }
+
+                boutonContinuer.disabled = true;
+                if (erreur) { erreur.hidden = true; }
+
+                var corps = new URLSearchParams();
+                corps.append('email', valeur);
+                corps.append('role', role);
+
+                fetch(BASE_URL + '/index.php?route=partenaire/demande', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: corps.toString()
+                })
+                    .then(function (resp) { return resp.json(); })
+                    .then(function (data) {
+                        if (data && data.ok) {
+                            if (message) { message.innerHTML = data.message; }
+                            forme.hidden = true;
+                            succes.hidden = false;
+                        } else {
+                            if (erreur) {
+                                erreur.innerHTML = (data && data.message) ? data.message : "Une erreur est survenue. Veuillez réessayer.";
+                                erreur.hidden = false;
+                            }
+                        }
+                    })
+                    .catch(function () {
+                        if (erreur) {
+                            erreur.textContent = "Une erreur est survenue. Veuillez réessayer.";
+                            erreur.hidden = false;
+                        }
+                    })
+                    .finally(function () {
+                        boutonContinuer.disabled = false;
+                    });
             });
         })();
     </script>

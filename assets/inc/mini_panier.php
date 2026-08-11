@@ -351,15 +351,15 @@ $fjcFormaterPrix = static fn($montant) => number_format((float) $montant, 2, ','
 <div id="fj-cart-overlay" class="fj-cart-overlay"></div>
 
 <aside id="fj-cart-drawer" class="fj-cart-drawer<?php echo $fjcOuvert ? ' open' : ''; ?>"
-       role="dialog" aria-modal="true" aria-label="Mon panier"<?php echo $fjcOuvert ? '' : ' aria-hidden="true"'; ?>>
+       role="dialog" aria-modal="true" aria-label="Mon panier" data-i18n-aria="panier.titre"<?php echo $fjcOuvert ? '' : ' aria-hidden="true"'; ?>>
     <div class="fj-cart-head">
-        <h2>Mon panier</h2>
-        <button type="button" class="fj-cart-close" data-fj-cart-close aria-label="Fermer le panier">&times;</button>
+        <h2 data-i18n="panier.titre">Mon panier</h2>
+        <button type="button" class="fj-cart-close" data-fj-cart-close aria-label="Fermer le panier" data-i18n-aria="common.fermer">&times;</button>
     </div>
 
     <?php if ($fjcDate): ?>
         <div class="fj-cart-date">
-            Livraison prévue le <strong><?php echo htmlspecialchars(date('d/m/Y', strtotime($fjcDate))); ?></strong>
+            <span data-i18n="common.livraisonPrevueLe">Livraison prévue le</span> <strong><?php echo htmlspecialchars(date('d/m/Y', strtotime($fjcDate))); ?></strong>
         </div>
     <?php endif; ?>
 
@@ -367,8 +367,8 @@ $fjcFormaterPrix = static fn($montant) => number_format((float) $montant, 2, ','
         <?php if (empty($fjcArticles)): ?>
             <div class="fj-cart-empty">
                 <span class="fj-cart-empty-icon" aria-hidden="true">&#128722;</span>
-                <p>Votre panier est vide.</p>
-                <a class="fj-cart-empty-cta" href="<?php echo BASE_URL; ?>/index.php?route=client">Consulter le menu</a>
+                <p data-i18n="panier.vide">Votre panier est vide.</p>
+                <a class="fj-cart-empty-cta" href="<?php echo BASE_URL; ?>/index.php?route=client" data-i18n="common.consulterMenu">Consulter le menu</a>
             </div>
         <?php else: ?>
             <?php foreach ($fjcArticles as $fjcArticle): ?>
@@ -377,15 +377,15 @@ $fjcFormaterPrix = static fn($montant) => number_format((float) $montant, 2, ','
                          alt="<?php echo htmlspecialchars($fjcArticle['nom']); ?>">
                     <div class="fj-cart-item-main">
                         <div class="fj-cart-item-nom"><?php echo htmlspecialchars($fjcArticle['nom']); ?></div>
-                        <div class="fj-cart-item-prix"><?php echo $fjcFormaterPrix($fjcArticle['prix']); ?> / unité</div>
+                        <div class="fj-cart-item-prix"><?php echo $fjcFormaterPrix($fjcArticle['prix']); ?> <span data-i18n="common.unite">/ unité</span></div>
                         <div class="fj-cart-item-ctrl">
                             <a href="<?php echo BASE_URL; ?>/index.php?route=client/panier&moins=<?php echo (int) $fjcArticle['id']; ?>&retour=<?php echo urlencode($fjcRetour); ?>"
-                               data-fj-cart-action aria-label="Retirer une quantité" title="Retirer une quantité">&minus;</a>
+                               data-fj-cart-action aria-label="Retirer une quantité" title="Retirer une quantité" data-i18n-aria="panier.retirerQuantite">&minus;</a>
                             <span class="fj-cart-item-qty"><?php echo (int) $fjcArticle['quantite']; ?></span>
                             <a href="<?php echo BASE_URL; ?>/index.php?route=client/panier&plus=<?php echo (int) $fjcArticle['id']; ?>&retour=<?php echo urlencode($fjcRetour); ?>"
-                               data-fj-cart-action aria-label="Ajouter une quantité" title="Ajouter une quantité">+</a>
+                               data-fj-cart-action aria-label="Ajouter une quantité" title="Ajouter une quantité" data-i18n-aria="panier.ajouterQuantite">+</a>
                             <a href="<?php echo BASE_URL; ?>/index.php?route=client/panier&supprimer=<?php echo (int) $fjcArticle['id']; ?>&retour=<?php echo urlencode($fjcRetour); ?>"
-                               data-fj-cart-action class="fj-cart-item-del" aria-label="Supprimer cet article" title="Supprimer">&times;</a>
+                               data-fj-cart-action class="fj-cart-item-del" aria-label="Supprimer cet article" title="Supprimer" data-i18n-aria="common.supprimer">&times;</a>
                         </div>
                     </div>
                     <div class="fj-cart-item-subtotal"><?php echo $fjcFormaterPrix($fjcArticle['sous_total']); ?></div>
@@ -396,23 +396,23 @@ $fjcFormaterPrix = static fn($montant) => number_format((float) $montant, 2, ','
 
     <div class="fj-cart-foot" id="fj-cart-foot">
         <?php if (empty($fjcArticles)): ?>
-            <button type="button" class="fj-cart-keep" data-fj-cart-close>Continuer mes achats</button>
+            <button type="button" class="fj-cart-keep" data-fj-cart-close data-i18n="common.continuerAchats">Continuer mes achats</button>
         <?php else: ?>
             <div class="fj-cart-sous-total">
-                <span>Sous-total</span>
+                <span data-i18n="common.sousTotal">Sous-total</span>
                 <span><?php echo $fjcFormaterPrix($fjcTotal); ?></span>
             </div>
             <div class="fj-cart-total">
-                <span>Total</span>
+                <span data-i18n="common.total">Total</span>
                 <span><?php echo $fjcFormaterPrix($fjcTotal); ?></span>
             </div>
             <div class="fj-cart-actions">
                 <a href="<?php echo BASE_URL; ?>/index.php?route=client/panier&vider=1&retour=<?php echo urlencode($fjcRetour); ?>"
                    data-fj-cart-action data-fj-cart-confirm="Voulez-vous vraiment vider le panier ?"
-                   class="fj-cart-vider" title="Vider le panier">Vider le panier</a>
-                <a href="<?php echo BASE_URL; ?>/index.php?route=client/commander" class="fj-cart-cta">Passer la commande</a>
+                   class="fj-cart-vider" title="Vider le panier" data-i18n="common.viderPanier">Vider le panier</a>
+                <a href="<?php echo BASE_URL; ?>/index.php?route=client/commander" class="fj-cart-cta" data-i18n="common.passerCommande">Passer la commande</a>
             </div>
-            <button type="button" class="fj-cart-keep" data-fj-cart-close>Continuer mes achats</button>
+            <button type="button" class="fj-cart-keep" data-fj-cart-close data-i18n="common.continuerAchats">Continuer mes achats</button>
         <?php endif; ?>
     </div>
 </aside>
@@ -516,6 +516,7 @@ $fjcFormaterPrix = static fn($montant) => number_format((float) $montant, 2, ','
                 footEl().innerHTML = nf.innerHTML;
                 if (countEl() && nc) { countEl().textContent = nc.textContent; }
                 window.fjCartSyncBadges();
+                if (window.fjI18nAppliquer) { window.fjI18nAppliquer(); }
             })
             .catch(function () {
                 window.location.href = url;

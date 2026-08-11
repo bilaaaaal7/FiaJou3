@@ -281,7 +281,7 @@ if (isset($_GET['erreur']) && isset($erreursAdmin[$_GET['erreur']])): ?>
             </p>
             <p class="modal-error" id="mi-error" hidden></p>
             <div class="form-actions">
-                <button type="submit" class="btn btn-gold">Enregistrer</button>
+                <button type="submit" name="modifier_item" class="btn btn-gold">Enregistrer</button>
                 <button type="button" class="btn btn-outline" data-modal-close>Annuler</button>
             </div>
         </form>

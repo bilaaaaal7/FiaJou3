@@ -2,6 +2,7 @@
 $pageTitle = "Menu - " . APP_NAME;
 $extraCss = ['admin.css'];
 $bodyClass = 'profil-sans-sidebar';
+$i18nPage = 'menu';
 require ROOT_PATH . '/assets/inc/header.php';
 require ROOT_PATH . '/assets/inc/navbar.php';
 
@@ -22,7 +23,7 @@ $jourLabel = [
     <?php require ROOT_PATH . '/assets/inc/back_home.php'; ?>
 
     <div class="topbar">
-        <h1>Notre Menu</h1>
+        <h1 data-i18n="menu.titre">Notre Menu</h1>
     </div>
 
     <?php if (isset($_GET['erreur']) && isset($messagesErreur[$_GET['erreur']])): ?>
@@ -31,13 +32,13 @@ $jourLabel = [
 
     <?php if ($panierModele->getDate()): ?>
         <div class="alert alert-info py-2" role="alert">
-            Date de livraison du panier : <strong><?php echo htmlspecialchars(date('d/m/Y', strtotime($panierModele->getDate()))); ?></strong>
+            <span data-i18n="common.dateLivraisonPanier">Date de livraison du panier :</span> <strong><?php echo htmlspecialchars(date('d/m/Y', strtotime($panierModele->getDate()))); ?></strong>
         </div>
     <?php endif; ?>
 
     <?php if ($menu && array_sum(array_map('count', $itemsParJour)) > 0): ?>
     <div class="panel" style="border: 2px solid var(--gold);">
-        <h2 style="color: var(--gold-dark);">Menu de la semaine — <?php echo htmlspecialchars($menu['nom']); ?></h2>
+        <h2 style="color: var(--gold-dark);"><span data-i18n="nav.menuSemaine">Menu de la semaine</span> — <?php echo htmlspecialchars($menu['nom']); ?></h2>
         <?php if ($libelleSemaine !== ''): ?>
             <p style="color: var(--gold-dark); font-weight: 600; margin: 0 0 4px;">
                 <?php echo htmlspecialchars($libelleSemaine); ?>
@@ -55,7 +56,7 @@ $jourLabel = [
                 [$jourOuvert] = $dateJour ? $menuSemaineModele->dateLivraisonValide($dateJour) : [false];
                 ?>
                 <div style="background: var(--gold-light); border: 1px solid var(--border); border-radius: 12px; padding: 12px;">
-                    <div style="font-weight: 700; color: var(--gold-dark); margin-bottom: 8px;"><?php echo $jourLabel[$jour]; ?></div>
+                    <div style="font-weight: 700; color: var(--gold-dark); margin-bottom: 8px;" data-i18n="jours.<?php echo $jour; ?>"><?php echo $jourLabel[$jour]; ?></div>
                     <?php foreach ($itemsParJour[$jour] as $item): ?>
                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
                             <div style="flex: 1;">
@@ -66,9 +67,9 @@ $jourLabel = [
                             </div>
                             <?php if ($item['disponible'] && $jourOuvert): ?>
                                 <a href="<?php echo BASE_URL; ?>/index.php?route=client&ajouter=<?php echo (int) $item['product_id']; ?>&date=<?php echo $dateJour; ?>"
-                                   class="btn btn-gold btn-sm" title="Livraison le <?php echo date('d/m/Y', strtotime($dateJour)); ?>">+</a>
+                                   class="btn btn-gold btn-sm" title="Livraison le <?php echo date('d/m/Y', strtotime($dateJour)); ?>" data-i18n-aria="common.ajouterPanier">+</a>
                             <?php else: ?>
-                                <span class="badge-status st-annulee">
+                                <span class="badge-status st-annulee" data-i18n="<?php echo $jourOuvert ? 'common.indisponible' : 'common.cloture'; ?>">
                                     <?php echo $jourOuvert ? 'Indisponible' : 'Clôturé'; ?>
                                 </span>
                             <?php endif; ?>
@@ -91,10 +92,10 @@ $jourLabel = [
         <?php if (!empty($itemsSamedi)): ?>
         <div style="margin-top: 16px; background: var(--gold); border-radius: 12px; padding: 16px; color: var(--dark);">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
-                <div style="font-weight: 700; font-size: 1.05rem;">Samedi — Menu libre</div>
+                <div style="font-weight: 700; font-size: 1.05rem;" data-i18n="jours.samediMenuLibre">Samedi — Menu libre</div>
                 <?php if ($samediOuvert): ?>
                     <div style="font-size: 0.82rem; font-weight: 600;">
-                        Livraison le <?php echo date('d/m/Y', strtotime($dateSamedi)); ?>
+                        <span data-i18n="common.livraisonLe">Livraison le</span> <?php echo date('d/m/Y', strtotime($dateSamedi)); ?>
                     </div>
                 <?php endif; ?>
             </div>
@@ -112,9 +113,9 @@ $jourLabel = [
                         </div>
                         <?php if ($item['disponible'] && $samediOuvert): ?>
                             <a href="<?php echo BASE_URL; ?>/index.php?route=client&ajouter=<?php echo (int) $item['product_id']; ?>&date=<?php echo $dateSamedi; ?>"
-                               class="btn btn-sm" style="background: var(--dark); color: var(--cream); border: none;" title="Livraison le samedi <?php echo date('d/m/Y', strtotime($dateSamedi)); ?>">+</a>
+                               class="btn btn-sm" style="background: var(--dark); color: var(--cream); border: none;" title="Livraison le samedi <?php echo date('d/m/Y', strtotime($dateSamedi)); ?>" data-i18n-aria="common.ajouterPanier">+</a>
                         <?php else: ?>
-                            <span class="badge-status st-annulee">Indisponible</span>
+                            <span class="badge-status st-annulee" data-i18n="common.indisponible">Indisponible</span>
                         <?php endif; ?>
                     </div>
                 <?php endforeach; ?>

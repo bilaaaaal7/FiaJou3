@@ -7,5 +7,5 @@
 ?>
 <a class="back-home" href="<?php echo BASE_URL; ?>/index.php?route=accueil">
     <i data-lucide="arrow-left" aria-hidden="true"></i>
-    <span>Retour à l'accueil</span>
+    <span data-i18n="common.retourAccueil">Retour à l'accueil</span>
 </a>

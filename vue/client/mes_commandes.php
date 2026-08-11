@@ -2,6 +2,7 @@
 $pageTitle = "Mes commandes - " . APP_NAME;
 $extraCss = ['admin.css'];
 $bodyClass = 'profil-sans-sidebar';
+$i18nPage = 'mes_commandes';
 require ROOT_PATH . '/assets/inc/header.php';
 require ROOT_PATH . '/assets/inc/navbar.php';
 
@@ -12,6 +13,16 @@ $initialesCmd = mb_strtoupper(mb_substr($prenomCmd, 0, 1) . mb_substr($nomCmd, 0
 if ($initialesCmd === '') {
     $initialesCmd = '?';
 }
+
+$cleStatutCommande = [
+    'en_attente'    => 'mes_commandes.statutEnAttente',
+    'confirmee'     => 'mes_commandes.statutConfirmee',
+    'en_preparation'=> 'mes_commandes.statutEnPreparation',
+    'prete'         => 'mes_commandes.statutPrete',
+    'en_livraison'  => 'mes_commandes.statutEnLivraison',
+    'livree'        => 'mes_commandes.statutLivree',
+    'annulee'       => 'mes_commandes.statutAnnulee',
+];
 ?>
 
 <div class="page-profil">
@@ -19,10 +30,10 @@ if ($initialesCmd === '') {
     <?php require ROOT_PATH . '/assets/inc/back_home.php'; ?>
 
     <div class="topbar">
-        <h1>Mes commandes</h1>
+        <h1 data-i18n="mes_commandes.titre">Mes commandes</h1>
         <div class="topbar-actions">
             <p class="profil-subtitle">Suivez vos commandes, du panier jusqu'à la livraison.</p>
-            <a href="<?php echo BASE_URL; ?>/index.php?route=client" class="btn btn-gold btn-sm">Consulter le menu</a>
+            <a href="<?php echo BASE_URL; ?>/index.php?route=client" class="btn btn-gold btn-sm" data-i18n="common.consulterMenu">Consulter le menu</a>
         </div>
     </div>
 
@@ -38,12 +49,12 @@ if ($initialesCmd === '') {
     <div class="panel profil-card">
         <div class="filter-bar">
             <div class="form-group">
-                <label>Filtrer</label>
+                <label data-i18n="mes_commandes.filtrer">Filtrer</label>
                 <select id="filterMesCommandes" onchange="filtrerMesCommandes()">
-                    <option value="toutes">Toutes</option>
-                    <option value="en_cours">En cours</option>
-                    <option value="livrees">Livrées</option>
-                    <option value="annulees">Annulées</option>
+                    <option value="toutes" data-i18n="mes_commandes.filtreToutes">Toutes</option>
+                    <option value="en_cours" data-i18n="mes_commandes.filtreEnCours">En cours</option>
+                    <option value="livrees" data-i18n="mes_commandes.filtreLivrees">Livrées</option>
+                    <option value="annulees" data-i18n="mes_commandes.filtreAnnulees">Annulées</option>
                 </select>
             </div>
         </div>
@@ -52,12 +63,12 @@ if ($initialesCmd === '') {
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Date commande</th>
-                        <th>Date livraison</th>
-                        <th>Heure</th>
-                        <th>Total</th>
-                        <th>Statut</th>
-                        <th>Commentaire</th>
+                        <th data-i18n="mes_commandes.dateCommande">Date commande</th>
+                        <th data-i18n="mes_commandes.dateLivraison">Date livraison</th>
+                        <th data-i18n="mes_commandes.heure">Heure</th>
+                        <th data-i18n="mes_commandes.total">Total</th>
+                        <th data-i18n="mes_commandes.statut">Statut</th>
+                        <th data-i18n="mes_commandes.commentaire">Commentaire</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -70,14 +81,15 @@ if ($initialesCmd === '') {
                         <td><?php echo htmlspecialchars($commande['heure_livraison']); ?></td>
                         <td><?php echo number_format((float) $commande['total'], 2, ',', ' '); ?> DH</td>
                         <td>
-                            <span class="badge-status st-<?php echo htmlspecialchars($commande['statut']); ?>">
+                            <span class="badge-status st-<?php echo htmlspecialchars($commande['statut']); ?>"
+                                  data-i18n="<?php echo $cleStatutCommande[$commande['statut']] ?? ''; ?>">
                                 <?php echo STATUTS_COMMANDE[$commande['statut']] ?? $commande['statut']; ?>
                             </span>
                         </td>
                         <td><?php echo htmlspecialchars($commande['commentaire'] ?? '-'); ?></td>
                         <td>
                             <a href="<?php echo BASE_URL; ?>/index.php?route=client/detail-commande&id=<?php echo (int) $commande['id']; ?>"
-                               class="btn btn-outline btn-sm">Détail</a>
+                               class="btn btn-outline btn-sm" data-i18n="mes_commandes.detail">Détail</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -105,9 +117,9 @@ if ($initialesCmd === '') {
     <?php else: ?>
     <div class="panel profil-card">
         <div class="empty-state">
-            Vous n'avez pas encore passé de commande.
+            <span data-i18n="mes_commandes.vide">Vous n'avez pas encore passé de commande.</span>
             <br><br>
-            <a href="<?php echo BASE_URL; ?>/index.php?route=client" class="btn btn-gold">Consulter le menu</a>
+            <a href="<?php echo BASE_URL; ?>/index.php?route=client" class="btn btn-gold" data-i18n="common.consulterMenu">Consulter le menu</a>
         </div>
     </div>
     <?php endif; ?>

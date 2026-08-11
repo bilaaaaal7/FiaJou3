@@ -8,6 +8,12 @@
  *   $metaKeywords    : string - meta keywords SEO, si pertinent (idem)
  *   $extraCss        : array  - fichiers CSS additionnels dans assets/css/
  *   $bodyClass       : string - classe CSS optionnelle sur <body>
+ *
+ * i18n (site entier) — la langue est résolue et servie globalement ; une vue
+ * qui participe au dictionnaire pose :
+ *   $i18nPage        : string - identifiant de page pour le dictionnaire
+ *                      (accueil|login|register|mdp|partenaire|parametres|menu|
+ *                       menu_semaine|panier|mes_commandes|profil), posé sur <body>.
  */
 
 $pageTitle       = $pageTitle       ?? APP_NAME;
@@ -15,6 +21,15 @@ $metaDescription = $metaDescription ?? 'Repas faits maison, livrés chez vous av
 $metaKeywords    = $metaKeywords    ?? '';
 $extraCss        = $extraCss        ?? [];
 $bodyClass       = $bodyClass       ?? '';
+$i18nActive      = $i18nActive      ?? false;
+$i18nPage        = $i18nPage        ?? '';
+
+// Langue active servie côté serveur (évite tout « flash » de langue sur
+// l'ensemble du site). Les pages qui ne posent pas de $i18nPage restent en
+// français tant que leur contenu n'est pas couvert par le dictionnaire.
+require_once ROOT_PATH . '/assets/inc/langue.php';
+$langueHtml = langue_actuelle();
+$dirHtml    = $langueHtml === 'ar' ? 'rtl' : 'ltr';
 
 // Empêche le navigateur de servir une page authentifiée depuis son cache
 // (bouton "précédent", bfcache) après une déconnexion : sans ça, revenir
@@ -27,7 +42,7 @@ if (est_connecte() && !headers_sent()) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="fr" dir="ltr">
+<html lang="<?php echo $langueHtml; ?>" dir="<?php echo $dirHtml; ?>">
 <head>
     <script>
         (function () {
@@ -36,6 +51,13 @@ if (est_connecte() && !headers_sent()) {
             if (t !== 'dark') { t = 'light'; }
             document.documentElement.setAttribute('data-theme', t);
         })();
+    </script>
+    <script>
+        window.FJ_I18N = {
+            lang: '<?php echo $langueHtml; ?>',
+            connecte: <?php echo est_connecte() ? 'true' : 'false'; ?>,
+            url: '<?php echo BASE_URL; ?>/index.php?route=langue'
+        };
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -56,10 +78,10 @@ if (est_connecte() && !headers_sent()) {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Open+Sans:wght@400;600;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/app.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/app.css?v=<?php echo (int) @filemtime(ROOT_PATH . '/assets/css/app.css'); ?>">
     <?php foreach ($extraCss as $css): ?>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/<?php echo htmlspecialchars($css); ?>?v=<?php echo (int) @filemtime(ROOT_PATH . '/assets/css/' . $css); ?>">
     <?php endforeach; ?>
 </head>
-<body class="<?php echo htmlspecialchars($bodyClass); ?>">
+<body class="<?php echo htmlspecialchars($bodyClass); ?>"<?php if ($i18nPage !== ''): ?> data-fj-page="<?php echo htmlspecialchars($i18nPage); ?>"<?php endif; ?>>
 <?php require ROOT_PATH . '/assets/inc/mini_panier.php'; ?>

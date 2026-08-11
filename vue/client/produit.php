@@ -1,6 +1,7 @@
 <?php
 $pageTitle = htmlspecialchars($plat['nom']) . " - " . APP_NAME;
 $extraCss = ['admin.css'];
+$i18nPage = 'produit';
 require ROOT_PATH . '/assets/inc/header.php';
 require ROOT_PATH . '/assets/inc/navbar.php';
 ?>
@@ -10,13 +11,17 @@ require ROOT_PATH . '/assets/inc/navbar.php';
     <?php require ROOT_PATH . '/assets/inc/back_home.php'; ?>
 
     <?php if (isset($_GET['erreur']) && $_GET['erreur'] === 'indisponible'): ?>
-        <div class="alert alert-danger py-2" role="alert" style="margin-top: 12px;">Ce plat n'est plus disponible ou la quantité maximale (20) est atteinte.</div>
+        <div class="alert alert-danger py-2" role="alert" style="margin-top: 12px;" data-i18n="produit.erreurIndisponible">Ce plat n'est plus disponible ou la quantité maximale (20) est atteinte.</div>
     <?php endif; ?>
     <?php if (isset($_GET['erreur']) && in_array($_GET['erreur'], ['horsmenu', 'fermee'], true)): ?>
         <div class="alert alert-danger py-2" role="alert" style="margin-top: 12px;">
-            <?php echo $_GET['erreur'] === 'fermee'
-                ? 'Les commandes pour cette date sont clôturées (limite ' . HEURE_LIMITE_COMMANDE . ' la veille).'
-                : 'Ce plat ne fait pas partie du menu de la semaine publié : il est disponible uniquement en consultation.'; ?>
+            <?php if ($_GET['erreur'] === 'fermee'): ?>
+                <span data-i18n="produit.erreurCloturees">Les commandes pour cette date sont clôturées (limite</span>
+                <strong><?php echo HEURE_LIMITE_COMMANDE; ?></strong>
+                <span data-i18n="produit.erreurClotureesFin">la veille).</span>
+            <?php else: ?>
+                <span data-i18n="produit.erreurHorsMenu">Ce plat ne fait pas partie du menu de la semaine publié : il est disponible uniquement en consultation.</span>
+            <?php endif; ?>
         </div>
     <?php endif; ?>
 
@@ -44,23 +49,24 @@ require ROOT_PATH . '/assets/inc/navbar.php';
 
             <div style="margin-bottom: 16px;">
                 <?php if ($plat['disponible']): ?>
-                    <span class="badge-status st-confirmee">Disponible</span>
+                    <span class="badge-status st-confirmee" data-i18n="produit.disponible">Disponible</span>
                 <?php else: ?>
-                    <span class="badge-status st-annulee">Indisponible</span>
+                    <span class="badge-status st-annulee" data-i18n="produit.indisponible">Indisponible</span>
                 <?php endif; ?>
             </div>
 
             <?php if ($plat['disponible'] && $dateCommande): ?>
                 <a href="<?php echo BASE_URL; ?>/index.php?route=client&ajouter=<?php echo $plat['id']; ?>&date=<?php echo $dateCommande; ?>"
                    class="btn btn-gold" style="padding: 10px 24px;">
-                    Ajouter au panier (livraison le <?php echo date('d/m/Y', strtotime($dateCommande)); ?>)
+                    <span data-i18n="produit.ajouterPanier">Ajouter au panier — livraison le</span>
+                    <strong><?php echo date('d/m/Y', strtotime($dateCommande)); ?></strong>
                 </a>
             <?php elseif ($plat['disponible']): ?>
-                <span class="btn btn-outline" style="padding: 10px 24px; opacity: 0.7; cursor: not-allowed;">
+                <span class="btn btn-outline" style="padding: 10px 24px; opacity: 0.7; cursor: not-allowed;" data-i18n="produit.consultationSeule">
                     Consultation uniquement — hors menu de la semaine
                 </span>
             <?php else: ?>
-                <span class="btn btn-outline" style="padding: 10px 24px; opacity: 0.6; cursor: not-allowed;">
+                <span class="btn btn-outline" style="padding: 10px 24px; opacity: 0.6; cursor: not-allowed;" data-i18n="produit.indisponibleMoment">
                     Indisponible pour le moment
                 </span>
             <?php endif; ?>

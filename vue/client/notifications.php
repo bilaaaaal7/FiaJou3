@@ -1,6 +1,7 @@
 <?php
 $pageTitle = "Notifications - " . APP_NAME;
 $extraCss = ['admin.css'];
+$i18nPage = 'notifications';
 
 // Page partagée par tous les rôles : la mise en page « profil » (sans sidebar)
 // n'est appliquée que dans l'espace client. Les autres rôles conservent leur sidebar.
@@ -25,13 +26,13 @@ if ($initialesNotif === '') {
     <?php require ROOT_PATH . '/assets/inc/back_home.php'; ?>
 
     <div class="topbar">
-        <h1>Notifications</h1>
+        <h1 data-i18n="notifications.titre">Notifications</h1>
         <div class="topbar-actions">
             <?php if ($nbNonLues > 0): ?>
-                <p class="profil-subtitle"><?php echo (int) $nbNonLues; ?> notification(s) non lue(s).</p>
-                <a href="<?php echo BASE_URL; ?>/index.php?route=client/notifications&marquer_tout_lu=1" class="btn btn-outline btn-sm">Tout marquer comme lu</a>
+                <p class="profil-subtitle"><strong><?php echo (int) $nbNonLues; ?></strong> <span data-i18n="notifications.nonLues">notification(s) non lue(s).</span></p>
+                <a href="<?php echo BASE_URL; ?>/index.php?route=client/notifications&marquer_tout_lu=1" class="btn btn-outline btn-sm" data-i18n="notifications.toutLu">Tout marquer comme lu</a>
             <?php else: ?>
-                <p class="profil-subtitle">Vous n'avez aucune notification non lue.</p>
+                <p class="profil-subtitle" data-i18n="notifications.aucuneNonLue">Vous n'avez aucune notification non lue.</p>
             <?php endif; ?>
         </div>
     </div>
@@ -59,12 +60,12 @@ if ($initialesNotif === '') {
                 </div>
                 <?php if (!$n['est_lu']): ?>
                     <a href="<?php echo BASE_URL; ?>/index.php?route=client/notifications&marquer_lu=<?php echo (int) $n['id']; ?>"
-                       class="btn btn-outline btn-sm" style="white-space:nowrap;">Lu</a>
+                       class="btn btn-outline btn-sm" style="white-space:nowrap;" data-i18n="notifications.lu">Lu</a>
                 <?php endif; ?>
             </div>
             <?php endforeach; ?>
         <?php else: ?>
-            <div class="empty-state">Aucune notification.</div>
+            <div class="empty-state" data-i18n="notifications.aucune">Aucune notification.</div>
         <?php endif; ?>
     </div>
 

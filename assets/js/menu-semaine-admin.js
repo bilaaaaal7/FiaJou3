@@ -109,10 +109,18 @@
         errorBox.hidden = true;
 
         var baseUrl = (window.MENU_SEMAINE_ADMIN && window.MENU_SEMAINE_ADMIN.url) || '';
+
+        // new FormData(form) n'inclut PAS les boutons "submit" : le contrôleur
+        // (MenuSemaineControleur) détecte l'action via isset($_POST['modifier_item']).
+        // On l'ajoute donc explicitement pour que la modification soit traitée
+        // (modification de l'entrée existante, jamais de création).
+        var donnees = new FormData(form);
+        donnees.append('modifier_item', '1');
+
         fetch(baseUrl, {
             method: 'POST',
             headers: { 'X-Requested-With': 'XMLHttpRequest' },
-            body: new FormData(form)
+            body: donnees
         })
         .then(function (r) { return r.json(); })
         .then(function (res) {

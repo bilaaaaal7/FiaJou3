@@ -40,7 +40,7 @@ class UtilisateurModele
     {
         $stmt = $this->pdo->prepare(
             "SELECT users.id, users.email, users.actif, profiles.prenom, profiles.nom,
-                    profiles.telephone, profiles.adresse, profiles.ville, profiles.role
+                    profiles.telephone, profiles.adresse, profiles.ville, profiles.role, profiles.langue
              FROM users
              INNER JOIN profiles ON users.id = profiles.user_id
              WHERE users.id = ?"
@@ -189,6 +189,15 @@ class UtilisateurModele
             $donnees['ville'] ?? '',
             $id,
         ]);
+    }
+
+    /**
+     * Enregistre la langue choisie par un compte (sélecteur de langue).
+     */
+    public function mettreAJourLangue(int $id, string $langue): void
+    {
+        $stmt = $this->pdo->prepare("UPDATE profiles SET langue = ? WHERE user_id = ?");
+        $stmt->execute([$langue, $id]);
     }
 
     public function changerMdp(int $id, string $nouveauMdp): void

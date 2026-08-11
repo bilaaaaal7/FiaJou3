@@ -1,6 +1,7 @@
 <?php
 $pageTitle = "Menu de la semaine - " . APP_NAME;
 $extraCss = ['admin.css'];
+$i18nPage = 'menu_semaine';
 require ROOT_PATH . '/assets/inc/header.php';
 require ROOT_PATH . '/assets/inc/navbar.php';
 ?>
@@ -10,7 +11,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
     <?php require ROOT_PATH . '/assets/inc/back_home.php'; ?>
 
     <div class="topbar">
-        <h1>Menu de la semaine</h1>
+        <h1 data-i18n="menu_semaine.titre">Menu de la semaine</h1>
     </div>
 
     <?php if ($menu): ?>
@@ -50,10 +51,10 @@ require ROOT_PATH . '/assets/inc/navbar.php';
         <?php foreach ($joursAffichage as $cle => $label): ?>
             <?php if (!empty($itemsParJour[$cle])): ?>
             <div class="panel">
-                <h2><?php echo $label; ?>
+                <h2><span data-i18n="jours.<?php echo $cle; ?>"><?php echo $label; ?></span>
                     <?php if (isset($datesParJour[$cle])): ?>
                         <span style="font-weight:400; color:var(--text-muted); font-size:0.85rem;">
-                            — livraison le <?php echo date('d/m/Y', strtotime($datesParJour[$cle])); ?>
+                            — <span data-i18n="common.livraisonLe">livraison le</span> <?php echo date('d/m/Y', strtotime($datesParJour[$cle])); ?>
                         </span>
                     <?php endif; ?>
                 </h2>
@@ -75,9 +76,9 @@ require ROOT_PATH . '/assets/inc/navbar.php';
                             </div>
                             <?php if ($item['disponible'] && !empty($datesParJour[$cle]) && $ouvertParJour[$cle]): ?>
                                 <a href="<?php echo BASE_URL; ?>/index.php?route=client&ajouter=<?php echo (int) $item['product_id']; ?>&date=<?php echo $datesParJour[$cle]; ?>"
-                                   class="btn btn-gold btn-sm btn-block" style="margin-top: 8px;">Ajouter au panier</a>
+                                   class="btn btn-gold btn-sm btn-block" style="margin-top: 8px;" data-i18n="common.ajouterPanier">Ajouter au panier</a>
                             <?php else: ?>
-                                <span class="badge-status st-annulee" style="margin-top: 8px; display: inline-block;">
+                                <span class="badge-status st-annulee" style="margin-top: 8px; display: inline-block;" data-i18n="<?php echo ($ouvertParJour[$cle] ?? true) ? 'common.indisponible' : 'common.commandesCloturees'; ?>">
                                     <?php echo ($ouvertParJour[$cle] ?? true) ? 'Indisponible' : 'Commandes clôturées'; ?>
                                 </span>
                             <?php endif; ?>
@@ -90,7 +91,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
         <?php endforeach; ?>
 
         <div class="panel" style="border: 2px solid var(--gold);">
-            <h2 style="color: var(--gold-dark);">Samedi — Menu libre</h2>
+            <h2 style="color: var(--gold-dark);" data-i18n="jours.samediMenuLibre">Samedi — Menu libre</h2>
             <p style="color: var(--text-muted); margin-top: -8px;">
                 Aucun menu spécifique le samedi : choisissez librement parmi tous les plats de la semaine.
             </p>
@@ -108,9 +109,9 @@ require ROOT_PATH . '/assets/inc/navbar.php';
                         <?php if ($item['disponible'] && !empty($datesParJour[JOUR_MENU_LIBRE]) && $ouvertParJour[JOUR_MENU_LIBRE]): ?>
                             <a href="<?php echo BASE_URL; ?>/index.php?route=client&ajouter=<?php echo (int) $item['product_id']; ?>&date=<?php echo $datesParJour[JOUR_MENU_LIBRE]; ?>"
                                class="btn btn-gold btn-sm btn-block" style="margin-top: 8px;"
-                               title="Livraison le samedi <?php echo date('d/m/Y', strtotime($datesParJour[JOUR_MENU_LIBRE])); ?>">Ajouter au panier</a>
+                               title="Livraison le samedi <?php echo date('d/m/Y', strtotime($datesParJour[JOUR_MENU_LIBRE])); ?>" data-i18n="common.ajouterPanier">Ajouter au panier</a>
                         <?php else: ?>
-                            <span class="badge-status st-annulee" style="margin-top: 8px; display: inline-block;">
+                            <span class="badge-status st-annulee" style="margin-top: 8px; display: inline-block;" data-i18n="<?php echo ($ouvertParJour[JOUR_MENU_LIBRE] ?? true) ? 'common.indisponible' : 'common.commandesCloturees'; ?>">
                                 <?php echo ($ouvertParJour[JOUR_MENU_LIBRE] ?? true) ? 'Indisponible' : 'Commandes clôturées'; ?>
                             </span>
                         <?php endif; ?>
@@ -127,7 +128,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
             <div class="empty-state">
                 Aucun menu de la semaine n'est publié pour le moment.
                 <br><br>
-                <a href="<?php echo BASE_URL; ?>/index.php?route=client" class="btn btn-gold">Consulter le menu</a>
+                <a href="<?php echo BASE_URL; ?>/index.php?route=client" class="btn btn-gold" data-i18n="common.consulterMenu">Consulter le menu</a>
             </div>
         </div>
     <?php endif; ?>

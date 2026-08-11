@@ -14,6 +14,9 @@ $extraJs = $extraJs ?? [];
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/theme.js"></script>
+    <?php if (!in_array('i18n.js', $extraJs, true)): ?>
+    <script src="<?php echo BASE_URL; ?>/assets/js/i18n.js?<?php echo (int) @filemtime(ROOT_PATH . '/assets/js/i18n.js'); ?>"></script>
+    <?php endif; ?>
     <?php foreach ($extraJs as $js): ?>
     <script src="<?php echo BASE_URL; ?>/assets/js/<?php echo htmlspecialchars($js); ?>?v=<?php echo (int) @filemtime(ROOT_PATH . '/assets/js/' . $js); ?>"></script>
     <?php endforeach; ?>
