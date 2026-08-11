@@ -40,6 +40,8 @@
             'login.submitBtn': 'Se connecter',
             'login.noAccount': 'Pas encore de compte ?',
             'login.registerLink': 'Inscrivez-vous',
+            'login.orDivider': 'ou',
+            'login.googleBtn': 'Continuer avec Google',
             'login.pageTitle': 'Connexion - FiaJou3',
 
             /* ---- Inscription ---- */
@@ -361,6 +363,8 @@
             'login.submitBtn': 'Sign in',
             'login.noAccount': "Don't have an account?",
             'login.registerLink': 'Sign up',
+            'login.orDivider': 'or',
+            'login.googleBtn': 'Continue with Google',
             'login.pageTitle': 'Login - FiaJou3',
 
             'register.title': 'Sign up',
@@ -677,6 +681,8 @@
             'login.submitBtn': 'تسجيل الدخول',
             'login.noAccount': 'ليس لديك حساب؟',
             'login.registerLink': 'إنشاء حساب',
+            'login.orDivider': 'أو',
+            'login.googleBtn': 'المتابعة باستخدام Google',
             'login.pageTitle': 'تسجيل الدخول - فياجوع',
 
             'register.title': 'إنشاء حساب',

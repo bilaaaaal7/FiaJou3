@@ -1,0 +1,3 @@
+# Variables d'environnement locales (Client ID / Secret Google, etc.)
+# Ne jamais commiter ce fichier — voir .env.example pour le modèle.
+.env

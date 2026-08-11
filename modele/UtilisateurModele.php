@@ -36,6 +36,62 @@ class UtilisateurModele
         return $stmt->fetch();
     }
 
+    /**
+     * Recherche un compte par son identifiant Google (colonne `google_id`,
+     * voir migration 20260811_010000_add_google_id_to_users.sql).
+     */
+    public function findByGoogleId(string $googleId): array|false
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM users WHERE google_id = ?");
+        $stmt->execute([$googleId]);
+        return $stmt->fetch();
+    }
+
+    /**
+     * Associe un identifiant Google à un compte existant (créé initialement
+     * avec email + mot de passe). Ne modifie ni l'email ni le mot de passe :
+     * le compte reste utilisable avec les deux méthodes de connexion.
+     */
+    public function associerGoogleId(int $userId, string $googleId): void
+    {
+        $stmt = $this->pdo->prepare("UPDATE users SET google_id = ? WHERE id = ?");
+        $stmt->execute([$googleId, $userId]);
+    }
+
+    /**
+     * Crée un compte à partir d'un profil Google (première connexion
+     * Google d'un email inconnu). Aucun mot de passe Google n'est jamais
+     * reçu ni stocké : `password` reste NULL tant que l'utilisateur n'en
+     * définit pas un lui-même (ex: via "mot de passe oublié").
+     *
+     * Les champs obligatoires de `profiles` non fournis par Google
+     * (téléphone notamment) doivent avoir été complétés avant l'appel à
+     * cette méthode — voir GoogleCompleteControleur.
+     */
+    public function creerCompteGoogle(array $donnees): int
+    {
+        $stmt = $this->pdo->prepare("INSERT INTO users (email, password, google_id) VALUES (?, NULL, ?)");
+        $stmt->execute([$donnees['email'], $donnees['google_id']]);
+
+        $userId = (int) $this->pdo->lastInsertId();
+
+        $stmt = $this->pdo->prepare(
+            "INSERT INTO profiles (user_id, prenom, nom, telephone, adresse, ville, role)
+             VALUES (?, ?, ?, ?, ?, ?, ?)"
+        );
+        $stmt->execute([
+            $userId,
+            $donnees['prenom'],
+            $donnees['nom'],
+            $donnees['telephone'],
+            $donnees['adresse'] ?? '',
+            $donnees['ville'] ?? '',
+            $donnees['role'] ?? ROLE_CLIENT,
+        ]);
+
+        return $userId;
+    }
+
     public function getProfilComplet(int $userId): array|false
     {
         $stmt = $this->pdo->prepare(

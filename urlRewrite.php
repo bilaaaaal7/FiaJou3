@@ -93,6 +93,32 @@ function dispatch(): void
             return;
 
         /* =========================
+           CONNEXION AVEC GOOGLE (OAuth 2.0 / OpenID Connect)
+           auth/google          : démarre le flux (redirection vers Google)
+           auth/google/callback : retour de Google, connecte/crée le compte
+           auth/google/complete : complète les champs obligatoires manquants
+                                   (téléphone) pour un nouveau compte Google
+        ========================= */
+
+        case 'auth/google':
+            // Action pure (redirection vers Google), aucune page n'est rendue.
+            require ROOT_PATH . '/controleur/auth/GoogleControleur.php';
+            return;
+
+        case 'auth/google/callback':
+            // Action pure (traite le retour de Google puis redirige).
+            require ROOT_PATH . '/controleur/auth/GoogleCallbackControleur.php';
+            return;
+
+        case 'auth/google/complete':
+            reset_meta();
+            $_SESSION['pr_title'] = "Finaliser l'inscription - " . APP_NAME;
+            $_SESSION['meta_description'] = 'Complétez votre inscription ' . APP_NAME . ' après connexion avec Google.';
+            $_SESSION['meta_keywords'] = 'inscription google, ' . APP_NAME;
+            require ROOT_PATH . '/controleur/auth/GoogleCompleteControleur.php';
+            return;
+
+        /* =========================
            PARTENARIAT (cuisinier / livreur)
            Deux flows distincts du Register client :
              - partenaire/demande : AJAX, reçoit l'email + le rôle depuis la

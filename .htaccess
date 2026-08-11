@@ -14,6 +14,15 @@ RewriteEngine On
 RewriteRule ^(config|modele|controleur|vue|admin|auth|client|cuisinier|livreur|includes|logs)(/|$) - [F,L]
 
 # ------------------------------------------------------------------
+# Bloque tout accès direct au fichier .env (Client ID / Secret Google,
+# identifiants SMTP...). Le fichier reste lisible par PHP côté serveur
+# (config/env.php), mais jamais servi par Apache si quelqu'un devine son URL.
+# ------------------------------------------------------------------
+<FilesMatch "^\.env">
+    Require all denied
+</FilesMatch>
+
+# ------------------------------------------------------------------
 # Routage propre : toute requête qui ne correspond pas à un fichier ou
 # un dossier existant (assets, uploads, favicon...) est envoyée vers
 # index.php avec le chemin demandé dans le paramètre GET "route".

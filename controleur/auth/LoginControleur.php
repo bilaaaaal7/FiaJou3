@@ -7,15 +7,26 @@
 require_once ROOT_PATH . '/modele/UtilisateurModele.php';
 require_once ROOT_PATH . '/modele/RateLimiterModele.php';
 require_once ROOT_PATH . '/assets/inc/langue.php';
+require_once ROOT_PATH . '/config/google_oauth.php';
 
 $error = "";
 $limiteur = new RateLimiterModele('connexion');
 $blocageRestant = $limiteur->tempsRestantBlocage();
 
+// Bouton "Continuer avec Google" affiché uniquement si les identifiants
+// OAuth sont configurés (voir .env.example / README_google_oauth.md).
+$googleActif = google_oauth_configure();
+
 // Message flash à usage unique (ex : posé par MotDePasseOublieControleur
 // après une réinitialisation de mot de passe réussie).
 $flashSucces = $_SESSION['flash_succes'] ?? '';
 unset($_SESSION['flash_succes']);
+
+// Message d'erreur porté par ?erreur= (ex: posé par GoogleCallbackControleur
+// via rediriger_avec_erreur), même convention que les autres contrôleurs.
+if (isset($_GET['erreur']) && $_GET['erreur'] !== '') {
+    $error = $_GET['erreur'];
+}
 
 if (isset($_POST['login'])) {
     if (!$limiteur->peutTenter()) {
