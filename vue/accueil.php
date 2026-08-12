@@ -553,9 +553,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
         .slider_section .detail-box a.btn1,
         .offer_section .box .detail-box a,
         .food_section .btn-box a,
-        .about_section .detail-box a,
-        .partner_section .box a.btn1,
-        .partner_section .box button.btn1 {
+        .about_section .detail-box a {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -578,9 +576,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
         .slider_section .detail-box a.btn1:hover,
         .offer_section .box .detail-box a:hover,
         .food_section .btn-box a:hover,
-        .about_section .detail-box a:hover,
-        .partner_section .box a.btn1:hover,
-        .partner_section .box button.btn1:hover {
+        .about_section .detail-box a:hover {
             transform: translateY(-3px);
             background: linear-gradient(135deg, #d8a52b, #c8931f 55%, #a37209);
             box-shadow: 0 14px 30px rgba(184, 134, 24, 0.5);
@@ -589,9 +585,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
         .slider_section .detail-box a.btn1:active,
         .offer_section .box .detail-box a:active,
         .food_section .btn-box a:active,
-        .about_section .detail-box a:active,
-        .partner_section .box a.btn1:active,
-        .partner_section .box button.btn1:active { transform: translateY(-1px); }
+        .about_section .detail-box a:active { transform: translateY(-1px); }
 
         /* ---------- Titres de section : filet or sous le titre ---------- */
         .heading_container h2 {
@@ -1258,42 +1252,86 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
         }
         .about_section .detail-box a { margin-top: 20px; }
 
-        /* ---------- Devenir partenaire ---------- */
-        .partner_section .heading_container { margin-bottom: 20px; }
-
-        .partner_section .box {
+        /* ---------- Pourquoi rejoindre FiaJou3 ---------- */
+        .partner_why {
             text-align: center;
-            padding: 40px 28px;
-            height: 100%;
+        }
+        .partner_why-head { max-width: 640px; margin: 0 auto 34px; }
+        .partner_why-head h3 {
+            position: relative;
+            display: inline-block;
+            margin: 0 0 12px;
+            padding-bottom: 14px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            color: #171717;
+        }
+        .partner_why-head h3::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 58px;
+            height: 3px;
+            border-radius: 3px;
+            background: linear-gradient(90deg, var(--fj-or), var(--fj-or-clair));
+        }
+        .partner_why-head p {
+            margin: 0;
+            color: #5f5a50;
+            line-height: 1.7;
+        }
+        .partner_why-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        .partner_why-item {
             background: #ffffff;
             border: 1px solid rgba(0, 0, 0, 0.06);
-            border-radius: 20px;
+            border-radius: 18px;
             box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
-            transition: transform .3s ease, box-shadow .3s ease;
+            padding: 28px 22px 26px;
+            transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease, background-color .25s ease;
         }
-        .partner_section .box:hover {
+        .partner_why-item:hover {
             transform: translateY(-6px);
             box-shadow: 0 22px 44px rgba(0, 0, 0, 0.12);
+            border-color: rgba(184, 134, 24, 0.35);
         }
-        .partner_section .box i {
+        .partner_why-item .partner_why-icon {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 92px;
-            height: 92px;
+            width: 64px;
+            height: 64px;
             border-radius: 50%;
             color: var(--fj-or) !important;
             background: rgba(184, 134, 24, 0.10);
             border: 1px dashed rgba(184, 134, 24, 0.45);
+            font-size: 1.5rem;
             transition: transform .3s ease, background-color .3s ease;
         }
-        .partner_section .box:hover i {
+        .partner_why-item:hover .partner_why-icon {
             transform: translateY(-4px) scale(1.06);
             background: rgba(184, 134, 24, 0.16);
         }
-        .partner_section .box h5 { margin: 18px 0 10px; font-weight: 700; }
-        .partner_section .box p { color: #5f5a50; line-height: 1.7; }
-        .partner_section .box a.btn1, .partner_section .box button.btn1 { margin-top: 14px; }
+        .partner_why-item h4 {
+            margin: 18px 0 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.02rem;
+            font-weight: 700;
+            color: #171717;
+        }
+        .partner_why-item p {
+            margin: 0;
+            color: #5f5a50;
+            font-size: 0.92rem;
+            line-height: 1.7;
+        }
 
         /* ---------- Témoignages ---------- */
         .client_section .heading_container { margin-bottom: 30px; }
@@ -1409,7 +1447,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
         /* ---------- Transitions de couleurs entre thèmes (aucun effet sur le layout) ---------- */
         body, .header_section, .hero_area--branded, .food_section .box,
         .about_section, .client_section .box .detail-box, .footer_section,
-        .offer_section .box, .partner_section .box {
+        .offer_section .box {
             transition: background-color .25s ease, color .25s ease;
         }
 
@@ -1509,14 +1547,16 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
         }
         [data-theme="dark"] .food_section .box .img-box { background: #232329; }
         [data-theme="dark"] .food_section .box .categorie-tag { color: #e0b14d; background: #3a3120; }
-        [data-theme="dark"] .partner_section .box {
+        [data-theme="dark"] .partner_why-head h3 { color: #f2efe8; }
+        [data-theme="dark"] .partner_why-head p { color: #b9b2a6; }
+        [data-theme="dark"] .partner_why-item {
             background: #1b1b21;
             border-color: rgba(255, 255, 255, 0.06);
             box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
         }
-        [data-theme="dark"] .partner_section .box i { background: rgba(184, 134, 24, 0.14); }
-        [data-theme="dark"] .partner_section .box h5 { color: #f2efe8; }
-        [data-theme="dark"] .partner_section .box p { color: #b9b2a6; }
+        [data-theme="dark"] .partner_why-item .partner_why-icon { background: rgba(184, 134, 24, 0.14); }
+        [data-theme="dark"] .partner_why-item h4 { color: #f2efe8; }
+        [data-theme="dark"] .partner_why-item p { color: #b9b2a6; }
         [data-theme="dark"] .menu-empty-state { color: #cfc9be; }
         [data-theme="dark"] .menu-samedi-note { color: #e0b14d; }
 
@@ -1558,6 +1598,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                 gap: 8px;
             }
             .hero_area--branded { min-height: auto; }
+            .partner_why-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
         @media (max-width: 767px) {
@@ -1573,7 +1614,8 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             .about_section .detail-box { margin-bottom: 40px; }
             .about_section .row { flex-direction: column-reverse; }
             .about_section .img-box { margin-bottom: 8px; }
-            .partner_section .box { padding: 32px 22px; }
+            .partner_why-head h3 { font-size: 1.3rem; }
+            .partner_why-grid { grid-template-columns: 1fr; gap: 16px; }
             .footer_section { padding: 52px 0 30px; }
         }
 
@@ -2111,33 +2153,40 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
     </section>
     <!-- end about section -->
 
-    <!-- devenir partenaire section (remplace la réservation de table) -->
+    <!-- pourquoi rejoindre FiaJou3 -->
     <section class="book_section layout_padding partner_section" id="partenaire">
         <div class="container">
-            <div class="heading_container fj-reveal">
-                <h2 data-i18n="accueil.partenaireTitre">Rejoignez FiaJou3</h2>
-            </div>
-            <div class="row">
-                <div class="col-md-6 fj-reveal">
-                    <div class="box">
-                        <i class="fa fa-cutlery fa-3x" aria-hidden="true" style="color:#B88618;"></i>
-                        <h5 data-i18n="accueil.partenaireCuisinier">Devenir cuisinier partenaire</h5>
-                        <p data-i18n="accueil.partenaireCuisinierTexte">Partagez vos recettes faites maison et vendez vos plats à de nouveaux clients chaque semaine.</p>
-                        <button type="button" class="btn1" data-fj-partenaire="cuisinier" data-i18n="accueil.partenaireJeMinscris">Je m'inscris</button>
-                    </div>
+            <div class="partner_why fj-reveal fj-reveal-delay-2">
+                <div class="partner_why-head">
+                    <h3 data-i18n="accueil.partenairePourquoiTitre">Pourquoi rejoindre FiaJou3 ?</h3>
+                    <p data-i18n="accueil.partenairePourquoiSous">Des avantages concrets pour cuisiniers et livreurs partenaires.</p>
                 </div>
-                <div class="col-md-6 fj-reveal fj-reveal-delay-1">
-                    <div class="box">
-                        <i class="fa fa-motorcycle fa-3x" aria-hidden="true" style="color:#B88618;"></i>
-                        <h5 data-i18n="accueil.partenaireLivreur">Devenir livreur partenaire</h5>
-                        <p data-i18n="accueil.partenaireLivreurTexte">Livrez les commandes dans votre zone et organisez vos tournées selon vos disponibilités.</p>
-                        <button type="button" class="btn1" data-fj-partenaire="livreur" data-i18n="accueil.partenaireJeMinscris">Je m'inscris</button>
+                <div class="partner_why-grid">
+                    <div class="partner_why-item">
+                        <span class="partner_why-icon"><i class="fa fa-users" aria-hidden="true"></i></span>
+                        <h4 data-i18n="accueil.partenaireAv1Titre">Gagnez de nouveaux clients</h4>
+                        <p data-i18n="accueil.partenaireAv1Texte">Rendez vos plats visibles auprès de clients qui commandent chaque semaine.</p>
+                    </div>
+                    <div class="partner_why-item">
+                        <span class="partner_why-icon"><i class="fa fa-clock-o" aria-hidden="true"></i></span>
+                        <h4 data-i18n="accueil.partenaireAv2Titre">Travaillez selon vos disponibilités</h4>
+                        <p data-i18n="accueil.partenaireAv2Texte">Cuisiniers et livreurs organisent leur activité à leur rythme.</p>
+                    </div>
+                    <div class="partner_why-item">
+                        <span class="partner_why-icon"><i class="fa fa-line-chart" aria-hidden="true"></i></span>
+                        <h4 data-i18n="accueil.partenaireAv3Titre">Développez votre activité</h4>
+                        <p data-i18n="accueil.partenaireAv3Texte">Gagnez en visibilité et fidélisez une clientèle régulière.</p>
+                    </div>
+                    <div class="partner_why-item">
+                        <span class="partner_why-icon"><i class="fa fa-heart" aria-hidden="true"></i></span>
+                        <h4 data-i18n="accueil.partenaireAv4Titre">Rejoignez une communauté locale</h4>
+                        <p data-i18n="accueil.partenaireAv4Texte">Faites partie d'un réseau de passionnés qui valorise le fait maison.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    <!-- end devenir partenaire section -->
+    <!-- end pourquoi rejoindre FiaJou3 -->
 
     <!-- client section -->
     <section class="client_section layout_padding-bottom">
