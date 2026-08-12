@@ -32,7 +32,7 @@ $cleStatutCommande = [
     <div class="topbar">
         <h1 data-i18n="mes_commandes.titre">Mes commandes</h1>
         <div class="topbar-actions">
-            <p class="profil-subtitle">Suivez vos commandes, du panier jusqu'à la livraison.</p>
+            <p class="profil-subtitle" data-i18n="mes_commandes.sousTitre">Suivez vos commandes, du panier jusqu'à la livraison.</p>
             <a href="<?php echo BASE_URL; ?>/index.php?route=client" class="btn btn-gold btn-sm" data-i18n="common.consulterMenu">Consulter le menu</a>
         </div>
     </div>

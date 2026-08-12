@@ -119,7 +119,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
                     <?php endforeach; ?>
                 </div>
             <?php else: ?>
-                <p style="color:var(--text-muted); padding:10px 0;">Aucun plat dans le menu de la semaine pour le moment.</p>
+                <p style="color:var(--text-muted); padding:10px 0;" data-i18n="menu_semaine.videTexte">Aucun plat dans le menu de la semaine pour le moment.</p>
             <?php endif; ?>
         </div>
 

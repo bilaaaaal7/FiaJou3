@@ -15,8 +15,45 @@
 require_once ROOT_PATH . '/modele/PartenaireInvitationModele.php';
 require_once ROOT_PATH . '/modele/MailerModele.php';
 require_once ROOT_PATH . '/modele/RateLimiterModele.php';
+require_once ROOT_PATH . '/assets/inc/langue.php';
 
 header('Content-Type: application/json; charset=utf-8');
+
+// Messages renvoyés à la modale (UI), traduits selon la langue active de la
+// requête. Le contenu de l'email d'invitation reste en français pour
+// l'instant (hors périmètre de cette passe i18n front-end).
+$L = langue_actuelle();
+$msg = [
+    'fr' => [
+        'requeteInvalide'  => 'Requête invalide.',
+        'tropDeDemandes'   => 'Trop de demandes. Réessayez dans %d minute(s).',
+        'emailInvalide'    => "L'adresse email n'est pas valide.",
+        'roleInvalide'     => 'Type de partenariat invalide.',
+        'erreurCreation'   => 'Une erreur est survenue. Veuillez réessayer.',
+        'erreurEnvoi'      => "L'email n'a pas pu être envoyé. Veuillez réessayer dans quelques minutes.",
+        'succes'           => 'Un email vient d\'être envoyé à <strong>%s</strong> avec votre lien de complétion. Vérifiez votre boîte de réception.',
+    ],
+    'en' => [
+        'requeteInvalide'  => 'Invalid request.',
+        'tropDeDemandes'   => 'Too many requests. Please try again in %d minute(s).',
+        'emailInvalide'    => 'This email address is not valid.',
+        'roleInvalide'     => 'Invalid partnership type.',
+        'erreurCreation'   => 'Something went wrong. Please try again.',
+        'erreurEnvoi'      => 'The email could not be sent. Please try again in a few minutes.',
+        'succes'           => 'An email was just sent to <strong>%s</strong> with your link to complete your application. Check your inbox.',
+    ],
+    'ar' => [
+        'requeteInvalide'  => 'طلب غير صالح.',
+        'tropDeDemandes'   => 'عدد كبير جدًا من الطلبات. يُرجى المحاولة بعد %d دقيقة (دقائق).',
+        'emailInvalide'    => 'عنوان البريد الإلكتروني غير صالح.',
+        'roleInvalide'     => 'نوع الشراكة غير صالح.',
+        'erreurCreation'   => 'حدث خطأ ما. يُرجى المحاولة مجددًا.',
+        'erreurEnvoi'      => 'تعذّر إرسال البريد الإلكتروني. يُرجى المحاولة بعد دقائق قليلة.',
+        'succes'           => 'تم للتو إرسال بريد إلكتروني إلى <strong>%s</strong> يحتوي على رابط إكمال طلبك. تحقق من بريدك الوارد.',
+    ],
+][$L] ?? null;
+// langue_actuelle() ne retourne que 'fr' | 'en' | 'ar' (cf. langues_supportees()) :
+// $msg est donc toujours défini ci-dessus.
 
 $repondre = static function (bool $ok, string $message): void {
     echo json_encode(['ok' => $ok, 'message' => $message], JSON_UNESCAPED_UNICODE);
@@ -25,13 +62,13 @@ $repondre = static function (bool $ok, string $message): void {
 
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
     http_response_code(405);
-    $repondre(false, 'Requête invalide.');
+    $repondre(false, $msg['requeteInvalide']);
 }
 
 $limiteur = new RateLimiterModele('partenaire_demande', 900, 5, 300);
 if (!$limiteur->peutTenter()) {
     $reste = $limiteur->tempsRestantBlocage();
-    $repondre(false, 'Trop de demandes. Réessayez dans ' . ceil($reste / 60) . ' minute(s).');
+    $repondre(false, sprintf($msg['tropDeDemandes'], (int) ceil($reste / 60)));
 }
 
 $email = trim((string) ($_POST['email'] ?? ''));
@@ -39,12 +76,12 @@ $role  = (string) ($_POST['role'] ?? '');
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     $limiteur->enregistrerEchec();
-    $repondre(false, "L'adresse email n'est pas valide.");
+    $repondre(false, $msg['emailInvalide']);
 }
 
 if (!in_array($role, [ROLE_CUISINIER, ROLE_LIVREUR], true)) {
     $limiteur->enregistrerEchec();
-    $repondre(false, 'Type de partenariat invalide.');
+    $repondre(false, $msg['roleInvalide']);
 }
 
 $limiteur->reinitialiser();
@@ -56,7 +93,7 @@ $invitationModele->invaliderAnterieures($email);
 
 $invitation = $invitationModele->creer($email, $role);
 if (!$invitation) {
-    $repondre(false, "Une erreur est survenue. Veuillez réessayer.");
+    $repondre(false, $msg['erreurCreation']);
 }
 
 $lien = BASE_URL . '/index.php?route=partenaire&token=' . urlencode($invitation['token']);
@@ -90,12 +127,12 @@ $corpsTexte = "Bonjour,\n\n"
 
 $mailer = new MailerModele();
 if (!$mailer->envoyer($email, $sujet, $corpsHtml, $corpsTexte)) {
-    $repondre(false, "L'email n'a pas pu être envoyé. Veuillez réessayer dans quelques minutes.");
+    $repondre(false, $msg['erreurEnvoi']);
 }
 
 journaliser_audit('partenaire.demande', 'email="' . $email . '" role="' . $role . '"');
 
 $repondre(
     true,
-    'Un email vient d\'être envoyé à <strong>' . htmlspecialchars($email) . '</strong> avec votre lien de complétion. Vérifiez votre boîte de réception.'
+    sprintf($msg['succes'], htmlspecialchars($email))
 );

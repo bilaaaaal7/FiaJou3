@@ -21,7 +21,7 @@ if ($initialesProfil === '') {
 
     <div class="topbar">
         <h1 data-i18n="profil.titre">Mon profil</h1>
-        <p class="profil-subtitle">Gérez vos informations personnelles et votre mot de passe.</p>
+        <p class="profil-subtitle" data-i18n="profil.sousTitre">Gérez vos informations personnelles et votre mot de passe.</p>
     </div>
 
     <?php if ($succes): ?>

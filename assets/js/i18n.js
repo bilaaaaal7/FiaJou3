@@ -210,6 +210,8 @@
             'accueil.partenaireJeMinscris': "Je m'inscris",
             'accueil.clientsTitre': 'Ce que disent nos clients',
             'accueil.clientsRegulier': 'Client(e) régulier(ère)',
+            'accueil.temoignage1': 'Le tajine était exactement comme celui de ma grand-mère, livré chaud en moins de 40 minutes. Je recommande vivement !',
+            'accueil.temoignage2': 'Simple, rapide et surtout de vrais plats faits maison. Le couscous du vendredi est devenu un rituel chez nous.',
             'accueil.footerContact': 'Contactez-nous',
             'accueil.footerHoraires': 'Horaires de commande',
             'accueil.footerTousLesJours': 'Tous les jours',
@@ -221,6 +223,16 @@
             'accueil.partenaireModalAnnuler': 'Annuler',
             'accueil.partenaireModalContinuer': 'Continuer',
             'accueil.partenaireModalFermer': 'Fermer',
+            'accueil.aboutTexte': "FiaJou3 met en relation des cuisiniers locaux passionnés avec des gourmands pressés. Chaque plat est préparé à la commande, comme à la maison, puis livré rapidement par nos livreurs partenaires près de chez vous.",
+            'accueil.samediDesc': 'Aucun menu spécifique le samedi : choisissez librement parmi tous les plats de la semaine.',
+            'accueil.partenaireCuisinierTexte': 'Partagez vos recettes faites maison et vendez vos plats à de nouveaux clients chaque semaine.',
+            'accueil.partenaireLivreurTexte': 'Livrez les commandes dans votre zone et organisez vos tournées selon vos disponibilités.',
+            'accueil.footerTexte': 'Des repas faits maison, préparés par des cuisiniers locaux et livrés rapidement chez vous.',
+            'accueil.footerMaroc': 'Maroc',
+            'accueil.partenaireModalSubCuisinier': 'Rejoignez FiaJou3 en tant que cuisinier.',
+            'accueil.partenaireModalSubLivreur': 'Rejoignez FiaJou3 en tant que livreur.',
+            'accueil.partenaireModalEmailInvalide': 'Veuillez saisir une adresse email valide.',
+            'accueil.partenaireModalErreurGenerique': 'Une erreur est survenue. Veuillez réessayer.',
 
             /* ---- Page Menu ---- */
             'menu.pageTitle': 'Menu — FiaJou3',
@@ -236,6 +248,7 @@
             'menu_semaine.pageTitle': 'Menu de la semaine — FiaJou3',
             'menu_semaine.titre': 'Menu de la semaine',
             'menu_semaine.sousTitre': 'Une sélection de plats frais chaque jour',
+            'menu_semaine.videTexte': 'Aucun plat dans le menu de la semaine pour le moment.',
 
             /* ---- Panier ---- */
             'panier.pageTitle': 'Mon panier — FiaJou3',
@@ -257,6 +270,7 @@
             /* ---- Mes commandes ---- */
             'mes_commandes.pageTitle': 'Mes commandes — FiaJou3',
             'mes_commandes.titre': 'Mes commandes',
+            'mes_commandes.sousTitre': "Suivez vos commandes, du panier jusqu'à la livraison.",
             'mes_commandes.vide': "Vous n'avez pas encore passé de commande.",
             'mes_commandes.commander': 'Commander maintenant',
             'mes_commandes.numero': 'Commande',
@@ -284,6 +298,7 @@
             /* ---- Profil (client) ---- */
             'profil.pageTitle': 'Mon profil — FiaJou3',
             'profil.titre': 'Mon profil',
+            'profil.sousTitre': 'Gérez vos informations personnelles et votre mot de passe.',
 
             /* ---- Fiche produit ---- */
             'produit.disponible': 'Disponible',
@@ -529,6 +544,8 @@
             'accueil.partenaireJeMinscris': 'Sign me up',
             'accueil.clientsTitre': 'What our customers say',
             'accueil.clientsRegulier': 'Regular customer',
+            'accueil.temoignage1': 'The tajine was exactly like my grandmother\u2019s, delivered hot in under 40 minutes. I highly recommend it!',
+            'accueil.temoignage2': 'Simple, fast and above all real homemade dishes. Friday\u2019s couscous has become a ritual in our home.',
             'accueil.footerContact': 'Contact us',
             'accueil.footerHoraires': 'Ordering hours',
             'accueil.footerTousLesJours': 'Every day',
@@ -540,6 +557,16 @@
             'accueil.partenaireModalAnnuler': 'Cancel',
             'accueil.partenaireModalContinuer': 'Continue',
             'accueil.partenaireModalFermer': 'Close',
+            'accueil.aboutTexte': 'FiaJou3 connects passionate local cooks with busy food lovers. Every dish is prepared to order, just like at home, then delivered quickly by our partner couriers near you.',
+            'accueil.samediDesc': 'No specific menu on Saturday: freely choose from all the dishes of the week.',
+            'accueil.partenaireCuisinierTexte': 'Share your home-made recipes and sell your dishes to new customers every week.',
+            'accueil.partenaireLivreurTexte': 'Deliver orders in your area and organize your rounds around your availability.',
+            'accueil.footerTexte': 'Home-cooked meals, prepared by local cooks and delivered quickly to you.',
+            'accueil.footerMaroc': 'Morocco',
+            'accueil.partenaireModalSubCuisinier': 'Join FiaJou3 as a cook.',
+            'accueil.partenaireModalSubLivreur': 'Join FiaJou3 as a courier.',
+            'accueil.partenaireModalEmailInvalide': 'Please enter a valid email address.',
+            'accueil.partenaireModalErreurGenerique': 'Something went wrong. Please try again.',
 
             /* ---- Menu page ---- */
             'menu.pageTitle': 'Menu - FiaJou3',
@@ -555,6 +582,7 @@
             'menu_semaine.pageTitle': 'Weekly menu - FiaJou3',
             'menu_semaine.titre': 'Weekly menu',
             'menu_semaine.sousTitre': 'A selection of fresh dishes every day',
+            'menu_semaine.videTexte': 'No dishes in the weekly menu at the moment.',
 
             /* ---- Cart ---- */
             'panier.pageTitle': 'My cart - FiaJou3',
@@ -576,6 +604,7 @@
             /* ---- My orders ---- */
             'mes_commandes.pageTitle': 'My orders - FiaJou3',
             'mes_commandes.titre': 'My orders',
+            'mes_commandes.sousTitre': 'Track your orders, from cart to delivery.',
             'mes_commandes.vide': 'You have not placed any order yet.',
             'mes_commandes.commander': 'Order now',
             'mes_commandes.numero': 'Order',
@@ -603,6 +632,7 @@
             /* ---- Client profile ---- */
             'profil.pageTitle': 'My profile - FiaJou3',
             'profil.titre': 'My profile',
+            'profil.sousTitre': 'Manage your personal information and password.',
 
             /* ---- Product page ---- */
             'produit.disponible': 'Available',
@@ -848,6 +878,8 @@
             'accueil.partenaireJeMinscris': 'أسجّل الآن',
             'accueil.clientsTitre': 'ماذا يقول عملاؤنا',
             'accueil.clientsRegulier': 'عميل دائم',
+            'accueil.temoignage1': 'كان الطاجين تمامًا مثل الذي كانت تحضّره جدتي، وصل ساخنًا في أقل من 40 دقيقة. أنصح به بشدة!',
+            'accueil.temoignage2': 'بسيط وسريع، والأهم أنه أطباق منزلية حقيقية. أصبح كسكس يوم الجمعة طقسًا مميزًا في بيتنا.',
             'accueil.footerContact': 'اتصل بنا',
             'accueil.footerHoraires': 'أوقات الطلب',
             'accueil.footerTousLesJours': 'كل يوم',
@@ -859,6 +891,16 @@
             'accueil.partenaireModalAnnuler': 'إلغاء',
             'accueil.partenaireModalContinuer': 'متابعة',
             'accueil.partenaireModalFermer': 'إغلاق',
+            'accueil.aboutTexte': 'يربط فياجوع طباخين محليين شغوفين بعشاق الطعام. يُحضّر كل طبق حسب الطلب، مثل المنزل، ثم يُوصّل بسرعة من طرف سعاة التوصيل الشركاء القريبين منك.',
+            'accueil.samediDesc': 'لا توجد قائمة خاصة بيوم السبت: اختر بحرية من بين جميع أطباق الأسبوع.',
+            'accueil.partenaireCuisinierTexte': 'شارك وصفاتك المنزلية وبع أطباقك لزبائن جدد كل أسبوع.',
+            'accueil.partenaireLivreurTexte': 'وصّل الطلبات في منطقتك ونظّم جولاتك حسب أوقات توفرك.',
+            'accueil.footerTexte': 'وجبات منزلية يحضّرها طباخون محليون وتُوصّل إليك بسرعة.',
+            'accueil.footerMaroc': 'المغرب',
+            'accueil.partenaireModalSubCuisinier': 'انضم إلى فياجوع كطباخ.',
+            'accueil.partenaireModalSubLivreur': 'انضم إلى فياجوع كساعي توصيل.',
+            'accueil.partenaireModalEmailInvalide': 'يُرجى إدخال بريد إلكتروني صحيح.',
+            'accueil.partenaireModalErreurGenerique': 'حدث خطأ ما. يُرجى المحاولة مجددا.',
 
             /* ---- صفحة القائمة ---- */
             'menu.pageTitle': 'القائمة - فياجوع',
@@ -874,6 +916,7 @@
             'menu_semaine.pageTitle': 'قائمة الأسبوع - فياجوع',
             'menu_semaine.titre': 'قائمة الأسبوع',
             'menu_semaine.sousTitre': 'تشكيلة من الأطباق الطازجة كل يوم',
+            'menu_semaine.videTexte': 'لا توجد أطباق في قائمة الأسبوع حالياً.',
 
             /* ---- السلة ---- */
             'panier.pageTitle': 'سلتي - فياجوع',
@@ -895,6 +938,7 @@
             /* ---- طلباتي ---- */
             'mes_commandes.pageTitle': 'طلباتي - فياجوع',
             'mes_commandes.titre': 'طلباتي',
+            'mes_commandes.sousTitre': 'تابع طلباتك من السلة إلى التوصيل.',
             'mes_commandes.vide': 'لم تقم بأي طلب بعد.',
             'mes_commandes.commander': 'اطلب الآن',
             'mes_commandes.numero': 'الطلب',
@@ -922,6 +966,7 @@
             /* ---- الملف الشخصي (عميل) ---- */
             'profil.pageTitle': 'ملفي الشخصي - فياجوع',
             'profil.titre': 'ملفي الشخصي',
+            'profil.sousTitre': 'أدر معلوماتك الشخصية وكلمة المرور.',
 
             /* ---- صفحة الطبق ---- */
             'produit.disponible': 'متوفر',

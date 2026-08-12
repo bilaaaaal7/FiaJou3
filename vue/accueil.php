@@ -1319,6 +1319,14 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
         .client_section .box .detail-box p { font-size: 15px; line-height: 1.7; }
         .client_section .box .detail-box h6 { font-weight: 700; font-size: 18px; color: var(--fj-or-clair); }
 
+        /* Les flèches précédent/suivant gardent toujours leur position
+           physique (précédent = flèche de gauche, suivant = flèche de
+           droite), quelle que soit la langue : c'est le sens de défilement
+           interne d'Owl Carousel (option "rtl", cf. custom.js) qui s'adapte
+           à l'arabe, pas la position des flèches. */
+        .client_section .owl-carousel .owl-nav {
+            direction: ltr;
+        }
         .client_section .owl-carousel .owl-nav .owl-prev,
         .client_section .owl-carousel .owl-nav .owl-next {
             background: rgba(184, 134, 24, 0.14);
@@ -1331,6 +1339,36 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             color: #ffffff;
             transform: translateY(-2px);
             box-shadow: 0 8px 18px rgba(184, 134, 24, 0.4);
+        }
+
+        /* La mécanique du carrousel (largeurs/positions/flottement des
+           cartes calculés par Owl Carousel) doit rester stable et
+           prévisible : on isole donc explicitement sa direction en LTR,
+           indépendamment du sens hérité de <html dir="rtl">. C'est ce sens
+           hérité (combiné au conteneur ".row" en display:flex juste
+           au-dessus) qui faisait sortir les cartes du champ visible en
+           arabe alors que les flèches de navigation, elles, restaient
+           visibles. Owl gère lui-même le défilement RTL via son option
+           "rtl" (cf. custom.js) : ce n'est plus le rôle du CSS hérité.
+           On NE force PAS ce sens sur toute la section (le reste du bloc
+           "Ce que disent nos clients" garde le sens de la page) : seule la
+           mécanique du carrousel est isolée. */
+        .client_section .owl-carousel.client_owl-carousel {
+            direction: ltr;
+        }
+
+        /* Le texte des avis (citation, nom, rôle) doit lui rester dans le
+           sens de la langue courante : on réapplique explicitement le RTL
+           hérité de la page sur le contenu, qui serait sinon repassé en LTR
+           par la règle ci-dessus. C'est le seul endroit où le sens de
+           lecture arabe doit s'appliquer dans le carrousel. */
+        html[dir="rtl"] .client_section .owl-carousel .box .detail-box {
+            direction: rtl;
+            text-align: right;
+        }
+        html[dir="rtl"] .client_section .owl-carousel .box .detail-box::before {
+            left: auto;
+            right: 24px;
         }
 
         /* ---------- Pied de page ---------- */
@@ -1879,7 +1917,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                             <span class="menu-samedi-date"><span data-i18n="common.livraisonLe">Livraison le</span> <?php echo date('d/m/Y', strtotime($dateSamedi)); ?></span>
                         <?php endif; ?>
                     </header>
-                    <p class="menu-samedi-desc">
+                    <p class="menu-samedi-desc" data-i18n="accueil.samediDesc">
                         Aucun menu spécifique le samedi : choisissez librement parmi tous les plats de la semaine.
                     </p>
                     <div class="menu-samedi-grid">
@@ -2029,6 +2067,20 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
         </div>
     </div>
 
+    <!-- Libellés traduits pour la modale "Devenir partenaire", utilisés par le
+         script ci-dessous (aucun texte n'y est codé en dur : tout provient du
+         dictionnaire i18n via ces éléments cachés, pour rester cohérent avec
+         la langue active, y compris après un changement de langue sans
+         rechargement). -->
+    <div hidden aria-hidden="true">
+        <span id="fj-i18n-titre-cuisinier" data-i18n="accueil.partenaireCuisinier">Devenir cuisinier partenaire</span>
+        <span id="fj-i18n-sub-cuisinier" data-i18n="accueil.partenaireModalSubCuisinier">Rejoignez FiaJou3 en tant que cuisinier.</span>
+        <span id="fj-i18n-titre-livreur" data-i18n="accueil.partenaireLivreur">Devenir livreur partenaire</span>
+        <span id="fj-i18n-sub-livreur" data-i18n="accueil.partenaireModalSubLivreur">Rejoignez FiaJou3 en tant que livreur.</span>
+        <span id="fj-i18n-email-invalide" data-i18n="accueil.partenaireModalEmailInvalide">Veuillez saisir une adresse email valide.</span>
+        <span id="fj-i18n-erreur-generique" data-i18n="accueil.partenaireModalErreurGenerique">Une erreur est survenue. Veuillez réessayer.</span>
+    </div>
+
     <!-- about section -->
     <section class="about_section layout_padding" id="about">
         <div class="container">
@@ -2043,7 +2095,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                         <div class="heading_container">
                             <h2 data-i18n="accueil.aboutTitre">Qui sommes-nous</h2>
                         </div>
-                        <p>
+                        <p data-i18n="accueil.aboutTexte">
                             <?php echo htmlspecialchars(APP_NAME); ?> met en relation des cuisiniers locaux passionnés
                             avec des gourmands pressés. Chaque plat est préparé à la commande, comme à la maison,
                             puis livré rapidement par nos livreurs partenaires près de chez vous.
@@ -2069,7 +2121,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                     <div class="box">
                         <i class="fa fa-cutlery fa-3x" aria-hidden="true" style="color:#B88618;"></i>
                         <h5 data-i18n="accueil.partenaireCuisinier">Devenir cuisinier partenaire</h5>
-                        <p>Partagez vos recettes faites maison et vendez vos plats à de nouveaux clients chaque semaine.</p>
+                        <p data-i18n="accueil.partenaireCuisinierTexte">Partagez vos recettes faites maison et vendez vos plats à de nouveaux clients chaque semaine.</p>
                         <button type="button" class="btn1" data-fj-partenaire="cuisinier" data-i18n="accueil.partenaireJeMinscris">Je m'inscris</button>
                     </div>
                 </div>
@@ -2077,7 +2129,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                     <div class="box">
                         <i class="fa fa-motorcycle fa-3x" aria-hidden="true" style="color:#B88618;"></i>
                         <h5 data-i18n="accueil.partenaireLivreur">Devenir livreur partenaire</h5>
-                        <p>Livrez les commandes dans votre zone et organisez vos tournées selon vos disponibilités.</p>
+                        <p data-i18n="accueil.partenaireLivreurTexte">Livrez les commandes dans votre zone et organisez vos tournées selon vos disponibilités.</p>
                         <button type="button" class="btn1" data-fj-partenaire="livreur" data-i18n="accueil.partenaireJeMinscris">Je m'inscris</button>
                     </div>
                 </div>
@@ -2097,7 +2149,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                     <div class="item">
                         <div class="box">
                             <div class="detail-box">
-                                <p>
+                                <p data-i18n="accueil.temoignage1">
                                     Le tajine était exactement comme celui de ma grand-mère, livré chaud
                                     en moins de 40 minutes. Je recommande vivement !
                                 </p>
@@ -2112,7 +2164,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                     <div class="item">
                         <div class="box">
                             <div class="detail-box">
-                                <p>
+                                <p data-i18n="accueil.temoignage2">
                                     Simple, rapide et surtout de vrais plats faits maison. Le couscous
                                     du vendredi est devenu un rituel chez nous.
                                 </p>
@@ -2140,7 +2192,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                         <div class="contact_link_box">
                             <a href="#">
                                 <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                <span>Maroc</span>
+                                <span data-i18n="accueil.footerMaroc">Maroc</span>
                             </a>
                             <a href="tel:+212000000000">
                                 <i class="fa fa-phone" aria-hidden="true"></i>
@@ -2158,7 +2210,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                         <a href="<?php echo BASE_URL; ?>/index.php?route=accueil" class="footer-logo">
                             <?php echo htmlspecialchars(APP_NAME); ?>
                         </a>
-                        <p>
+                        <p data-i18n="accueil.footerTexte">
                             Des repas faits maison, préparés par des cuisiniers locaux et livrés
                             rapidement chez vous.
                         </p>
@@ -2346,13 +2398,30 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             var erreur = document.getElementById('fj-partenaire-erreur');
             var boutonContinuer = formulaire.querySelector('.fj-partenaire-continuer');
 
-            var libelles = {
-                cuisinier: { titre: 'Devenir cuisinier partenaire', sub: 'Rejoignez FiaJou3 en tant que cuisinier.' },
-                livreur:   { titre: 'Devenir livreur partenaire',   sub: 'Rejoignez FiaJou3 en tant que livreur.' }
-            };
+            // Lit le texte déjà traduit par i18n.js dans les éléments cachés
+            // ci-dessus, plutôt que de coder les libellés en dur ici : la
+            // modale reste correcte quelle que soit la langue active, y
+            // compris après un changement de langue sans rechargement.
+            function texteI18n(id, repli) {
+                var el = document.getElementById(id);
+                return (el && el.textContent) ? el.textContent : repli;
+            }
+
+            function libellesRole(role) {
+                if (role === 'livreur') {
+                    return {
+                        titre: texteI18n('fj-i18n-titre-livreur', 'Devenir livreur partenaire'),
+                        sub: texteI18n('fj-i18n-sub-livreur', 'Rejoignez FiaJou3 en tant que livreur.')
+                    };
+                }
+                return {
+                    titre: texteI18n('fj-i18n-titre-cuisinier', 'Devenir cuisinier partenaire'),
+                    sub: texteI18n('fj-i18n-sub-cuisinier', 'Rejoignez FiaJou3 en tant que cuisinier.')
+                };
+            }
 
             function ouvrir(role) {
-                var l = libelles[role] || libelles.cuisinier;
+                var l = libellesRole(role);
                 if (titre) titre.textContent = l.titre;
                 if (sousTitre) sousTitre.textContent = l.sub;
                 if (champRole) champRole.value = role;
@@ -2396,7 +2465,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                 var valeur = email.value.trim();
                 if (!valeur || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valeur)) {
                     if (erreur) {
-                        erreur.textContent = "Veuillez saisir une adresse email valide.";
+                        erreur.textContent = texteI18n('fj-i18n-email-invalide', 'Veuillez saisir une adresse email valide.');
                         erreur.hidden = false;
                     }
                     return;
