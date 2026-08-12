@@ -1872,6 +1872,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                         <?php if (empty($itemsJour)): continue; endif; ?>
                         <?php $item = $itemsJour[0]; ?>
                         <?php $nbPlatsJour = count($itemsJour); ?>
+                        <?php $totalJour = array_sum(array_map(fn($plat) => (float) ($plat['prix'] ?? 0), $itemsJour)); ?>
                         <article class="menu-day-card" data-fj-modal-open="<?php echo $jourKey; ?>" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Voir le menu du <?php echo $jourLabel; ?>">
                             <header class="menu-day-card-head">
                                 <span class="menu-day-name" data-i18n="jours.<?php echo $jourKey; ?>"><?php echo $jourLabel; ?></span>
@@ -1891,7 +1892,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                             </div>
                             <footer class="menu-day-card-foot">
                                 <span class="menu-day-price">
-                                    <?php echo isset($item['prix']) ? number_format((float) $item['prix'], 2) . ' MAD' : ''; ?>
+                                    <?php echo $totalJour > 0 ? number_format($totalJour, 2) . ' MAD' : ''; ?>
                                 </span>
                                 <?php if ($statutJour[$jourKey] === 'ouvert'): ?>
                                     <a class="menu-add-btn"
