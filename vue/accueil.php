@@ -737,11 +737,16 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             border-radius: 16px;
             padding: 20px 22px;
             box-shadow: 0 10px 24px rgba(0, 0, 0, 0.07);
-            transition: transform .3s ease, box-shadow .3s ease;
+            transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
         }
         .menu-day-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 16px 34px rgba(0, 0, 0, 0.12);
+            transform: translateY(-3px);
+            border-color: rgba(184, 134, 24, 0.55);
+            box-shadow: 0 18px 34px rgba(184, 134, 24, 0.16), 0 14px 28px rgba(0, 0, 0, 0.10);
+        }
+        .menu-day-card:focus-visible {
+            outline: 2px solid rgba(184, 134, 24, 0.6);
+            outline-offset: 2px;
         }
         .menu-day-card-head {
             display: flex;
@@ -790,11 +795,32 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             margin-top: auto;
             padding-top: 6px;
             display: flex;
+            flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
             gap: 10px;
         }
         .menu-day-price { font-size: 1.08rem; font-weight: 800; color: var(--fj-or); }
+        .menu-day-voir {
+            flex-basis: 100%;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--fj-or-sombre);
+            transition: color .25s ease;
+        }
+        .menu-day-voir::after {
+            content: "→";
+            transition: transform .25s ease;
+        }
+        html[dir="rtl"] .menu-day-voir::after { content: "←"; }
+        .menu-day-card:hover .menu-day-voir { color: var(--fj-or); }
+        .menu-day-card:hover .menu-day-voir::after { transform: translateX(3px); }
+        html[dir="rtl"] .menu-day-card:hover .menu-day-voir::after { transform: translateX(-3px); }
 
         .menu-add-btn {
             width: 40px;
@@ -884,9 +910,15 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             border-color: rgba(255, 255, 255, 0.08);
             box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
         }
+        [data-theme="dark"] .menu-day-card:hover {
+            border-color: rgba(224, 177, 77, 0.5);
+            box-shadow: 0 18px 34px rgba(0, 0, 0, 0.45), 0 6px 22px rgba(224, 177, 77, 0.16);
+        }
+        [data-theme="dark"] .menu-day-card:focus-visible { outline-color: rgba(224, 177, 77, 0.7); }
         [data-theme="dark"] .menu-day-name { color: #e0b14d; }
         [data-theme="dark"] .menu-day-dish { color: #f2efe8; }
         [data-theme="dark"] .menu-day-cat { color: #b9b2a6; }
+        [data-theme="dark"] .menu-day-voir { color: #e0b14d; }
         [data-theme="dark"] .menu-day-status-open { background: #3a3120; color: #e0b14d; }
         [data-theme="dark"] .menu-day-status-closed { background: #452824; color: #ff9b8f; }
         [data-theme="dark"] .menu-day-status-unavailable { background: #2a2a30; color: #b9b2a6; }
@@ -1832,8 +1864,9 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                                            ? 'Ajouter au panier · livraison le ' . date('d/m/Y', strtotime($dateParJour[$jourKey]))
                                            : 'Connectez-vous pour commander'; ?>"
                                        aria-label="Ajouter au panier" data-i18n-aria="common.ajouterPanier">+</a>
-                                <?php endif; ?>
+                                    <?php endif; ?>
                             </footer>
+                            <span class="menu-day-voir" data-i18n="accueil.voirPlats">Voir les plats</span>
                         </article>
                     <?php endforeach; ?>
                 </div>
