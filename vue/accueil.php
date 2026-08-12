@@ -134,7 +134,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
         body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
         ::selection { background: rgba(184, 134, 24, 0.28); }
 
-        #menu, #about, #partenaire { scroll-margin-top: 96px; }
+        #menu, #about, #partenaire, #contact { scroll-margin-top: 96px; }
 
         /* ---------- Animations d'apparition au scroll ---------- */
         .fj-reveal { opacity: 1; transform: none; }
@@ -1686,7 +1686,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                                 <a class="nav-link" href="#about"><span data-i18n="accueil.navAPropos">À propos</span></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#partenaire"><span data-i18n="accueil.navPartenaire">Devenir partenaire</span></a>
+                                <a class="nav-link" href="#contact"><span data-i18n="accueil.navContact">Contact</span></a>
                             </li>
                         </ul>
                         <div class="user_option">
@@ -2184,7 +2184,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
     <!-- end client section -->
 
     <!-- footer section -->
-    <footer class="footer_section">
+    <footer class="footer_section" id="contact">
         <div class="container fj-reveal">
             <div class="row">
                 <div class="col-md-4 footer-col">
