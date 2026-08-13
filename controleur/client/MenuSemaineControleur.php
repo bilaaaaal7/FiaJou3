@@ -25,10 +25,11 @@ if ($menu && $menu['week_start'] && $menu['week_end']) {
     );
 }
 
+$semaineRef = MenuSemaineModele::semaineReference($menu);
 $datesParJour = [];
 $ouvertParJour = [];
 foreach (JOURS_LIVRAISON as $jour) {
-    $date = $menuSemaineModele->prochaineDatePourJour($jour);
+    $date = MenuSemaineModele::datePourJour($jour, $semaineRef);
     $datesParJour[$jour] = $date;
     [$ouvertParJour[$jour]] = $date ? $menuSemaineModele->dateLivraisonValide($date) : [false];
 }

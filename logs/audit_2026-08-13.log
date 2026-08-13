@@ -1,0 +1,46 @@
+[2026-08-13 01:12:16] user=20 email=saram@gmail.com role=admin action=connexion.reussie details="email=saram@gmail.com" ip=192.168.100.103
+[2026-08-13 01:12:42] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-13 01:14:49] user=20 email=saram@gmail.com role=admin action=connexion.reussie details="email=saram@gmail.com" ip=192.168.100.103
+[2026-08-13 01:16:52] user=20 email=saram@gmail.com role=admin action=connexion.reussie details="email=saram@gmail.com" ip=192.168.100.103
+[2026-08-13 01:18:31] user=20 email=saram@gmail.com role=admin action=connexion.reussie details="email=saram@gmail.com" ip=192.168.100.103
+[2026-08-13 01:19:23] user=20 email=saram@gmail.com role=admin action=cuisinier.creer details="email=raouiya@gmail.com" ip=192.168.100.103
+[2026-08-13 01:20:25] user=20 email=saram@gmail.com role=admin action=connexion.reussie details="email=saram@gmail.com" ip=192.168.100.103
+[2026-08-13 01:22:50] user=20 email=saram@gmail.com role=admin action=connexion.reussie details="email=saram@gmail.com" ip=192.168.100.103
+[2026-08-13 01:23:48] user=20 email=saram@gmail.com role=admin action=utilisateur.modifier details="id=35 role=client email=saida@gmail.com" ip=192.168.100.103
+[2026-08-13 01:24:59] user=20 email=saram@gmail.com role=admin action=connexion.reussie details="email=saram@gmail.com" ip=192.168.100.103
+[2026-08-13 01:27:22] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-13 01:28:41] user=20 email=saram@gmail.com role=admin action=connexion.reussie details="email=saram@gmail.com" ip=192.168.100.140
+[2026-08-13 01:30:13] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-13 01:32:54] user=20 email=saram@gmail.com role=admin action=menu_semaine.creer_semaine details="semaine=2026-08-17 -> 2026-08-23" ip=192.168.100.140
+[2026-08-13 01:32:55] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-13 01:33:11] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.supprimer details="id=35" ip=::1
+[2026-08-13 01:34:19] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-13 01:35:25] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.supprimer details="id=34" ip=::1
+[2026-08-13 01:35:54] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-13 01:36:00] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.creer_semaine details="semaine=2026-08-10 -> 2026-08-16" ip=::1
+[2026-08-13 01:36:18] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=36 product_id=31 jour=lundi" ip=::1
+[2026-08-13 01:36:35] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=36 product_id=13 jour=mardi" ip=::1
+[2026-08-13 01:36:42] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=36 product_id=11 jour=mercredi" ip=::1
+[2026-08-13 01:36:53] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=36 product_id=32 jour=jeudi" ip=::1
+[2026-08-13 01:36:59] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=36 product_id=9 jour=vendredi" ip=::1
+[2026-08-13 01:37:10] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=36 product_id=15 jour=dimanche" ip=::1
+[2026-08-13 01:37:14] user=20 email=saram@gmail.com role=admin action=connexion.reussie details="email=saram@gmail.com" ip=192.168.100.103
+[2026-08-13 01:37:14] user=20 email=saram@gmail.com role=admin action=connexion.reussie details="email=saram@gmail.com" ip=192.168.100.103
+[2026-08-13 01:37:18] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.publier details="id=36" ip=::1
+[2026-08-13 01:40:12] user=20 email=saram@gmail.com role=admin action=cuisinier.creer details="email=satedezajy@mailinator.com" ip=192.168.100.140
+[2026-08-13 01:42:31] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-13 01:43:03] user=5 email=ismailsghir107@gmail.com role=admin action=commande.statut details="id=17 nouveau_statut=livree cook_id= driver_id=" ip=::1
+[2026-08-13 01:43:53] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.supprimer details="id=36" ip=::1
+[2026-08-13 01:44:14] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.creer details="nom=Menu Semaine 2 semaine=2026-08-10 -> 2026-08-16" ip=::1
+[2026-08-13 01:44:23] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=37 product_id=31 jour=lundi" ip=::1
+[2026-08-13 01:44:28] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=37 product_id=13 jour=mardi" ip=::1
+[2026-08-13 01:44:36] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=37 product_id=11 jour=mercredi" ip=::1
+[2026-08-13 01:45:04] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=37 product_id=32 jour=jeudi" ip=::1
+[2026-08-13 01:45:09] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=37 product_id=8 jour=vendredi" ip=::1
+[2026-08-13 01:45:14] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=37 product_id=10 jour=dimanche" ip=::1
+[2026-08-13 01:45:26] user=5 email=ismailsghir107@gmail.com role=admin action=menu_semaine.publier details="id=37" ip=::1
+[2026-08-13 01:48:41] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-13 01:53:19] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-13 02:02:00] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-13 19:15:37] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-13 19:16:21] user=5 email=ismailsghir107@gmail.com role=admin action=plat.modifier details="id=10 nom=Mix Grill prix=120 disponible=1" ip=::1

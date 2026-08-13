@@ -449,30 +449,47 @@ class MenuSemaineModele
     }
 
     /**
-     * Prochaine date (strictement dans le futur) pour un jour de la semaine.
+     * Date (Y-m-d) du jour demandé au sein d'une semaine complète (lundi → dimanche).
+     *
+     * La date est TOUJOURS dérivée du lundi de la semaine ($weekStart) :
+     * lundi = +0 jour, mardi = +1, mercredi = +2, … dimanche = +6. La date du
+     * jour n'intervient jamais dans le calcul : la carte d'un jour, son modal,
+     * les liens de commande et la validation utilisent donc exactement la même
+     * date. Pour la semaine suivante, passer le lundi suivant (lundi + 7 jours).
      */
-    public function prochaineDatePourJour(string $jourFr): ?string
+    public static function datePourJour(string $jourFr, string $weekStart): ?string
     {
-        $ordre = self::ordreJours();
-        $cible = $ordre[$jourFr] ?? null;
-        if ($cible === null) {
+        $decalage = (self::ordreJours()[$jourFr] ?? 0) - 1;
+        if ($decalage < 0) {
             return null;
         }
-        $aujourdHui = (int) date('N');
-        $diff = $cible - $aujourdHui;
-        if ($diff <= 0) {
-            $diff += 7;
+        return date('Y-m-d', strtotime($weekStart . ' +' . $decalage . ' days'));
+    }
+
+    /**
+     * Lundi de référence pour calculer les dates d'un menu affiché.
+     *
+     * On utilise le lundi de la période du menu (week_start) lorsqu'elle est
+     * définie ; en repli (menu hérité sans période) le lundi de la semaine en
+     * cours. Toutes les dates affichées en sont dérivées (lundi + 0 à 6 jours).
+     */
+    public static function semaineReference(array|false $menu): string
+    {
+        if ($menu && !empty($menu['week_start'])) {
+            return $menu['week_start'];
         }
-        return date('Y-m-d', strtotime('+' . $diff . ' days'));
+        return self::debutSemaine();
     }
 
     /**
      * Première date de livraison commandable pour un plat.
      *
-     * Les jours où le plat figure au menu du week sont candidats, auxquels
+     * Les jours où le plat figure au menu de la semaine sont candidats, auxquels
      * s'ajoute le samedi (jour de menu libre : tous les plats du menu de la
-     * semaine sont commandables). La date la plus proche encore ouverte à la
-     * commande est renvoyée.
+     * semaine sont commandables). Les dates sont TOUJOURS calculées à partir du
+     * lundi de chaque semaine (lundi + rang − 1), jamais à partir de la date du
+     * jour : on balaie la semaine du menu actif puis, si aucune date n'y est
+     * encore ouverte, les semaines suivantes (+7 jours), lundi → dimanche.
      */
     public function getDateCommandePourPlat(int $platId): ?string
     {
@@ -495,18 +512,27 @@ class MenuSemaineModele
         }
         // Samedi : menu libre, tous les plats de la semaine sont commandables.
         $candidats[] = JOUR_MENU_LIBRE;
+        $candidats = array_unique($candidats);
+        $ordre = self::ordreJours();
+        usort($candidats, function ($a, $b) use ($ordre) {
+            return ($ordre[$a] ?? 99) <=> ($ordre[$b] ?? 99);
+        });
 
-        $meilleureDate = null;
-        foreach (array_unique($candidats) as $jour) {
-            $date = $this->prochaineDatePourJour($jour);
-            if ($date === null || !$this->dateLivraisonValide($date)[0]) {
-                continue;
+        $weekStart = self::semaineReference($menu);
+        // Balayage des semaines (lundi → dimanche) tant qu'une date encore
+        // ouverte à la commande n'est pas trouvée. Limite de sécurité pour
+        // éviter une boucle infinie (couverture ~6 mois).
+        for ($i = 0; $i < 26; $i++) {
+            foreach ($candidats as $jour) {
+                $date = self::datePourJour($jour, $weekStart);
+                if ($date === null || !$this->dateLivraisonValide($date)[0]) {
+                    continue;
+                }
+                return $date;
             }
-            if ($meilleureDate === null || $date < $meilleureDate) {
-                $meilleureDate = $date;
-            }
+            $weekStart = date('Y-m-d', strtotime($weekStart . ' +7 days'));
         }
-        return $meilleureDate;
+        return null;
     }
 
     /**

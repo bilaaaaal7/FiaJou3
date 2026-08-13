@@ -1836,10 +1836,11 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                 </div>
             <?php else: ?>
                 <?php
+                $semaineRef   = MenuSemaineModele::semaineReference($menu);
                 $dateParJour   = [];
                 $ouvertParJour = [];
                 foreach ($jourLabels as $jourKey => $jourLabel) {
-                    $date = $menuSemaineModele->prochaineDatePourJour($jourKey);
+                    $date = MenuSemaineModele::datePourJour($jourKey, $semaineRef);
                     $dateParJour[$jourKey] = $date;
                     $ouvertParJour[$jourKey] = false;
                     if ($date) {
@@ -1865,7 +1866,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                     }
                 }
 
-                $dateSamedi = $menuSemaineModele->prochaineDatePourJour(JOUR_MENU_LIBRE);
+                $dateSamedi = MenuSemaineModele::datePourJour(JOUR_MENU_LIBRE, $semaineRef);
                 $samediOuvert = false;
                 if ($dateSamedi) {
                     [$samediOuvert] = $menuSemaineModele->dateLivraisonValide($dateSamedi);

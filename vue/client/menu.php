@@ -49,10 +49,11 @@ $jourLabel = [
             Le samedi, le menu est libre : tous les plats de la semaine sont commandables.
         </p>
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
+            <?php $semaineRef = MenuSemaineModele::semaineReference($menu); ?>
             <?php foreach (JOURS_MENU as $jour): ?>
                 <?php if (empty($itemsParJour[$jour])): continue; endif; ?>
                 <?php
-                $dateJour = $menuSemaineModele->prochaineDatePourJour($jour);
+                $dateJour = MenuSemaineModele::datePourJour($jour, $semaineRef);
                 [$jourOuvert] = $dateJour ? $menuSemaineModele->dateLivraisonValide($dateJour) : [false];
                 ?>
                 <div style="background: var(--gold-light); border: 1px solid var(--border); border-radius: 12px; padding: 12px;">
@@ -86,7 +87,7 @@ $jourLabel = [
                 $itemsSamedi[$item['product_id']] = $item;
             }
         }
-        $dateSamedi = $menuSemaineModele->prochaineDatePourJour(JOUR_MENU_LIBRE);
+        $dateSamedi = MenuSemaineModele::datePourJour(JOUR_MENU_LIBRE, $semaineRef);
         [$samediOuvert] = $dateSamedi ? $menuSemaineModele->dateLivraisonValide($dateSamedi) : [false];
         ?>
         <?php if (!empty($itemsSamedi)): ?>
