@@ -1,21 +1,14 @@
 <?php
 /**
- * Icône de profil (avatar circulaire) + menu déroulant, affichée en haut à
- * droite pour tout utilisateur connecté. Composant autonome (CSS/JS inline
- * chargés une seule fois via profile-menu.css / profile-menu.js) réutilisé :
- *   - dans l'en-tête public de la landing page (vue/accueil.php), pour un
- *     client connecté ;
- *   - dans la barre du tableau de bord (assets/inc/navbar.php), pour les
- *     autres rôles (admin, cuisinier, livreur).
+ * Menu utilisateur dans la navbar : avatar + nom + chevron, capsule dark.
+ * Clic → dropdown (profil, commandes, notifs, paramètres, déconnexion).
+ * Composant autonome (CSS dans profile-menu.css, JS dans profile-menu.js).
  *
  * Variable optionnelle avant l'include :
- *   $profileMenuVariant : 'light' (fond sombre, texte clair - navbar publique)
- *                         | 'dark' (fond clair, texte sombre - app-shell)
+ *   $profileMenuVariant : 'light' (navbar publique sombre)
+ *                         | 'dark' (app-shell)
  */
 
-// Ce menu déroulant (Mon Profil / Mes Commandes / Déconnexion) est spécifique
-// à l'espace Client. Les autres rôles gardent leur propre lien de déconnexion
-// existant dans la sidebar.
 if (!est_connecte() || utilisateur_role() !== ROLE_CLIENT) {
     return;
 }
@@ -23,7 +16,7 @@ if (!est_connecte() || utilisateur_role() !== ROLE_CLIENT) {
 $profileMenuVariant = $profileMenuVariant ?? 'dark';
 $prenomUser = $_SESSION['prenom'] ?? '';
 $nomUser    = $_SESSION['nom'] ?? '';
-$initiales = strtoupper(mb_substr($prenomUser, 0, 1) . mb_substr($nomUser, 0, 1));
+$initiales = strtoupper(mb_substr($prenomUser, 0, 1));
 if ($initiales === '') {
     $initiales = '?';
 }
@@ -33,45 +26,32 @@ if (!empty($_SESSION['user_id'])) {
     require_once ROOT_PATH . '/modele/NotificationModele.php';
     $nbNotifsNonLues = (new NotificationModele())->compterNonLues((int) $_SESSION['user_id']);
 }
-
-$roleI18n = [
-    ROLE_ADMIN     => 'nav.roleAdmin',
-    ROLE_CLIENT    => 'nav.roleClient',
-    ROLE_CUISINIER => 'nav.roleCuisinier',
-    ROLE_LIVREUR   => 'nav.roleLivreur',
-];
-$roleCleI18n = $roleI18n[utilisateur_role()] ?? '';
 ?>
-<div class="profile-menu profile-menu--<?php echo htmlspecialchars($profileMenuVariant); ?>" data-profile-menu>
-    <button type="button" class="profile-menu__trigger" data-profile-trigger aria-haspopup="true" aria-expanded="false">
-        <span class="profile-menu__avatar"><?php echo htmlspecialchars($initiales); ?></span>
+<div class="user-menu">
+    <button type="button" class="user-menu-trigger">
+        <span class="user-avatar"><?php echo htmlspecialchars($initiales); ?></span>
+        <span class="user-name"><?php echo htmlspecialchars(trim($prenomUser)); ?></span>
+        <span class="user-chevron">&#709;</span>
     </button>
 
-    <div class="profile-menu__dropdown" data-profile-dropdown role="menu">
-        <div class="profile-menu__header">
-            <span class="profile-menu__avatar profile-menu__avatar--lg"><?php echo htmlspecialchars($initiales); ?></span>
-            <div>
-                <div class="profile-menu__name"><?php echo htmlspecialchars(trim($prenomUser . ' ' . $nomUser)); ?></div>
-                <div class="profile-menu__role"<?php echo $roleCleI18n !== '' ? ' data-i18n="' . htmlspecialchars($roleCleI18n) . '"' : ''; ?>><?php echo htmlspecialchars(utilisateur_role() ?? ''); ?></div>
-            </div>
-        </div>
-        <a role="menuitem" href="<?php echo BASE_URL; ?>/index.php?route=client/profil">
+    <div class="user-dropdown">
+        <a href="<?php echo BASE_URL; ?>/index.php?route=client/profil">
             <i class="fa fa-user" aria-hidden="true"></i> <span data-i18n="nav.monProfil">Mon Profil</span>
         </a>
-        <a role="menuitem" href="<?php echo BASE_URL; ?>/index.php?route=client/mes-commandes">
+        <a href="<?php echo BASE_URL; ?>/index.php?route=client/mes-commandes">
             <i class="fa fa-shopping-bag" aria-hidden="true"></i> <span data-i18n="nav.mesCommandes">Mes Commandes</span>
         </a>
-        <a role="menuitem" href="<?php echo BASE_URL; ?>/index.php?route=client/notifications">
+        <a href="<?php echo BASE_URL; ?>/index.php?route=client/notifications">
             <i class="fa fa-bell" aria-hidden="true"></i> <span data-i18n="nav.notifications">Notifications</span>
             <?php if ($nbNotifsNonLues > 0): ?>
-                <span class="profile-menu__badge"><?php echo $nbNotifsNonLues > 9 ? '9+' : $nbNotifsNonLues; ?></span>
+                <span class="user-menu-badge"><?php echo $nbNotifsNonLues > 9 ? '9+' : $nbNotifsNonLues; ?></span>
             <?php endif; ?>
         </a>
-        <a role="menuitem" href="<?php echo BASE_URL; ?>/index.php?route=parametres">
+        <a href="<?php echo BASE_URL; ?>/index.php?route=parametres">
             <i class="fa fa-cog" aria-hidden="true"></i> <span data-i18n="nav.parametres">Paramètres</span>
         </a>
-        <div class="profile-menu__divider"></div>
-        <a role="menuitem" href="<?php echo BASE_URL; ?>/index.php?route=deconnexion" class="profile-menu__logout">
+        <div class="user-menu-divider"></div>
+        <a href="<?php echo BASE_URL; ?>/index.php?route=deconnexion" class="user-menu-logout">
             <i class="fa fa-sign-out" aria-hidden="true"></i> <span data-i18n="nav.deconnexion">Déconnexion</span>
         </a>
     </div>

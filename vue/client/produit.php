@@ -1,9 +1,10 @@
 <?php
 $pageTitle = htmlspecialchars(localiser($plat, 'nom')) . " - " . APP_NAME;
-$extraCss = ['admin.css'];
+$extraCss = ['admin.css', 'profile-menu.css', 'client-public.css'];
+$bodyClass = 'client-public-layout';
 $i18nPage = 'produit';
 require ROOT_PATH . '/assets/inc/header.php';
-require ROOT_PATH . '/assets/inc/navbar.php';
+require ROOT_PATH . '/assets/inc/client_navbar.php';
 ?>
 
 <div style="max-width: 900px; margin: 0 auto;">
@@ -74,4 +75,4 @@ require ROOT_PATH . '/assets/inc/navbar.php';
     </div>
 </div>
 
-<?php require ROOT_PATH . '/assets/inc/footer.php'; ?>
+<?php require ROOT_PATH . '/assets/inc/client_footer.php'; ?>

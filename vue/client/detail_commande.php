@@ -1,10 +1,10 @@
 <?php
 $pageTitle = "Commande #" . (int) $commande['id'] . " - " . APP_NAME;
-$extraCss = ['admin.css'];
-$bodyClass = 'profil-sans-sidebar';
+$extraCss = ['admin.css', 'profile-menu.css', 'client-public.css'];
+$bodyClass = 'client-public-layout';
 $i18nPage = 'detail_commande';
 require ROOT_PATH . '/assets/inc/header.php';
-require ROOT_PATH . '/assets/inc/navbar.php';
+require ROOT_PATH . '/assets/inc/client_navbar.php';
 
 $cleStatutCommande = [
     'en_attente'    => 'mes_commandes.statutEnAttente',
@@ -190,4 +190,4 @@ if ($initialesDetail === '') {
 
 </div>
 
-<?php require ROOT_PATH . '/assets/inc/footer.php'; ?>
+<?php require ROOT_PATH . '/assets/inc/client_footer.php'; ?>

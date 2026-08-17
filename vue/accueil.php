@@ -82,7 +82,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
     <link href="<?php echo BASE_URL; ?>/assets/feane/css/font-awesome.min.css" rel="stylesheet" />
     <link href="<?php echo BASE_URL; ?>/assets/feane/css/style.css" rel="stylesheet" />
     <link href="<?php echo BASE_URL; ?>/assets/feane/css/responsive.css" rel="stylesheet" />
-    <link href="<?php echo BASE_URL; ?>/assets/css/profile-menu.css" rel="stylesheet" />
+    <link href="<?php echo BASE_URL; ?>/assets/css/profile-menu.css?v=<?php echo (int) @filemtime(ROOT_PATH . '/assets/css/profile-menu.css'); ?>" rel="stylesheet" />
 
     <style>
         /* =====================================================================
@@ -1511,11 +1511,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             background: rgba(184, 134, 24, 0.12);
         }
         [data-theme="light"] .user_option .fj-cart-nav:hover svg { color: var(--fj-or-sombre); }
-        [data-theme="light"] .header_section .profile-menu__trigger {
-            border-color: rgba(23, 23, 23, 0.28);
-            background: rgba(0, 0, 0, 0.04);
-            color: #171717;
-        }
+
 
         /* Hero clair : fond blanc cassé, texte Noir Charbon */
         [data-theme="light"] .hero_area--branded {
@@ -1677,13 +1673,6 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             text-align: center;
             pointer-events: none;
         }
-        /* Le menu profil est aussi affiché dans le header public (fond sombre). */
-        .header_section .profile-menu__trigger {
-            border-color: rgba(255, 255, 255, 0.25);
-            background: rgba(255, 255, 255, 0.05);
-            color: #ffffff;
-        }
-        .header_section .profile-menu__trigger .fa-user { color: var(--fj-or-clair); }
         @media (max-width: 991px) {
             .user_option { justify-content: center; }
         }
@@ -2297,7 +2286,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
     <script src="<?php echo BASE_URL; ?>/assets/feane/js/custom.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/theme.js"></script>
-    <script src="<?php echo BASE_URL; ?>/assets/js/profile-menu.js"></script>
+    <script src="<?php echo BASE_URL; ?>/assets/js/profile-menu.js?v=<?php echo (int) @filemtime(ROOT_PATH . '/assets/js/profile-menu.js'); ?>"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/i18n.js?<?php echo (int) @filemtime(ROOT_PATH . '/assets/js/i18n.js'); ?>"></script>
     <script>if (window.lucide) { lucide.createIcons(); }</script>
 

@@ -1,16 +1,10 @@
 <?php
 $pageTitle = "Notifications - " . APP_NAME;
-$extraCss = ['admin.css'];
+$extraCss = ['admin.css', 'profile-menu.css', 'client-public.css'];
+$bodyClass = 'client-public-layout';
 $i18nPage = 'notifications';
-
-// Page partagée par tous les rôles : la mise en page « profil » (sans sidebar)
-// n'est appliquée que dans l'espace client. Les autres rôles conservent leur sidebar.
-$estClientNotif = utilisateur_role() === ROLE_CLIENT;
-if ($estClientNotif) {
-    $bodyClass = 'profil-sans-sidebar';
-}
 require ROOT_PATH . '/assets/inc/header.php';
-require ROOT_PATH . '/assets/inc/navbar.php';
+require ROOT_PATH . '/assets/inc/client_navbar.php';
 
 $prenomNotif = trim((string) ($_SESSION['prenom'] ?? ''));
 $nomNotif    = trim((string) ($_SESSION['nom'] ?? ''));
@@ -71,4 +65,4 @@ if ($initialesNotif === '') {
 
 </div>
 
-<?php require ROOT_PATH . '/assets/inc/footer.php'; ?>
+<?php require ROOT_PATH . '/assets/inc/client_footer.php'; ?>

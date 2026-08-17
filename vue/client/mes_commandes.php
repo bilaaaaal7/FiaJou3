@@ -1,10 +1,10 @@
 <?php
 $pageTitle = "Mes commandes - " . APP_NAME;
-$extraCss = ['admin.css'];
-$bodyClass = 'profil-sans-sidebar';
+$extraCss = ['admin.css', 'profile-menu.css', 'client-public.css'];
+$bodyClass = 'client-public-layout';
 $i18nPage = 'mes_commandes';
 require ROOT_PATH . '/assets/inc/header.php';
-require ROOT_PATH . '/assets/inc/navbar.php';
+require ROOT_PATH . '/assets/inc/client_navbar.php';
 
 $prenomCmd = trim((string) ($_SESSION['prenom'] ?? ''));
 $nomCmd    = trim((string) ($_SESSION['nom'] ?? ''));
@@ -126,4 +126,4 @@ $cleStatutCommande = [
 
 </div>
 
-<?php require ROOT_PATH . '/assets/inc/footer.php'; ?>
+<?php require ROOT_PATH . '/assets/inc/client_footer.php'; ?>

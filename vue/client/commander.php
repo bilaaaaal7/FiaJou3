@@ -1,9 +1,10 @@
 <?php
 $pageTitle = "Commander - " . APP_NAME;
-$extraCss = ['admin.css'];
+$extraCss = ['admin.css', 'profile-menu.css', 'client-public.css'];
+$bodyClass = 'client-public-layout';
 $i18nPage = 'commander';
 require ROOT_PATH . '/assets/inc/header.php';
-require ROOT_PATH . '/assets/inc/navbar.php';
+require ROOT_PATH . '/assets/inc/client_navbar.php';
 
 $fraisLivraison = 0;
 if (isset($_POST['zone_id'])) {
@@ -148,4 +149,4 @@ $priorityDefaut = isset($_POST['priority']) && !empty($_POST['priority']);
 
 </div>
 
-<?php require ROOT_PATH . '/assets/inc/footer.php'; ?>
+<?php require ROOT_PATH . '/assets/inc/client_footer.php'; ?>

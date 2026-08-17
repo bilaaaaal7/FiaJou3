@@ -1,141 +1,166 @@
 /*
-  Icône de profil circulaire + menu déroulant (Mon Profil, Mes Commandes,
-  Notifications, Paramètres, Déconnexion). Palette alignée sur la charte
-  FiaJou3 (Or Tajine #B88618 / Noir Charbon #171717).
+  profile-menu.css — Bouton capsule utilisateur + dropdown.
+  Composant autonome, aucun lien avec l'ancien .navbar-user / .profile-menu__.
+  Utilisé sur : accueil.php, toutes les pages client (client_navbar.php).
 */
 
-.profile-menu {
+/* ==============================================================
+   WRAPPER — position relative pour le dropdown
+   ============================================================== */
+.user-menu {
     position: relative;
     display: inline-flex;
     align-items: center;
 }
 
-.profile-menu__trigger {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    border: 2px solid rgba(184, 134, 24, 0.55);
-    background: transparent;
-    cursor: pointer;
-    padding: 0;
-    transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease;
-}
-
-.profile-menu__trigger:hover,
-.profile-menu__trigger[aria-expanded="true"] {
-    border-color: #B88618;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(184, 134, 24, 0.28);
-}
-
-.profile-menu__avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #B88618, #7a5810);
-    color: #fff;
-    font-family: 'Poppins', 'Open Sans', sans-serif;
-    font-weight: 700;
-    font-size: 0.92rem;
-    letter-spacing: 0.3px;
-}
-
-.profile-menu__avatar--lg {
-    width: 48px;
-    height: 48px;
-    font-size: 1.1rem;
-    flex-shrink: 0;
-}
-
-.profile-menu__dot {
-    position: absolute;
-    top: -1px;
-    right: -1px;
-    width: 11px;
-    height: 11px;
-    border-radius: 50%;
-    background: #e0533d;
-    border: 2px solid #171717;
-}
-
-.profile-menu--dark .profile-menu__dot { border-color: #F8F5EF; }
-
-.profile-menu__dropdown {
-    position: absolute;
-    top: calc(100% + 12px);
-    right: 0;
-    width: 250px;
-    background: #fff;
-    border-radius: 14px;
-    box-shadow: 0 10px 28px rgba(23, 23, 23, 0.14), 0 28px 60px rgba(23, 23, 23, 0.16);
-    border: 1px solid #e8e2d3;
-    padding: 8px;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-8px) scale(0.97);
-    transform-origin: top right;
-    transition: opacity .22s ease, transform .28s cubic-bezier(.22, .61, .36, 1), visibility .22s, box-shadow .28s ease;
-    z-index: 1000;
-}
-
-.profile-menu.is-open .profile-menu__dropdown {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0) scale(1);
-    box-shadow: 0 18px 44px rgba(23, 23, 23, 0.20), 0 36px 80px rgba(23, 23, 23, 0.20);
-}
-
-.profile-menu__header {
+/* ==============================================================
+   TRIGGER — capsule dark avec avatar, nom, chevron
+   ============================================================== */
+.user-menu-trigger {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 10px 10px 14px;
-    border-bottom: 1px solid #eee6d6;
-    margin-bottom: 6px;
+    gap: 10px;
+
+    height: 48px;
+    min-width: 130px;
+    padding: 4px 12px 4px 4px;
+
+    border: 1px solid #555;
+    border-radius: 999px;
+
+    background: #202020;
+    color: #fff;
+
+    cursor: pointer;
+    white-space: nowrap;
+    box-sizing: border-box;
+
+    transition: border-color .2s ease, background .2s ease, transform .2s ease, box-shadow .2s ease;
 }
 
-.profile-menu__name {
-    font-family: 'Poppins', 'Open Sans', sans-serif;
+.user-menu-trigger:hover {
+    border-color: #B88618;
+    background: rgba(184, 134, 24, 0.15);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(184, 134, 24, 0.18);
+}
+
+.user-menu-trigger:focus-visible {
+    outline: 2px solid #B88618;
+    outline-offset: 2px;
+}
+
+/* ==============================================================
+   AVATAR — cercle gold contenant l'initiale
+   ============================================================== */
+.user-avatar {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+    background: #c99516;
+    color: white;
+
     font-weight: 700;
-    font-size: 0.94rem;
-    color: #171717;
-    line-height: 1.25;
+
+    position: static;
 }
 
-.profile-menu__role {
-    font-size: 0.74rem;
-    color: #706B62;
-    text-transform: capitalize;
+/* ==============================================================
+   NAME — prénom en blanc
+   ============================================================== */
+.user-name {
+    position: static;
+    display: block;
+
+    margin: 0;
+    padding: 0;
+
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+
+    white-space: nowrap;
 }
 
-.profile-menu__dropdown a {
+/* ==============================================================
+   CHEVRON — flèche vers le bas
+   ============================================================== */
+.user-chevron {
+    position: static;
+    display: flex;
+
+    margin-left: auto;
+
+    color: #aaa;
+}
+
+/* ==============================================================
+   DROPDOWN — caché par défaut, visible quand .open
+   ============================================================== */
+.user-dropdown {
+    display: none;
+
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+
+    min-width: 210px;
+
+    padding: 8px;
+
+    background: #1c1c1c;
+    border: 1px solid #444;
+    border-radius: 12px;
+
+    z-index: 9999;
+
+    flex-direction: column;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+}
+
+.user-menu.open .user-dropdown {
+    display: flex;
+}
+
+/* ==============================================================
+   DROPDOWN — liens
+   ============================================================== */
+.user-dropdown a {
     display: flex;
     align-items: center;
     gap: 10px;
     padding: 10px 12px;
+    margin: 0;
     border-radius: 9px;
     font-size: 0.88rem;
     font-weight: 500;
-    color: #171717;
+    color: #f5f5f5;
     text-decoration: none;
-    transition: background .2s ease, color .2s ease, padding-left .25s cubic-bezier(.22, .61, .36, 1);
+    transition: background .15s ease, color .15s ease;
 }
 
-.profile-menu__dropdown a i { width: 16px; text-align: center; color: #B88618; }
-
-.profile-menu__dropdown a:hover {
-    background: #f4ecd8;
-    padding-left: 16px;
+.user-dropdown a i,
+.user-dropdown a svg {
+    width: 16px;
+    text-align: center;
+    color: #B88618;
+    flex-shrink: 0;
 }
 
-.profile-menu__badge {
+.user-dropdown a:hover {
+    background: rgba(184, 134, 24, 0.12);
+}
+
+/* ==============================================================
+   DROPDOWN — badge notif
+   ============================================================== */
+.user-menu-badge {
     margin-left: auto;
     background: #B88618;
     color: #fff;
@@ -145,52 +170,96 @@
     padding: 1px 7px;
 }
 
-.profile-menu__divider {
+/* ==============================================================
+   DROPDOWN — divider
+   ============================================================== */
+.user-menu-divider {
     height: 1px;
-    background: #eee6d6;
+    background: #333;
     margin: 6px 4px;
 }
 
-.profile-menu__logout { color: #c0392b !important; }
-.profile-menu__logout i { color: #c0392b !important; }
-.profile-menu__logout:hover { background: #fbe3e1 !important; }
+/* ==============================================================
+   DROPDOWN — logout
+   ============================================================== */
+.user-menu-logout { color: #c0392b !important; }
+.user-menu-logout i,
+.user-menu-logout svg { color: #c0392b !important; }
+.user-menu-logout:hover { background: rgba(192, 57, 43, 0.10) !important; }
 
-@media (max-width: 480px) {
-    .profile-menu__dropdown { width: 230px; max-width: calc(100vw - 24px); right: -8px; }
+/* ==============================================================
+   LIGHT THEME — pages client (fond blanc, texte sombre)
+   ============================================================== */
+[data-theme="light"] .user-menu-trigger {
+    border-color: rgba(23, 23, 23, 0.20);
+    background: rgba(0, 0, 0, 0.04);
+    color: #171717;
 }
 
-/* Préfère moins d'animation : le menu reste fonctionnel, sans mouvement */
-@media (prefers-reduced-motion: reduce) {
-    .profile-menu__dropdown,
-    .profile-menu__dropdown a,
-    .profile-menu__trigger {
-        transition: none !important;
+[data-theme="light"] .user-menu-trigger:hover {
+    border-color: #B88618;
+    background: rgba(184, 134, 24, 0.12);
+}
+
+[data-theme="light"] .user-name {
+    color: #171717;
+}
+
+[data-theme="light"] .user-chevron {
+    color: #706B62;
+}
+
+[data-theme="light"] .user-dropdown {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .user-dropdown a {
+    color: #171717;
+}
+
+[data-theme="light"] .user-menu-divider {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+/* ==============================================================
+   MOBILE : trigger passe en cercle
+   ============================================================== */
+@media (max-width: 768px) {
+    .user-menu-trigger {
+        width: 48px;
+        min-width: 48px;
+        border-radius: 50%;
+        padding: 0;
+        justify-content: center;
+    }
+    .user-name,
+    .user-chevron {
+        display: none;
     }
 }
 
-/* ---------- RTL (Arabic) ---------- */
-html[dir="rtl"] .profile-menu__dot {
-    right: auto;
-    left: -1px;
+@media (max-width: 480px) {
+    .user-dropdown {
+        width: 240px;
+        max-width: calc(100vw - 24px);
+        right: -8px;
+    }
 }
-html[dir="rtl"] .profile-menu__dropdown {
+
+/* ==============================================================
+   RTL
+   ============================================================== */
+html[dir="rtl"] .user-dropdown {
     right: auto;
     left: 0;
-    transform-origin: top left;
 }
-html[dir="rtl"] .profile-menu__dropdown a {
-    transition: background .2s ease, color .2s ease, padding-inline-start .25s cubic-bezier(.22, .61, .36, 1);
-}
-html[dir="rtl"] .profile-menu__dropdown a:hover {
-    padding-left: 12px;
-    padding-inline-start: 16px;
-}
-html[dir="rtl"] .profile-menu__badge {
+html[dir="rtl"] .user-chevron {
     margin-left: 0;
     margin-right: auto;
 }
 @media (max-width: 480px) {
-    html[dir="rtl"] .profile-menu__dropdown {
+    html[dir="rtl"] .user-dropdown {
         right: auto;
         left: -8px;
     }

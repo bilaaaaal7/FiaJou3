@@ -23,6 +23,7 @@ $extraCss        = $extraCss        ?? [];
 $bodyClass       = $bodyClass       ?? '';
 $i18nActive      = $i18nActive      ?? false;
 $i18nPage        = $i18nPage        ?? '';
+$forceLightTheme = $forceLightTheme ?? false;
 
 // Langue active servie côté serveur (évite tout « flash » de langue sur
 // l'ensemble du site). Les pages qui ne posent pas de $i18nPage restent en
@@ -47,10 +48,14 @@ if (est_connecte() && !headers_sent()) {
 <head>
     <script>
         (function () {
+            <?php if ($forceLightTheme): ?>
+            document.documentElement.setAttribute('data-theme', 'light');
+            <?php else: ?>
             var t = null;
             try { t = localStorage.getItem('fiajou3-theme'); } catch (e) { /* ignore */ }
             if (t !== 'dark') { t = 'light'; }
             document.documentElement.setAttribute('data-theme', t);
+            <?php endif; ?>
         })();
     </script>
     <script>

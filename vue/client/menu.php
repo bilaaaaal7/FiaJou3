@@ -1,10 +1,10 @@
 <?php
 $pageTitle = "Menu - " . APP_NAME;
-$extraCss = ['admin.css'];
-$bodyClass = 'profil-sans-sidebar';
+$extraCss = ['admin.css', 'profile-menu.css', 'client-public.css'];
+$bodyClass = 'client-public-layout';
 $i18nPage = 'menu';
 require ROOT_PATH . '/assets/inc/header.php';
-require ROOT_PATH . '/assets/inc/navbar.php';
+require ROOT_PATH . '/assets/inc/client_navbar.php';
 
 $messagesErreur = [
     'indisponible' => 'Ce plat n\'est plus disponible ou la quantité maximale (20) est atteinte.',
@@ -140,4 +140,4 @@ $jourLabel = [
 
 </div>
 
-<?php require ROOT_PATH . '/assets/inc/footer.php'; ?>
+<?php require ROOT_PATH . '/assets/inc/client_footer.php'; ?>

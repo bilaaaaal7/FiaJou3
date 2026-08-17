@@ -1,9 +1,10 @@
 <?php
 $pageTitle = "Menu de la semaine - " . APP_NAME;
-$extraCss = ['admin.css'];
+$extraCss = ['admin.css', 'profile-menu.css', 'client-public.css'];
+$bodyClass = 'client-public-layout';
 $i18nPage = 'menu_semaine';
 require ROOT_PATH . '/assets/inc/header.php';
-require ROOT_PATH . '/assets/inc/navbar.php';
+require ROOT_PATH . '/assets/inc/client_navbar.php';
 ?>
 
 <div style="max-width: 1100px; margin: 0 auto;">
@@ -135,4 +136,4 @@ require ROOT_PATH . '/assets/inc/navbar.php';
 
 </div>
 
-<?php require ROOT_PATH . '/assets/inc/footer.php'; ?>
+<?php require ROOT_PATH . '/assets/inc/client_footer.php'; ?>
