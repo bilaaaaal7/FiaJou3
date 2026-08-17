@@ -2,7 +2,7 @@
 /**
  * Composant partagé : grille de cartes "Accès rapide" pour les dashboards.
  * Variable attendue avant l'include :
- *   $quickAccessItems : array de ['icon' => string, 'label' => string, 'route' => string]
+ *   $quickAccessItems : array de ['icon' => string, 'label' => string, 'route' => string, 'i18n' => string(optionnel)]
  */
 $quickAccessItems = $quickAccessItems ?? [];
 ?>
@@ -20,7 +20,7 @@ $quickAccessItems = $quickAccessItems ?? [];
                 }
                 ?>
             </span>
-            <span class="quick-access-label"><?php echo htmlspecialchars($item['label']); ?></span>
+            <span class="quick-access-label"<?php echo !empty($item['i18n']) ? ' data-i18n="' . htmlspecialchars($item['i18n']) . '"' : ''; ?>><?php echo htmlspecialchars($item['label']); ?></span>
         </a>
     <?php endforeach; ?>
 </div>

@@ -8,9 +8,13 @@
     var errorBox = document.getElementById('mi-error');
     var product = document.getElementById('mi-product');
     var nom = document.getElementById('mi-nom');
+    var nomEn = document.getElementById('mi-nom-en');
+    var nomAr = document.getElementById('mi-nom-ar');
     var category = document.getElementById('mi-category');
     var prix = document.getElementById('mi-prix');
     var description = document.getElementById('mi-description');
+    var descriptionEn = document.getElementById('mi-description-en');
+    var descriptionAr = document.getElementById('mi-description-ar');
 
     function formatterPrix(v) {
         var n = parseFloat(v);
@@ -22,9 +26,13 @@
         var opt = product.options[product.selectedIndex];
         if (!opt) { return; }
         nom.value = opt.getAttribute('data-nom') || '';
+        nomEn.value = opt.getAttribute('data-nom-en') || '';
+        nomAr.value = opt.getAttribute('data-nom-ar') || '';
         category.value = opt.getAttribute('data-category') || '';
         prix.value = opt.getAttribute('data-prix') || '';
         description.value = opt.getAttribute('data-description') || '';
+        descriptionEn.value = opt.getAttribute('data-description-en') || '';
+        descriptionAr.value = opt.getAttribute('data-description-ar') || '';
     }
 
     product.addEventListener('change', remplirDepuisPlat);
@@ -36,9 +44,13 @@
         document.getElementById('mi-menu-id').value = btn.getAttribute('data-menu-id') || '';
         product.value = btn.getAttribute('data-product-id') || '';
         nom.value = btn.getAttribute('data-nom') || '';
+        nomEn.value = btn.getAttribute('data-nom-en') || '';
+        nomAr.value = btn.getAttribute('data-nom-ar') || '';
         category.value = btn.getAttribute('data-category-id') || '';
         prix.value = btn.getAttribute('data-prix') || '';
         description.value = btn.getAttribute('data-description') || '';
+        descriptionEn.value = btn.getAttribute('data-description-en') || '';
+        descriptionAr.value = btn.getAttribute('data-description-ar') || '';
         root.hidden = false;
         document.body.classList.add('modal-open');
         product.focus();
@@ -68,19 +80,23 @@
         var editBtn = chip.querySelector('[data-modal-edit]');
         if (editBtn) {
             editBtn.setAttribute('data-product-id', item.product_id);
-            editBtn.setAttribute('data-nom', nomTxt);
+            editBtn.setAttribute('data-nom', item.nom || '');
+            editBtn.setAttribute('data-nom-en', item.nom_en || '');
+            editBtn.setAttribute('data-nom-ar', item.nom_ar || '');
             editBtn.setAttribute('data-category-id', item.categorie_id || 0);
             editBtn.setAttribute('data-prix', item.prix);
             editBtn.setAttribute('data-description', item.description || '');
-            editBtn.title = 'Modifier ' + nomTxt;
-            editBtn.setAttribute('aria-label', 'Modifier ' + nomTxt);
+            editBtn.setAttribute('data-description-en', item.description_en || '');
+            editBtn.setAttribute('data-description-ar', item.description_ar || '');
+            editBtn.title = window.fjI18n('common.modifier') + ' ' + nomTxt;
+            editBtn.setAttribute('aria-label', window.fjI18n('common.modifier') + ' ' + nomTxt);
         }
 
         var retirer = chip.querySelector('[data-confirm]');
         if (retirer) {
-            retirer.setAttribute('data-confirm', 'Retirer ' + nomTxt + ' du menu ?');
-            retirer.title = 'Retirer ' + nomTxt;
-            retirer.setAttribute('aria-label', 'Retirer ' + nomTxt);
+            retirer.setAttribute('data-confirm', window.fjI18n('common.retirer') + ' ' + nomTxt + window.fjI18n('admin_menu_semaine.duMenu'));
+            retirer.title = window.fjI18n('common.retirer') + ' ' + nomTxt;
+            retirer.setAttribute('aria-label', window.fjI18n('common.retirer') + ' ' + nomTxt);
         }
     }
 
@@ -105,7 +121,7 @@
         var btn = form.querySelector('button[type="submit"]');
         var boutonOriginal = btn.textContent;
         btn.disabled = true;
-        btn.textContent = 'Enregistrement…';
+        btn.textContent = window.fjI18n('admin_menu_semaine.enregistrement');
         errorBox.hidden = true;
 
         var baseUrl = (window.MENU_SEMAINE_ADMIN && window.MENU_SEMAINE_ADMIN.url) || '';
@@ -128,12 +144,12 @@
                 appliquerItem(res.item);
                 closeModal();
             } else {
-                errorBox.textContent = res.message || 'Erreur lors de l\'enregistrement.';
+                errorBox.textContent = res.message || window.fjI18n('admin_menu_semaine.erreurEnregistrement');
                 errorBox.hidden = false;
             }
         })
         .catch(function () {
-            errorBox.textContent = 'Erreur réseau : la modification n\'a pas été enregistrée.';
+            errorBox.textContent = window.fjI18n('admin_menu_semaine.erreurReseau');
             errorBox.hidden = false;
         })
         .then(function () {

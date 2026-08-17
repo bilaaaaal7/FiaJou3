@@ -13,6 +13,10 @@ $categorieModele = new CategorieModele();
 
 $nom = "";
 $description = "";
+$nomEn = "";
+$nomAr = "";
+$descriptionEn = "";
+$descriptionAr = "";
 $image = "";
 $idModifier = "";
 $error = "";
@@ -20,11 +24,15 @@ $error = "";
 if (isset($_POST['ajouter'])) {
     $nom = trim($_POST['nom'] ?? '');
     $description = trim($_POST['description'] ?? '');
+    $nomEn = trim($_POST['nom_en'] ?? '');
+    $nomAr = trim($_POST['nom_ar'] ?? '');
+    $descriptionEn = trim($_POST['description_en'] ?? '');
+    $descriptionAr = trim($_POST['description_ar'] ?? '');
 
     $image = trim($_POST['image'] ?? '');
 
     if (empty($error)) {
-        $categorieModele->creer($nom, $description, $image);
+        $categorieModele->creer($nom, $description, $image, $nomEn, $nomAr, $descriptionEn, $descriptionAr);
         journaliser_audit('categorie.creer', 'nom="' . $nom . '"');
 
         header('Location: ' . BASE_URL . '/index.php?route=admin/categories');
@@ -36,6 +44,10 @@ if (isset($_POST['modifier'])) {
     $id = (int) $_POST['id'];
     $nom = trim($_POST['nom'] ?? '');
     $description = trim($_POST['description'] ?? '');
+    $nomEn = trim($_POST['nom_en'] ?? '');
+    $nomAr = trim($_POST['nom_ar'] ?? '');
+    $descriptionEn = trim($_POST['description_en'] ?? '');
+    $descriptionAr = trim($_POST['description_ar'] ?? '');
 
     $categorie = $categorieModele->getParId($id);
     $image = $categorie['image'] ?? "";
@@ -53,7 +65,7 @@ if (isset($_POST['modifier'])) {
             $image = $nouvelleImage;
         }
 
-        $categorieModele->mettreAJour($id, $nom, $description, $image);
+        $categorieModele->mettreAJour($id, $nom, $description, $image, $nomEn, $nomAr, $descriptionEn, $descriptionAr);
         journaliser_audit('categorie.modifier', 'id=' . $id . ' nom="' . $nom . '"');
 
         header('Location: ' . BASE_URL . '/index.php?route=admin/categories');
@@ -79,7 +91,11 @@ if (isset($_GET['modifier'])) {
     if ($categorie) {
         $idModifier = $categorie['id'];
         $nom = $categorie['nom'];
+        $nomEn = $categorie['nom_en'] ?? '';
+        $nomAr = $categorie['nom_ar'] ?? '';
         $description = $categorie['description'];
+        $descriptionEn = $categorie['description_en'] ?? '';
+        $descriptionAr = $categorie['description_ar'] ?? '';
         $image = $categorie['image'];
     }
 }

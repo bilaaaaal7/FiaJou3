@@ -28,6 +28,8 @@ $extraJs = $extraJs ?? [];
             var el = e.target.closest('[data-confirm]');
             if (!el) { return; }
             var message = el.getAttribute('data-confirm');
+            var cle = el.getAttribute('data-confirm-i18n');
+            if (cle && window.fjI18n) { message = window.fjI18n(cle); }
             if (message && !window.confirm(message)) {
                 e.preventDefault();
             }

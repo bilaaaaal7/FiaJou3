@@ -20,7 +20,7 @@ require ROOT_PATH . '/assets/inc/navbar.php';
         <?php if ($dateLivraison): ?>
             <div class="alert alert-info py-2" role="alert" style="margin-bottom: 16px;">
                 <span data-i18n="common.livraisonPrevueLe">Date de livraison prévue :</span> <strong><?php echo htmlspecialchars(date('d/m/Y', strtotime($dateLivraison))); ?></strong>
-                <span style="opacity: 0.8;"> — modifiable à la finalisation de la commande.</span>
+                <span style="opacity: 0.8;" data-i18n="panier.modifiableFin">— modifiable à la finalisation de la commande.</span>
             </div>
         <?php endif; ?>
 
@@ -40,9 +40,9 @@ require ROOT_PATH . '/assets/inc/navbar.php';
                 <?php foreach ($panier as $plat): ?>
                     <tr>
                         <td>
-                            <img class="thumb" src="<?php echo UPLOADS_URL; ?>/<?php echo htmlspecialchars($plat['image']); ?>" alt="<?php echo htmlspecialchars($plat['nom']); ?>">
+                            <img class="thumb" src="<?php echo UPLOADS_URL; ?>/<?php echo htmlspecialchars($plat['image']); ?>" alt="<?php echo htmlspecialchars(localiser($plat, 'nom')); ?>">
                         </td>
-                        <td><?php echo htmlspecialchars($plat['nom']); ?></td>
+                        <td><?php echo htmlspecialchars(localiser($plat, 'nom')); ?></td>
                         <td><?php echo number_format($plat['prix'], 2); ?> DH</td>
                         <td><?php echo $plat['quantite']; ?></td>
                         <td><?php echo number_format($plat['sous_total'], 2); ?> DH</td>

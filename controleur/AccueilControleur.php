@@ -2,11 +2,13 @@
 /**
  * Contrôleur : Page d'accueil publique
  * Route : /accueil
- * Accessible sans connexion. Si l'utilisateur est déjà connecté,
- * on le renvoie directement vers son espace.
+ * Accessible sans connexion. Les cuisiniers et livreurs connectés sont
+ * renvoyés directement vers leur espace ; le client connecté et
+ * l'administrateur (bouton « Retour à l'accueil » de la sidebar Admin)
+ * peuvent consulter l'accueil public.
  */
 
-if (est_connecte() && utilisateur_role() !== ROLE_CLIENT) {
+if (est_connecte() && !in_array(utilisateur_role(), [ROLE_CLIENT, ROLE_ADMIN], true)) {
     header('Location: ' . BASE_URL . '/index.php?route=' . route_par_defaut_pour_role(utilisateur_role()));
     exit;
 }

@@ -44,3 +44,6 @@
 [2026-08-13 02:02:00] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
 [2026-08-13 19:15:37] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
 [2026-08-13 19:16:21] user=5 email=ismailsghir107@gmail.com role=admin action=plat.modifier details="id=10 nom=Mix Grill prix=120 disponible=1" ip=::1
+[2026-08-13 11:50:02] user=5 email=elbbilal00@gmail.com role=admin action=connexion.reussie details="email=elbbilal00@gmail.com" ip=::1
+[2026-08-13 12:39:27] user=5 email=elbbilal00@gmail.com role=admin action=connexion.reussie details="email=elbbilal00@gmail.com" ip=::1
+[2026-08-13 13:24:05] user=5 email=elbbilal00@gmail.com role=admin action=connexion.reussie details="email=elbbilal00@gmail.com" ip=::1

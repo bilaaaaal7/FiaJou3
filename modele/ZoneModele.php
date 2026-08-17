@@ -5,6 +5,7 @@
  */
 
 require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/../assets/inc/langue.php';
 
 class ZoneModele
 {
@@ -29,20 +30,25 @@ class ZoneModele
         return $stmt->fetch();
     }
 
-    public function creer(string $nom, float $prixLivraison): void
+    public function creer(string $nom, float $prixLivraison, ?string $nomEn = null, ?string $nomAr = null): void
     {
         $stmt = $this->pdo->prepare(
-            "INSERT INTO delivery_zones (nom, prix_livraison) VALUES (?, ?)"
+            "INSERT INTO delivery_zones (nom, nom_en, nom_ar, prix_livraison) VALUES (?, ?, ?, ?)"
         );
-        $stmt->execute([$nom, $prixLivraison]);
+        $stmt->execute([$nom, self::ouNull($nomEn), self::ouNull($nomAr), $prixLivraison]);
     }
 
-    public function mettreAJour(int $id, string $nom, float $prixLivraison): void
+    public function mettreAJour(int $id, string $nom, float $prixLivraison, ?string $nomEn = null, ?string $nomAr = null): void
     {
         $stmt = $this->pdo->prepare(
-            "UPDATE delivery_zones SET nom = ?, prix_livraison = ? WHERE id = ?"
+            "UPDATE delivery_zones SET nom = ?, nom_en = ?, nom_ar = ?, prix_livraison = ? WHERE id = ?"
         );
-        $stmt->execute([$nom, $prixLivraison, $id]);
+        $stmt->execute([$nom, self::ouNull($nomEn), self::ouNull($nomAr), $prixLivraison, $id]);
+    }
+
+    private static function ouNull(?string $valeur): ?string
+    {
+        return ($valeur === null || trim($valeur) === '') ? null : trim($valeur);
     }
 
     public function supprimer(int $id): bool

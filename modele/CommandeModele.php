@@ -5,6 +5,7 @@
  */
 
 require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/../assets/inc/langue.php';
 require_once __DIR__ . '/HistoriqueModele.php';
 require_once __DIR__ . '/PlatModele.php';
 require_once __DIR__ . '/ZoneModele.php';
@@ -19,6 +20,27 @@ class CommandeModele
     }
 
     /**
+     * Résout le nom de zone dans la langue active pour un jeu de résultats.
+     * Remplace `zone_nom` par la traduction correspondante (en/ar) ou la
+     * valeur française (base) si la traduction est absente.
+     */
+    private static function localiserZones(array $lignes): array
+    {
+        $langue = langue_actuelle();
+        if ($langue === 'fr') {
+            return $lignes;
+        }
+        foreach ($lignes as &$ligne) {
+            $cleLocale = 'zone_nom_' . $langue;
+            if (!empty($ligne[$cleLocale])) {
+                $ligne['zone_nom'] = $ligne[$cleLocale];
+            }
+        }
+        unset($ligne);
+        return $lignes;
+    }
+
+    /**
      * Liste complète des commandes (vue admin), avec infos client.
      */
     public function getToutesAvecClient(): array
@@ -28,7 +50,7 @@ class CommandeModele
                     orders.total, orders.statut, orders.commentaire, orders.priority, orders.pause,
                     orders.assigned_cook_id, orders.assigned_driver_id,
                     users.email, profiles.prenom, profiles.nom,
-                    dz.nom AS zone_nom
+                    dz.nom AS zone_nom, dz.nom_en AS zone_nom_en, dz.nom_ar AS zone_nom_ar
              FROM orders
              INNER JOIN users ON orders.user_id = users.id
              INNER JOIN profiles ON users.id = profiles.user_id
@@ -36,7 +58,7 @@ class CommandeModele
              ORDER BY orders.id DESC"
         );
         $stmt->execute();
-        return $stmt->fetchAll();
+        return self::localiserZones($stmt->fetchAll());
     }
 
     /**
@@ -50,7 +72,7 @@ class CommandeModele
                     orders.assigned_cook_id, orders.assigned_driver_id,
                     profiles.prenom, profiles.nom, users.email, profiles.telephone,
                     profiles.adresse, profiles.ville,
-                    dz.nom AS zone_nom, dz.prix_livraison
+                    dz.nom AS zone_nom, dz.nom_en AS zone_nom_en, dz.nom_ar AS zone_nom_ar, dz.prix_livraison
              FROM orders
              INNER JOIN users ON orders.user_id = users.id
              INNER JOIN profiles ON users.id = profiles.user_id
@@ -59,7 +81,7 @@ class CommandeModele
              ORDER BY orders.date_livraison, orders.heure_livraison"
         );
         $stmt->execute([$statut]);
-        return $stmt->fetchAll();
+        return self::localiserZones($stmt->fetchAll());
     }
 
     /**
@@ -92,7 +114,7 @@ class CommandeModele
                     orders.assigned_cook_id, orders.assigned_driver_id,
                     profiles.prenom, profiles.nom, users.email, profiles.telephone,
                     profiles.adresse, profiles.ville,
-                    dz.nom AS zone_nom, dz.prix_livraison
+                    dz.nom AS zone_nom, dz.nom_en AS zone_nom_en, dz.nom_ar AS zone_nom_ar, dz.prix_livraison
              FROM orders
              INNER JOIN users ON orders.user_id = users.id
              INNER JOIN profiles ON users.id = profiles.user_id
@@ -101,7 +123,7 @@ class CommandeModele
              ORDER BY orders.date_livraison, orders.heure_livraison"
         );
         $stmt->execute([$driverId]);
-        return $stmt->fetchAll();
+        return self::localiserZones($stmt->fetchAll());
     }
 
     /**
@@ -114,7 +136,7 @@ class CommandeModele
                     orders.total, orders.statut, orders.commentaire, orders.priority, orders.pause,
                     profiles.prenom, profiles.nom, users.email, profiles.telephone,
                     profiles.adresse, profiles.ville,
-                    dz.nom AS zone_nom, dz.prix_livraison
+                    dz.nom AS zone_nom, dz.nom_en AS zone_nom_en, dz.nom_ar AS zone_nom_ar, dz.prix_livraison
              FROM orders
              INNER JOIN users ON orders.user_id = users.id
              INNER JOIN profiles ON users.id = profiles.user_id
@@ -123,7 +145,7 @@ class CommandeModele
              ORDER BY orders.heure_livraison"
         );
         $stmt->execute([$driverId, $statut]);
-        return $stmt->fetchAll();
+        return self::localiserZones($stmt->fetchAll());
     }
 
     /**
@@ -132,20 +154,20 @@ class CommandeModele
     public function getParUtilisateur(int $userId): array
     {
         $stmt = $this->pdo->prepare(
-            "SELECT orders.*, dz.nom AS zone_nom
+            "SELECT orders.*, dz.nom AS zone_nom, dz.nom_en AS zone_nom_en, dz.nom_ar AS zone_nom_ar
              FROM orders
              LEFT JOIN delivery_zones dz ON orders.zone_id = dz.id
              WHERE orders.user_id = ?
              ORDER BY orders.id DESC"
         );
         $stmt->execute([$userId]);
-        return $stmt->fetchAll();
+        return self::localiserZones($stmt->fetchAll());
     }
 
     public function getParId(int $id): array|false
     {
         $stmt = $this->pdo->prepare(
-            "SELECT orders.*, dz.nom AS zone_nom, dz.prix_livraison,
+            "SELECT orders.*, dz.nom AS zone_nom, dz.nom_en AS zone_nom_en, dz.nom_ar AS zone_nom_ar, dz.prix_livraison,
                     profiles.prenom, profiles.nom, users.email, profiles.telephone,
                     profiles.adresse, profiles.ville
              FROM orders
@@ -155,7 +177,11 @@ class CommandeModele
              WHERE orders.id = ?"
         );
         $stmt->execute([$id]);
-        return $stmt->fetch();
+        $ligne = $stmt->fetch();
+        if ($ligne) {
+            $ligne = self::localiserZones([$ligne])[0];
+        }
+        return $ligne;
     }
 
     public function getItems(int $orderId): array
@@ -169,7 +195,7 @@ class CommandeModele
 
         foreach ($items as &$item) {
             $plat = $platModele->getParId((int) $item['product_id']);
-            $item['plat_nom'] = $plat['nom'] ?? null;
+            $item['plat_nom'] = $plat ? localiser($plat, 'nom') : null;
             $item['image'] = $plat['image'] ?? null;
             $item['categorie'] = $plat ? ($categories[$plat['category_id']] ?? null) : null;
         }
@@ -181,6 +207,7 @@ class CommandeModele
     /**
      * Tableau [category_id => nom] pour enrichir les résultats des jointures
      * anciennement faites en SQL sur `plats` / `categories`.
+     * Les noms sont rendus dans la langue active (base française en repli).
      */
     private function indexCategoriesParId(): array
     {
@@ -189,7 +216,7 @@ class CommandeModele
 
         $index = [];
         foreach ($categorieModele->getToutes() as $categorie) {
-            $index[$categorie['id']] = $categorie['nom'];
+            $index[$categorie['id']] = localiser($categorie, 'nom');
         }
 
         return $index;
@@ -395,7 +422,7 @@ class CommandeModele
     public function commandesDuJour(): array
     {
         $stmt = $this->pdo->query(
-            "SELECT orders.*, profiles.prenom, profiles.nom, dz.nom AS zone_nom
+            "SELECT orders.*, profiles.prenom, profiles.nom, dz.nom AS zone_nom, dz.nom_en AS zone_nom_en, dz.nom_ar AS zone_nom_ar
              FROM orders
              INNER JOIN users ON orders.user_id = users.id
              INNER JOIN profiles ON users.id = profiles.user_id
@@ -403,7 +430,7 @@ class CommandeModele
              WHERE DATE(orders.created_at) = CURDATE()
              ORDER BY orders.id DESC"
         );
-        return $stmt->fetchAll();
+        return self::localiserZones($stmt->fetchAll());
     }
 
     /**
@@ -468,7 +495,7 @@ class CommandeModele
         foreach ($lignes as $ligne) {
             $plat = $platModele->getParId((int) $ligne['product_id']);
             $resultat[] = [
-                'nom' => $plat['nom'] ?? null,
+                'nom' => $plat ? localiser($plat, 'nom') : null,
                 'total_qte' => $ligne['total_qte'],
                 'total_ca' => $ligne['total_ca'],
             ];
@@ -502,7 +529,7 @@ class CommandeModele
             $plat = $platModele->getParId((int) $ligne['product_id']);
             $resultat[] = [
                 'id' => $plat['id'] ?? $ligne['product_id'],
-                'nom' => $plat['nom'] ?? null,
+                'nom' => $plat ? localiser($plat, 'nom') : null,
                 'image' => $plat['image'] ?? null,
                 'categorie' => $plat ? ($categories[$plat['category_id']] ?? null) : null,
                 'total_quantite' => $ligne['total_quantite'],
@@ -549,7 +576,7 @@ class CommandeModele
                     orders.total, orders.statut, orders.commentaire, orders.pause,
                     profiles.prenom, profiles.nom, users.email, profiles.telephone,
                     profiles.adresse, profiles.ville,
-                    dz.nom AS zone_nom
+                    dz.nom AS zone_nom, dz.nom_en AS zone_nom_en, dz.nom_ar AS zone_nom_ar
              FROM orders
              INNER JOIN users ON orders.user_id = users.id
              INNER JOIN profiles ON users.id = profiles.user_id
@@ -560,7 +587,7 @@ class CommandeModele
              ORDER BY orders.heure_livraison"
         );
         $stmt->execute([$driverId]);
-        return $stmt->fetchAll();
+        return self::localiserZones($stmt->fetchAll());
     }
 
     /**
@@ -569,7 +596,7 @@ class CommandeModele
     public function prochaineLivraison(int $userId): array|false
     {
         $stmt = $this->pdo->prepare(
-            "SELECT orders.*, dz.nom AS zone_nom
+            "SELECT orders.*, dz.nom AS zone_nom, dz.nom_en AS zone_nom_en, dz.nom_ar AS zone_nom_ar
              FROM orders
              LEFT JOIN delivery_zones dz ON orders.zone_id = dz.id
              WHERE orders.user_id = ?
@@ -579,7 +606,11 @@ class CommandeModele
              LIMIT 1"
         );
         $stmt->execute([$userId]);
-        return $stmt->fetch();
+        $ligne = $stmt->fetch();
+        if ($ligne) {
+            $ligne = self::localiserZones([$ligne])[0];
+        }
+        return $ligne;
     }
 
     /**
@@ -591,7 +622,7 @@ class CommandeModele
             "SELECT orders.id, orders.date_livraison, orders.heure_livraison,
                     orders.total, orders.statut, orders.priority, orders.pause,
                     profiles.prenom, profiles.nom, profiles.telephone,
-                    dz.nom AS zone_nom
+                    dz.nom AS zone_nom, dz.nom_en AS zone_nom_en, dz.nom_ar AS zone_nom_ar
              FROM orders
              INNER JOIN users ON orders.user_id = users.id
              INNER JOIN profiles ON users.id = profiles.user_id
@@ -602,7 +633,7 @@ class CommandeModele
              LIMIT " . (int) $limit
         );
         $stmt->execute();
-        return $stmt->fetchAll();
+        return self::localiserZones($stmt->fetchAll());
     }
 
     /**

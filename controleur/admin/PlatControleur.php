@@ -15,6 +15,10 @@ $categorieModele = new CategorieModele();
 
 $nom = "";
 $description = "";
+$nomEn = "";
+$nomAr = "";
+$descriptionEn = "";
+$descriptionAr = "";
 $prix = "";
 $image = "";
 $disponible = 1;
@@ -24,8 +28,12 @@ $error = "";
 
 if (isset($_POST['ajouter'])) {
     $category_id = $_POST['category_id'];
-    $nom = $_POST['nom'];
-    $description = $_POST['description'];
+    $nom = trim($_POST['nom'] ?? '');
+    $description = trim($_POST['description'] ?? '');
+    $nomEn = trim($_POST['nom_en'] ?? '');
+    $nomAr = trim($_POST['nom_ar'] ?? '');
+    $descriptionEn = trim($_POST['description_en'] ?? '');
+    $descriptionAr = trim($_POST['description_ar'] ?? '');
     $prix = $_POST['prix'];
     $disponible = $_POST['disponible'];
 
@@ -41,7 +49,11 @@ if (isset($_POST['ajouter'])) {
         $platModele->creer([
             'category_id' => $category_id,
             'nom' => $nom,
+            'nom_en' => $nomEn,
+            'nom_ar' => $nomAr,
             'description' => $description,
+            'description_en' => $descriptionEn,
+            'description_ar' => $descriptionAr,
             'prix' => $prix,
             'image' => $image,
             'disponible' => $disponible,
@@ -56,8 +68,12 @@ if (isset($_POST['ajouter'])) {
 if (isset($_POST['modifier'])) {
     $id = (int) $_POST['id'];
     $category_id = $_POST['category_id'];
-    $nom = $_POST['nom'];
-    $description = $_POST['description'];
+    $nom = trim($_POST['nom'] ?? '');
+    $description = trim($_POST['description'] ?? '');
+    $nomEn = trim($_POST['nom_en'] ?? '');
+    $nomAr = trim($_POST['nom_ar'] ?? '');
+    $descriptionEn = trim($_POST['description_en'] ?? '');
+    $descriptionAr = trim($_POST['description_ar'] ?? '');
     $prix = $_POST['prix'];
     $disponible = $_POST['disponible'];
 
@@ -81,7 +97,11 @@ if (isset($_POST['modifier'])) {
         $platModele->mettreAJour($id, [
             'category_id' => $category_id,
             'nom' => $nom,
+            'nom_en' => $nomEn,
+            'nom_ar' => $nomAr,
             'description' => $description,
+            'description_en' => $descriptionEn,
+            'description_ar' => $descriptionAr,
             'prix' => $prix,
             'image' => $image,
             'disponible' => $disponible,
@@ -112,7 +132,11 @@ if (isset($_GET['modifier'])) {
         $idModifier = $plat['id'];
         $category_id = $plat['category_id'];
         $nom = $plat['nom'];
+        $nomEn = $plat['nom_en'] ?? '';
+        $nomAr = $plat['nom_ar'] ?? '';
         $description = $plat['description'];
+        $descriptionEn = $plat['description_en'] ?? '';
+        $descriptionAr = $plat['description_ar'] ?? '';
         $prix = $plat['prix'];
         $image = $plat['image'];
         $disponible = $plat['disponible'];

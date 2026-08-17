@@ -181,7 +181,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             display: flex;
             align-items: center;
             gap: 6px;
-            padding-left: 0;
+            padding-inline-start: 0;
             margin: 0;
         }
 
@@ -632,7 +632,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             width: 150px;
             min-width: 150px;
             height: 150px;
-            margin-right: 18px;
+            margin-inline-end: 18px;
             border: 3px solid var(--fj-or);
             box-shadow: 0 0 0 6px rgba(184, 134, 24, 0.12);
         }
@@ -996,7 +996,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             padding: 26px 26px 28px;
         }
         .fj-modal-panel.is-active { display: block; }
-        .fj-modal-head { padding-right: 40px; margin-bottom: 14px; }
+        .fj-modal-head { padding-inline-end: 40px; margin-bottom: 14px; }
         .fj-modal-title {
             margin: 0;
             font-size: 1.4rem;
@@ -1085,7 +1085,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
         .fj-modal-dish-status-ok { background: #e7f4e7; color: #2e7d32; }
         .fj-modal-dish-status-ko { background: #f1efe9; color: #8a8478; }
         .fj-modal-add {
-            margin-left: auto;
+            margin-inline-start: auto;
             display: inline-flex;
             align-items: center;
             gap: 6px;
@@ -1441,8 +1441,8 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             transform: translateY(-3px);
             box-shadow: 0 8px 16px rgba(184, 134, 24, 0.4);
         }
-        .footer_section .footer_contact .contact_link_box a { transition: color .3s ease, padding-left .3s ease; }
-        .footer_section .footer_contact .contact_link_box a:hover { padding-left: 6px; }
+        .footer_section .footer_contact .contact_link_box a { transition: color .3s ease, padding-inline-start .3s ease; }
+        .footer_section .footer_contact .contact_link_box a:hover { padding-inline-start: 6px; }
 
         /* ---------- Transitions de couleurs entre thèmes (aucun effet sur le layout) ---------- */
         body, .header_section, .hero_area--branded, .food_section .box,
@@ -1577,7 +1577,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                 box-shadow: 0 24px 48px rgba(0, 0, 0, 0.15);
             }
             .custom_nav-container .navbar-nav {
-                padding-left: 0;
+                padding-inline-start: 0;
                 align-items: center;
                 gap: 2px;
                 width: 100%;
@@ -2025,7 +2025,7 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
                     <?php endif; ?>
                     <div class="fj-modal-list">
                         <?php foreach ($panneau['items'] as $item): ?>
-                            <?php $itemDescription = $platsParId[(int) $item['product_id']]['description'] ?? null; ?>
+                            <?php $itemDescription = ($platsParId[(int) $item['product_id']] ?? null) ? localiser($platsParId[(int) $item['product_id']], 'description') : null; ?>
                             <article class="fj-modal-dish">
                                 <div class="fj-modal-dish-img">
                                     <?php if (!empty($item['image'])): ?>

@@ -5,6 +5,7 @@
  */
 
 require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/../assets/inc/langue.php';
 
 class CategorieModele
 {
@@ -28,20 +29,48 @@ class CategorieModele
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function creer(string $nom, string $description, ?string $image = null): void
+    public function creer(string $nom, string $description, ?string $image = null, ?string $nomEn = null, ?string $nomAr = null, ?string $descriptionEn = null, ?string $descriptionAr = null): void
     {
         $stmt = $this->pdo->prepare(
-            "INSERT INTO categories (nom, description, image) VALUES (?, ?, ?)"
+            "INSERT INTO categories (nom, nom_en, nom_ar, description, description_en, description_ar, image)
+             VALUES (?, ?, ?, ?, ?, ?, ?)"
         );
-        $stmt->execute([$nom, $description, $image]);
+        $stmt->execute([
+            $nom,
+            self::ouNull($nomEn),
+            self::ouNull($nomAr),
+            $description,
+            self::ouNull($descriptionEn),
+            self::ouNull($descriptionAr),
+            $image,
+        ]);
     }
 
-    public function mettreAJour(int $id, string $nom, string $description, ?string $image = null): void
+    public function mettreAJour(int $id, string $nom, string $description, ?string $image = null, ?string $nomEn = null, ?string $nomAr = null, ?string $descriptionEn = null, ?string $descriptionAr = null): void
     {
         $stmt = $this->pdo->prepare(
-            "UPDATE categories SET nom = ?, description = ?, image = ? WHERE id = ?"
+            "UPDATE categories SET nom = ?, nom_en = ?, nom_ar = ?,
+                    description = ?, description_en = ?, description_ar = ?, image = ?
+             WHERE id = ?"
         );
-        $stmt->execute([$nom, $description, $image, $id]);
+        $stmt->execute([
+            $nom,
+            self::ouNull($nomEn),
+            self::ouNull($nomAr),
+            $description,
+            self::ouNull($descriptionEn),
+            self::ouNull($descriptionAr),
+            $image,
+            $id,
+        ]);
+    }
+
+    /**
+     * NULL si la chaîne est vide : une traduction effacée retombe sur la base.
+     */
+    private static function ouNull(?string $valeur): ?string
+    {
+        return ($valeur === null || trim($valeur) === '') ? null : trim($valeur);
     }
 
     public function supprimer(int $id): bool

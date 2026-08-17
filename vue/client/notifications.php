@@ -53,9 +53,9 @@ if ($initialesNotif === '') {
                 <div style="min-width:0;">
                     <div class="notif-title">
                         <i data-lucide="bell" aria-hidden="true"></i>
-                        <?php echo htmlspecialchars($n['titre']); ?>
+                        <?php echo render_i18n($n['titre']); ?>
                     </div>
-                    <div class="notif-msg"><?php echo htmlspecialchars($n['message']); ?></div>
+                    <div class="notif-msg"><?php echo render_i18n($n['message']); ?></div>
                     <small><?php echo htmlspecialchars($n['date_notification']); ?></small>
                 </div>
                 <?php if (!$n['est_lu']): ?>

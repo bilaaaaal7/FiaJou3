@@ -102,6 +102,11 @@ $roleCleI18n = $roleI18n[$role] ?? '';
                 <?php sidebar_lien('admin/cuisiniers', 'chef-hat', 'Cuisiniers', $routeActuelle, null, [], 'nav.cuisiniers'); ?>
                 <?php sidebar_lien('admin/livreurs', 'bike', 'Livreurs', $routeActuelle, null, [], 'nav.livreurs'); ?>
                 <?php sidebar_lien('admin/zones', 'map-pin', 'Zones de livraison', $routeActuelle, null, [], 'nav.zones'); ?>
+
+                <a class="sidebar-back-home" href="<?php echo BASE_URL; ?>/index.php?route=accueil">
+                    <i data-lucide="home" aria-hidden="true"></i>
+                    <span data-i18n="common.retourAccueil">Retour à l'accueil</span>
+                </a>
             <?php elseif ($role === ROLE_CLIENT): ?>
                 <?php sidebar_lien('accueil', 'home', 'Accueil', $routeActuelle, null, [], 'nav.accueil'); ?>
                 <?php sidebar_lien('client', 'utensils-crossed', 'Menu', $routeActuelle, null, [], 'nav.menu'); ?>
@@ -121,13 +126,15 @@ $roleCleI18n = $roleI18n[$role] ?? '';
         // Titre affiché dans l'en-tête : $pageHeading si la vue le définit.
         // Les vues qui possèdent leur propre titre (topbar, page client)
         // ne définissent pas $pageHeading pour éviter toute duplication.
+        // $pageHeadingI18n (optionnel) = clé i18n, traduite côté client.
         $pageHeading = (string) ($pageHeading ?? '');
+        $pageHeadingI18n = (string) ($pageHeadingI18n ?? '');
         ?>
         <div class="topheader">
             <div class="topheader-left">
                 <button type="button" class="menu-toggle" onclick="toggleSidebar()" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="sidebar" data-i18n-aria="nav.ouvrirMenu">&#9776;</button>
                 <?php if ($pageHeading !== ''): ?>
-                    <h1 class="topheader-title"><?php echo htmlspecialchars($pageHeading); ?></h1>
+                    <h1 class="topheader-title"<?php if ($pageHeadingI18n !== ''): ?> data-i18n="<?php echo htmlspecialchars($pageHeadingI18n); ?>"<?php endif; ?>><?php echo htmlspecialchars($pageHeading); ?></h1>
                 <?php endif; ?>
             </div>
 

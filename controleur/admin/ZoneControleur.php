@@ -6,14 +6,21 @@ require_once ROOT_PATH . '/modele/ZoneModele.php';
 $zoneModele = new ZoneModele();
 $message = '';
 $erreur = '';
+$nom = '';
+$prix = '';
+$nomEn = '';
+$nomAr = '';
+$idModifier = '';
 
 if (isset($_POST['ajouter'])) {
     $nom = trim($_POST['nom']);
     $prix = (float) $_POST['prix_livraison'];
+    $nomEn = trim($_POST['nom_en'] ?? '');
+    $nomAr = trim($_POST['nom_ar'] ?? '');
     if (empty($nom) || $prix < 0) {
         $erreur = "Veuillez remplir tous les champs correctement.";
     } else {
-        $zoneModele->creer($nom, $prix);
+        $zoneModele->creer($nom, $prix, $nomEn, $nomAr);
         journaliser_audit('zone.creer', 'nom="' . $nom . '" prix=' . $prix);
         header('Location: ' . BASE_URL . '/index.php?route=admin/zones&succes=1');
         exit;
@@ -24,11 +31,13 @@ if (isset($_POST['modifier'])) {
     $id = (int) $_POST['id'];
     $nom = trim($_POST['nom']);
     $prix = (float) $_POST['prix_livraison'];
+    $nomEn = trim($_POST['nom_en'] ?? '');
+    $nomAr = trim($_POST['nom_ar'] ?? '');
     if (empty($nom) || $prix < 0) {
         $erreur = "Veuillez remplir tous les champs correctement.";
         $idModifier = $id;
     } else {
-        $zoneModele->mettreAJour($id, $nom, $prix);
+        $zoneModele->mettreAJour($id, $nom, $prix, $nomEn, $nomAr);
         journaliser_audit('zone.modifier', 'id=' . $id . ' nom="' . $nom . '" prix=' . $prix);
         header('Location: ' . BASE_URL . '/index.php?route=admin/zones');
         exit;
@@ -47,9 +56,6 @@ if (isset($_GET['supprimer'])) {
 }
 
 $zones = $zoneModele->getToutes();
-$idModifier = $idModifier ?? '';
-$nom = $nom ?? '';
-$prix = $prix ?? '';
 
 if (isset($_GET['modifier'])) {
     $zone = $zoneModele->getParId((int) $_GET['modifier']);
@@ -57,6 +63,8 @@ if (isset($_GET['modifier'])) {
         $idModifier = $zone['id'];
         $nom = $zone['nom'];
         $prix = $zone['prix_livraison'];
+        $nomEn = $zone['nom_en'] ?? '';
+        $nomAr = $zone['nom_ar'] ?? '';
     }
 }
 

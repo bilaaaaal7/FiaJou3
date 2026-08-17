@@ -167,3 +167,31 @@
         transition: none !important;
     }
 }
+
+/* ---------- RTL (Arabic) ---------- */
+html[dir="rtl"] .profile-menu__dot {
+    right: auto;
+    left: -1px;
+}
+html[dir="rtl"] .profile-menu__dropdown {
+    right: auto;
+    left: 0;
+    transform-origin: top left;
+}
+html[dir="rtl"] .profile-menu__dropdown a {
+    transition: background .2s ease, color .2s ease, padding-inline-start .25s cubic-bezier(.22, .61, .36, 1);
+}
+html[dir="rtl"] .profile-menu__dropdown a:hover {
+    padding-left: 12px;
+    padding-inline-start: 16px;
+}
+html[dir="rtl"] .profile-menu__badge {
+    margin-left: 0;
+    margin-right: auto;
+}
+@media (max-width: 480px) {
+    html[dir="rtl"] .profile-menu__dropdown {
+        right: auto;
+        left: -8px;
+    }
+}

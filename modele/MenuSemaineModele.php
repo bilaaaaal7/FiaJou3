@@ -5,6 +5,7 @@
  */
 
 require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/../assets/inc/langue.php';
 
 class MenuSemaineModele
 {
@@ -73,26 +74,32 @@ class MenuSemaineModele
 
         $categories = [];
         foreach ($categorieModele->getToutes() as $categorie) {
-            $categories[$categorie['id']] = $categorie['nom'];
+            $categories[$categorie['id']] = localiser($categorie, 'nom');
         }
 
         foreach ($items as &$item) {
             $plat = $platModele->getParId((int) $item['product_id']);
             // L'entrée du menu possède son propre "instantané" (nom, description,
-            // prix, catégorie) : s'il est renseigné il prime sur le plat, sinon on
-            // retombe sur les valeurs du produit réutilisable. Modifier une semaine
-            // n'affecte donc jamais les autres semaines ni le plat lui-même.
-            $item['plat_nom'] = $item['nom'] ?: ($plat['nom'] ?? null);
+            // prix, catégorie, traductions) : s'il est renseigné il prime sur le
+            // plat, sinon on retombe sur les valeurs du produit réutilisable.
+            // Modifier une semaine n'affecte donc jamais les autres semaines ni
+            // le plat lui-même.
+            $item['nom'] = $item['nom'] ?: ($plat['nom'] ?? null);
+            $item['nom_en'] = $item['nom_en'] ?: ($plat['nom_en'] ?? null);
+            $item['nom_ar'] = $item['nom_ar'] ?: ($plat['nom_ar'] ?? null);
             $item['prix'] = $item['prix'] ?? ($plat['prix'] ?? null);
             $item['image'] = $plat['image'] ?? null;
             $item['disponible'] = $plat['disponible'] ?? null;
-            $item['description'] = $item['description'] ?? ($plat['description'] ?? null);
+            $item['description'] = $item['description'] ?: ($plat['description'] ?? null);
+            $item['description_en'] = $item['description_en'] ?: ($plat['description_en'] ?? null);
+            $item['description_ar'] = $item['description_ar'] ?: ($plat['description_ar'] ?? null);
             $item['categorie_id'] = $item['category_id'] !== null
                 ? (int) $item['category_id']
                 : (int) ($plat['category_id'] ?? 0);
             $item['categorie'] = $item['categorie_id']
                 ? ($categories[$item['categorie_id']] ?? null)
                 : null;
+            $item['plat_nom'] = localiser($item, 'nom');
         }
         unset($item);
 
@@ -158,8 +165,9 @@ class MenuSemaineModele
         $plat = $platModele->getParId($productId);
         $stmt = $this->pdo->prepare(
             "INSERT INTO weekly_menu_items
-                (weekly_menu_id, product_id, jour, position, nom, description, prix, category_id)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+                (weekly_menu_id, product_id, jour, position, nom, nom_en, nom_ar,
+                 description, description_en, description_ar, prix, category_id)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         );
         $stmt->execute([
             $menuId,
@@ -167,7 +175,11 @@ class MenuSemaineModele
             $jour,
             $position,
             $plat['nom'] ?? null,
+            $plat['nom_en'] ?? null,
+            $plat['nom_ar'] ?? null,
             $plat['description'] ?? null,
+            $plat['description_en'] ?? null,
+            $plat['description_ar'] ?? null,
             $plat['prix'] ?? null,
             $plat['category_id'] ?? null,
         ]);
@@ -250,13 +262,19 @@ class MenuSemaineModele
     {
         $stmt = $this->pdo->prepare(
             "UPDATE weekly_menu_items
-             SET product_id = ?, nom = ?, description = ?, prix = ?, category_id = ?
+             SET product_id = ?, nom = ?, nom_en = ?, nom_ar = ?,
+                 description = ?, description_en = ?, description_ar = ?,
+                 prix = ?, category_id = ?
              WHERE id = ?"
         );
         $stmt->execute([
             (int) $donnees['product_id'],
             trim($donnees['nom'] ?? '') !== '' ? trim($donnees['nom']) : null,
+            trim($donnees['nom_en'] ?? '') !== '' ? trim($donnees['nom_en']) : null,
+            trim($donnees['nom_ar'] ?? '') !== '' ? trim($donnees['nom_ar']) : null,
             trim($donnees['description'] ?? '') !== '' ? trim($donnees['description']) : null,
+            trim($donnees['description_en'] ?? '') !== '' ? trim($donnees['description_en']) : null,
+            trim($donnees['description_ar'] ?? '') !== '' ? trim($donnees['description_ar']) : null,
             isset($donnees['prix']) && $donnees['prix'] !== '' ? (float) $donnees['prix'] : null,
             !empty($donnees['category_id']) ? (int) $donnees['category_id'] : null,
             $itemId,
@@ -275,8 +293,10 @@ class MenuSemaineModele
         $nouveauId = $this->creer($nom, $weekStart, $weekEnd);
         $stmt = $this->pdo->prepare(
             "INSERT INTO weekly_menu_items
-                (weekly_menu_id, product_id, jour, position, nom, description, prix, category_id)
-             SELECT ?, product_id, jour, position, nom, description, prix, category_id
+                (weekly_menu_id, product_id, jour, position, nom, nom_en, nom_ar,
+                 description, description_en, description_ar, prix, category_id)
+             SELECT ?, product_id, jour, position, nom, nom_en, nom_ar,
+                    description, description_en, description_ar, prix, category_id
              FROM weekly_menu_items
              WHERE weekly_menu_id = ?"
         );
@@ -425,6 +445,9 @@ class MenuSemaineModele
         foreach ($items as $item) {
             $plat = $platModele->getParId((int) $item['product_id']);
             if ($plat && $plat['disponible'] && !isset($vus[$plat['id']])) {
+                // Champs d'affichage rendus dans la langue active.
+                $plat['nom'] = localiser($plat, 'nom');
+                $plat['description'] = localiser($plat, 'description');
                 $plats[] = $plat;
                 $vus[$plat['id']] = true;
             }

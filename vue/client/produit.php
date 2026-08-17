@@ -1,5 +1,5 @@
 <?php
-$pageTitle = htmlspecialchars($plat['nom']) . " - " . APP_NAME;
+$pageTitle = htmlspecialchars(localiser($plat, 'nom')) . " - " . APP_NAME;
 $extraCss = ['admin.css'];
 $i18nPage = 'produit';
 require ROOT_PATH . '/assets/inc/header.php';
@@ -27,20 +27,20 @@ require ROOT_PATH . '/assets/inc/navbar.php';
 
     <div class="panel" style="margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start;">
         <img src="<?php echo UPLOADS_URL; ?>/<?php echo htmlspecialchars($plat['image']); ?>"
-             alt="<?php echo htmlspecialchars($plat['nom']); ?>"
+             alt="<?php echo htmlspecialchars(localiser($plat, 'nom')); ?>"
              style="width: 100%; border-radius: 12px; object-fit: cover; max-height: 360px; <?php echo $plat['disponible'] ? '' : 'opacity: 0.5;'; ?>">
 
         <div>
             <?php if ($categorie): ?>
                 <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">
-                    <?php echo htmlspecialchars($categorie['nom']); ?>
+                    <?php echo htmlspecialchars(localiser($categorie, 'nom')); ?>
                 </div>
             <?php endif; ?>
 
-            <h1 style="margin: 4px 0 12px;"><?php echo htmlspecialchars($plat['nom']); ?></h1>
+            <h1 style="margin: 4px 0 12px;"><?php echo htmlspecialchars(localiser($plat, 'nom')); ?></h1>
 
             <p style="color: var(--text-muted); line-height: 1.6;">
-                <?php echo nl2br(htmlspecialchars($plat['description'] ?? '')); ?>
+                <?php echo nl2br(htmlspecialchars(localiser($plat, 'description'))); ?>
             </p>
 
             <div style="font-size: 1.6rem; font-weight: 700; color: var(--gold-dark); margin: 16px 0;">

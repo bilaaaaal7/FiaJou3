@@ -181,6 +181,36 @@ a:focus-visible {
 
 .sidebar nav a.active svg { color: var(--gold); }
 
+/* Lien « Retour à l'accueil » (exclusif espace Admin) : même langage visuel
+   que la navigation de la sidebar, séparé en bas du menu. */
+.sidebar-back-home {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 14px 0 2px;
+    padding: 11px 14px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--gold-dark);
+    border-radius: 10px;
+    border-top: 1px solid var(--border-soft);
+    transition: background .18s ease, color .18s ease, transform .18s ease, box-shadow .18s ease;
+}
+
+.sidebar-back-home svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: var(--gold);
+    transition: color .18s ease;
+}
+
+.sidebar-back-home:hover {
+    background: var(--sidebar-hover);
+    color: var(--gold-dark);
+    transform: translateX(2px);
+}
+
 /* Compteur neutre dans la sidebar (ex. panier client) */
 .nav-badge {
     display: inline-flex;
@@ -1720,4 +1750,55 @@ body.profil-sans-sidebar .topheader { border-bottom-color: transparent; }
     .back-home {
         transition: none !important;
     }
+}
+
+/* ---------- RTL (arabe) ---------- */
+html[dir="rtl"] .sidebar {
+    border-right: 0;
+    border-left: 1px solid var(--border-soft);
+    box-shadow: -1px 0 12px rgba(23, 23, 23, 0.04);
+}
+
+html[dir="rtl"] .sidebar nav a:hover,
+html[dir="rtl"] .sidebar-back-home:hover { transform: translateX(-2px); }
+
+html[dir="rtl"] .topheader-actions { margin-left: 0; margin-right: auto; }
+
+html[dir="rtl"] .topheader-notif-badge { right: auto; left: -3px; }
+
+html[dir="rtl"] .topheader-profile-dropdown {
+    right: auto;
+    left: 0;
+    transform-origin: top left;
+}
+
+@media (max-width: 480px) {
+    html[dir="rtl"] .topheader-profile-trigger { padding-right: 0; padding-left: 6px; }
+    html[dir="rtl"] .topheader-profile-dropdown { right: auto; left: -8px; }
+}
+
+html[dir="rtl"] .back-home:hover { transform: translateX(3px); }
+html[dir="rtl"] .back-home:hover svg { transform: translateX(2px); }
+
+html[dir="rtl"] table.data-table th { text-align: right; }
+html[dir="rtl"] table.data-table td { text-align: right; }
+
+html[dir="rtl"] .alert-panel { border-left: 0; border-right: 4px solid var(--danger); }
+
+html[dir="rtl"] .alert-list { padding-left: 0; padding-right: 20px; }
+
+html[dir="rtl"] .nav-badge { margin-left: 0; margin-right: auto; }
+
+html[dir="rtl"] .notif-item.notif-unread { border-left: 0; border-right: 3px solid var(--gold); }
+
+html[dir="rtl"] .notif-item:hover { transform: translateX(-2px); }
+
+@media (max-width: 900px) {
+    html[dir="rtl"] .sidebar {
+        left: auto;
+        right: 0;
+        transform: translateX(100%);
+    }
+    html[dir="rtl"] body.sidebar-open .sidebar,
+    html[dir="rtl"] .sidebar.open { transform: translateX(0); }
 }

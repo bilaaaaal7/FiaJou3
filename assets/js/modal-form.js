@@ -9,6 +9,17 @@
         }
     }
 
+    // Résout une valeur d'attribut qui peut être une clé i18n : si
+    // window.fjI18n traduit la chaîne (clé connue), on prend la traduction,
+    // sinon on conserve la valeur d'origine (texte français du fallback).
+    function resoudreI18n(texte) {
+        if (texte && window.fjI18n) {
+            var traduit = window.fjI18n(texte);
+            if (traduit !== texte) { return traduit; }
+        }
+        return texte;
+    }
+
     // Applique le mode ajout / modification à la modale : titre, bouton
     // de soumission (name + label) et champ caché "id" (vidé en ajout).
     function appliquerMode(overlay, mode) {
@@ -16,14 +27,14 @@
         var titre = overlay.querySelector('.modal-head h3');
         if (titre) {
             var nouveauTitre = estEdit ? titre.getAttribute('data-title-edit') : titre.getAttribute('data-title-add');
-            if (nouveauTitre) { titre.textContent = nouveauTitre; }
+            if (nouveauTitre) { titre.textContent = resoudreI18n(nouveauTitre); }
         }
         var bouton = overlay.querySelector('button[type="submit"]');
         if (bouton) {
             var nom = estEdit ? bouton.getAttribute('data-name-edit') : bouton.getAttribute('data-name-add');
             var label = estEdit ? bouton.getAttribute('data-label-edit') : bouton.getAttribute('data-label-add');
             if (nom) { bouton.name = nom; }
-            if (label) { bouton.textContent = label; }
+            if (label) { bouton.textContent = resoudreI18n(label); }
         }
         if (!estEdit) {
             var champId = overlay.querySelector('input[type="hidden"][name="id"]');

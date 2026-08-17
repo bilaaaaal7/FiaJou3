@@ -12,6 +12,11 @@ $messagesErreur = [
     'fermee'       => 'Les commandes pour cette date sont clôturées (limite ' . HEURE_LIMITE_COMMANDE . ' la veille).',
     'quantite_max' => 'La quantité maximale (20) est atteinte pour ce plat.',
 ];
+$erreurI18n = [
+    'indisponible' => 'produit.erreurIndisponible',
+    'horsmenu'     => 'produit.erreurHorsMenu',
+    'quantite_max' => 'produit.erreurQuantiteMax',
+];
 $jourLabel = [
     'lundi' => 'Lundi', 'mardi' => 'Mardi', 'mercredi' => 'Mercredi',
     'jeudi' => 'Jeudi', 'vendredi' => 'Vendredi', 'dimanche' => 'Dimanche',
@@ -27,7 +32,15 @@ $jourLabel = [
     </div>
 
     <?php if (isset($_GET['erreur']) && isset($messagesErreur[$_GET['erreur']])): ?>
-        <div class="alert alert-danger py-2" role="alert"><?php echo htmlspecialchars($messagesErreur[$_GET['erreur']]); ?></div>
+        <?php if ($_GET['erreur'] === 'fermee'): ?>
+            <div class="alert alert-danger py-2" role="alert">
+                <span data-i18n="produit.erreurCloturees">Les commandes pour cette date sont clôturées (limite</span>
+                <strong><?php echo HEURE_LIMITE_COMMANDE; ?></strong>
+                <span data-i18n="produit.erreurClotureesFin">la veille).</span>
+            </div>
+        <?php else: ?>
+            <div class="alert alert-danger py-2" role="alert" data-i18n="<?php echo htmlspecialchars($erreurI18n[$_GET['erreur']] ?? ''); ?>"><?php echo htmlspecialchars($messagesErreur[$_GET['erreur']]); ?></div>
+        <?php endif; ?>
     <?php endif; ?>
 
     <?php if ($panierModele->getDate()): ?>
@@ -45,8 +58,9 @@ $jourLabel = [
             </p>
         <?php endif; ?>
         <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 16px;">
-            Commandez avant <?php echo HEURE_LIMITE_COMMANDE; ?> pour une livraison le lendemain (7j/7).
-            Le samedi, le menu est libre : tous les plats de la semaine sont commandables.
+            <span data-i18n="menu.infoCmdAvant">Commandez avant</span> <?php echo HEURE_LIMITE_COMMANDE; ?>
+            <span data-i18n="menu.infoCmdAvantFin">pour une livraison le lendemain (7j/7).</span>
+            <span data-i18n="commander.livraisonInfoFin">Le samedi, le menu est libre : tous les plats de la semaine sont commandables.</span>
         </p>
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
             <?php $semaineRef = MenuSemaineModele::semaineReference($menu); ?>
@@ -100,9 +114,7 @@ $jourLabel = [
                     </div>
                 <?php endif; ?>
             </div>
-            <p style="font-size: 0.82rem; margin: 0 0 10px; opacity: 0.85;">
-                Aucun menu spécifique le samedi : choisissez librement parmi tous les plats de la semaine.
-            </p>
+            <p style="font-size: 0.82rem; margin: 0 0 10px; opacity: 0.85;" data-i18n="accueil.samediDesc">Aucun menu spécifique le samedi : choisissez librement parmi tous les plats de la semaine.</p>
             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px;">
                 <?php foreach ($itemsSamedi as $item): ?>
                     <div style="background: var(--surface); border-radius: 10px; padding: 10px; display: flex; align-items: center; gap: 8px;">

@@ -33,7 +33,7 @@ $priorityDefaut = isset($_POST['priority']) && !empty($_POST['priority']);
 
     <?php if (!empty($erreurs)): ?>
     <div class="alert-box alert-error">
-        <ul style="margin:0; padding-left:18px;">
+        <ul style="margin:0; padding-inline-start:18px;">
         <?php foreach ($erreurs as $err): ?>
             <li><?php echo htmlspecialchars($err); ?></li>
         <?php endforeach; ?>
@@ -81,7 +81,7 @@ $priorityDefaut = isset($_POST['priority']) && !empty($_POST['priority']);
                         <?php foreach ($zones as $zone): ?>
                         <option value="<?php echo (int) $zone['id']; ?>"
                             <?php echo ((int) $zone['id'] === (int) $selectedZoneId) ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($zone['nom']); ?>
+                            <?php echo htmlspecialchars(localiser($zone, 'nom')); ?>
                             (<?php echo number_format((float) $zone['prix_livraison'], 2, ',', ' '); ?> DH)
                         </option>
                         <?php endforeach; ?>

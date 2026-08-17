@@ -346,6 +346,19 @@ $fjcFormaterPrix = static fn($montant) => number_format((float) $montant, 2, ','
 
     /* Bouton nav en mode button (app-shell) : annule les styles par défaut */
     button.topheader-notif { padding: 0; cursor: pointer; }
+
+    /* ---------- RTL (Arabic) ---------- */
+    html[dir="rtl"] .fj-cart-drawer {
+        right: auto;
+        left: 0;
+        border-left: 0;
+        border-right: 1px solid var(--fjc-border);
+        box-shadow: 14px 0 36px var(--fjc-shadow);
+        transform: translateX(-102%);
+    }
+    html[dir="rtl"] .fj-cart-drawer.open {
+        transform: translateX(0);
+    }
 </style>
 
 <div id="fj-cart-overlay" class="fj-cart-overlay"></div>
@@ -374,9 +387,9 @@ $fjcFormaterPrix = static fn($montant) => number_format((float) $montant, 2, ','
             <?php foreach ($fjcArticles as $fjcArticle): ?>
                 <div class="fj-cart-item">
                     <img src="<?php echo UPLOADS_URL; ?>/<?php echo htmlspecialchars($fjcArticle['image']); ?>"
-                         alt="<?php echo htmlspecialchars($fjcArticle['nom']); ?>">
+                         alt="<?php echo htmlspecialchars(localiser($fjcArticle, 'nom')); ?>">
                     <div class="fj-cart-item-main">
-                        <div class="fj-cart-item-nom"><?php echo htmlspecialchars($fjcArticle['nom']); ?></div>
+                        <div class="fj-cart-item-nom"><?php echo htmlspecialchars(localiser($fjcArticle, 'nom')); ?></div>
                         <div class="fj-cart-item-prix"><?php echo $fjcFormaterPrix($fjcArticle['prix']); ?> <span data-i18n="common.unite">/ unité</span></div>
                         <div class="fj-cart-item-ctrl">
                             <a href="<?php echo BASE_URL; ?>/index.php?route=client/panier&moins=<?php echo (int) $fjcArticle['id']; ?>&retour=<?php echo urlencode($fjcRetour); ?>"

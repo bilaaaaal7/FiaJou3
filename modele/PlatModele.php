@@ -5,6 +5,7 @@
  */
 
 require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/../assets/inc/langue.php';
 
 class PlatModele
 {
@@ -30,12 +31,16 @@ class PlatModele
 
     /**
      * Menu client : plats + nom de la categorie, tries par categorie puis nom.
+     * Les champs `nom`, `description` et `categorie` sont rendus dans la
+     * langue active (voir localiser()) ; la base française sert de repli.
      */
     public function getMenu(): array
     {
         $stmt = $this->pdo->query(
-            "SELECT p.id, p.nom, p.description, p.prix, p.image, p.disponible,
-                    c.nom AS categorie
+            "SELECT p.id, p.nom, p.nom_en, p.nom_ar,
+                    p.description, p.description_en, p.description_ar,
+                    p.prix, p.image, p.disponible,
+                    c.nom AS categorie, c.nom_en AS categorie_en, c.nom_ar AS categorie_ar
              FROM plats p
              INNER JOIN categories c ON c.id = p.category_id
              ORDER BY c.nom, p.nom"
@@ -46,6 +51,17 @@ class PlatModele
             $plat['id'] = (int) $plat['id'];
             $plat['prix'] = (float) $plat['prix'];
             $plat['disponible'] = (int) $plat['disponible'];
+
+            $plat['nom'] = localiser($plat, 'nom');
+            $plat['description'] = localiser($plat, 'description');
+            $plat['categorie'] = localiser([
+                'categorie' => $plat['categorie'] ?? null,
+                'categorie_en' => $plat['categorie_en'] ?? null,
+                'categorie_ar' => $plat['categorie_ar'] ?? null,
+            ], 'categorie');
+            unset($plat['nom_en'], $plat['nom_ar'],
+                  $plat['description_en'], $plat['description_ar'],
+                  $plat['categorie_en'], $plat['categorie_ar']);
         }
         unset($plat);
 
@@ -68,13 +84,17 @@ class PlatModele
     public function creer(array $donnees): void
     {
         $stmt = $this->pdo->prepare(
-            "INSERT INTO plats (category_id, nom, description, prix, image, disponible)
-             VALUES (?, ?, ?, ?, ?, ?)"
+            "INSERT INTO plats (category_id, nom, nom_en, nom_ar, description, description_en, description_ar, prix, image, disponible)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         );
         $stmt->execute([
             (int) $donnees['category_id'],
             $donnees['nom'],
+            self::ouNull($donnees['nom_en'] ?? null),
+            self::ouNull($donnees['nom_ar'] ?? null),
             $donnees['description'] ?? null,
+            self::ouNull($donnees['description_en'] ?? null),
+            self::ouNull($donnees['description_ar'] ?? null),
             (float) $donnees['prix'],
             $donnees['image'] ?? null,
             (int) ($donnees['disponible'] ?? 1),
@@ -85,18 +105,32 @@ class PlatModele
     {
         $stmt = $this->pdo->prepare(
             "UPDATE plats
-             SET category_id = ?, nom = ?, description = ?, prix = ?, image = ?, disponible = ?
+             SET category_id = ?, nom = ?, nom_en = ?, nom_ar = ?,
+                 description = ?, description_en = ?, description_ar = ?,
+                 prix = ?, image = ?, disponible = ?
              WHERE id = ?"
         );
         $stmt->execute([
             (int) $donnees['category_id'],
             $donnees['nom'],
+            self::ouNull($donnees['nom_en'] ?? null),
+            self::ouNull($donnees['nom_ar'] ?? null),
             $donnees['description'] ?? null,
+            self::ouNull($donnees['description_en'] ?? null),
+            self::ouNull($donnees['description_ar'] ?? null),
             (float) $donnees['prix'],
             $donnees['image'] ?? null,
             (int) ($donnees['disponible'] ?? 1),
             $id,
         ]);
+    }
+
+    /**
+     * NULL si la chaîne est vide : une traduction effacée retombe sur la base.
+     */
+    private static function ouNull(?string $valeur): ?string
+    {
+        return ($valeur === null || trim($valeur) === '') ? null : trim($valeur);
     }
 
     public function supprimer(int $id): bool
