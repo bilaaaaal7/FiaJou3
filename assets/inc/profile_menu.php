@@ -31,7 +31,7 @@ if (!empty($_SESSION['user_id'])) {
     <button type="button" class="user-menu-trigger">
         <span class="user-avatar"><?php echo htmlspecialchars($initiales); ?></span>
         <span class="user-name"><?php echo htmlspecialchars(trim($prenomUser)); ?></span>
-        <span class="user-chevron">&#709;</span>
+        <span class="user-chevron"><i class="fa fa-chevron-down" aria-hidden="true"></i></span>
     </button>
 
     <div class="user-dropdown">

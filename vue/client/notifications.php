@@ -17,8 +17,6 @@ if ($initialesNotif === '') {
 
 <div class="page-profil">
 
-    <?php require ROOT_PATH . '/assets/inc/back_home.php'; ?>
-
     <div class="topbar">
         <h1 data-i18n="notifications.titre">Notifications</h1>
         <div class="topbar-actions">

@@ -1,12 +1,10 @@
 <?php
 $pageTitle = "Paramètres - " . APP_NAME;
-$extraCss = ['admin.css'];
-$extraJs = ['i18n.js'];
-$bodyClass = 'profil-sans-sidebar';
-$i18nActive = true;
+$extraCss = ['admin.css', 'profile-menu.css', 'client-public.css'];
+$bodyClass = 'client-public-layout';
 $i18nPage = 'parametres';
 require ROOT_PATH . '/assets/inc/header.php';
-require ROOT_PATH . '/assets/inc/navbar.php';
+require ROOT_PATH . '/assets/inc/client_navbar.php';
 
 $prenomParam = trim((string) ($profil['prenom'] ?? ''));
 $nomParam    = trim((string) ($profil['nom'] ?? ''));
@@ -26,8 +24,6 @@ $langueCouranteInfo = $languesInfosParam[$langueActiveParam] ?? $languesInfosPar
 ?>
 
 <div class="page-profil">
-
-    <?php require ROOT_PATH . '/assets/inc/back_home.php'; ?>
 
     <div class="topbar">
         <h1 data-i18n="parametres.titre">Paramètres</h1>
@@ -162,4 +158,4 @@ $langueCouranteInfo = $languesInfosParam[$langueActiveParam] ?? $languesInfosPar
 
 </div>
 
-<?php require ROOT_PATH . '/assets/inc/footer.php'; ?>
+<?php require ROOT_PATH . '/assets/inc/client_footer.php'; ?>
