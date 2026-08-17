@@ -497,8 +497,87 @@ html[dir="rtl"] .header_section .lang-switcher--dropdown .lang-switcher-option {
 }
 
 /* ================================================================
-   FOOTER SECTION (extrait de accueil.php lignes 1412-1445)
+   FOOTER SECTION
+   Base (feane/style.css) + overrides (accueil.php inline styles).
+   Même rendu exact que la page d'accueil — toujours sombre.
    ================================================================ */
+
+/* --- Base (feane/style.css) --- */
+.footer_section {
+    background-color: var(--fj-noir, #171717);
+    color: #ffffff;
+    text-align: center;
+}
+.footer_section h4 {
+    font-size: 28px;
+}
+.footer_section h4,
+.footer_section .footer-logo {
+    font-weight: 600;
+    margin-bottom: 20px;
+    font-family: 'Poppins', 'Open Sans', sans-serif;
+}
+.footer_section p {
+    color: #dbdbdb;
+}
+.footer_section .footer-col {
+    margin-bottom: 30px;
+}
+.footer_section .footer_contact .contact_link_box {
+    display: flex;
+    flex-direction: column;
+}
+.footer_section .footer_contact .contact_link_box a {
+    margin: 5px 0;
+    color: #ffffff;
+}
+.footer_section .footer_contact .contact_link_box a i {
+    margin-right: 5px;
+}
+.footer_section .footer_contact .contact_link_box a:hover {
+    color: #B88618;
+}
+.footer_section .footer-logo {
+    display: block;
+    font-weight: bold;
+    font-size: 38px;
+    line-height: 1;
+    color: #ffffff;
+}
+.footer_section .footer_social {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+.footer_section .footer_social a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #171717;
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    background-color: #ffffff;
+    margin: 0 2.5px;
+    font-size: 18px;
+}
+.footer_section .footer_social a:hover {
+    color: #B88618;
+}
+.footer_section .footer-info {
+    text-align: center;
+    margin-top: 25px;
+}
+.footer_section .footer-info p {
+    color: #ffffff;
+    margin: 0;
+}
+.footer_section .footer-info p a {
+    color: inherit;
+}
+
+/* --- Overrides (accueil.php inline styles) --- */
 .footer_section {
     padding: 64px 0 34px;
     position: relative;
@@ -533,37 +612,9 @@ html[dir="rtl"] .header_section .lang-switcher--dropdown .lang-switcher-option {
 .footer_section .footer_contact .contact_link_box a { transition: color .3s ease, padding-inline-start .3s ease; }
 .footer_section .footer_contact .contact_link_box a:hover { padding-inline-start: 6px; }
 
-/* ================================================================
-   LIGHT FOOTER — pages client en mode clair
-   ================================================================ */
-[data-theme="light"] body.client-public-layout .footer_section {
-    background: var(--bg, #ffffff);
-    border-top: 1px solid var(--border-soft, #e4dfd3);
-}
-[data-theme="light"] body.client-public-layout .footer_section::before {
-    background: linear-gradient(90deg, transparent, var(--gold, #B88618), transparent);
-}
-[data-theme="light"] body.client-public-layout .footer_section .footer-logo {
-    color: var(--text, #171717);
-}
-[data-theme="light"] body.client-public-layout .footer_section p,
-[data-theme="light"] body.client-public-layout .footer_section h4,
-[data-theme="light"] body.client-public-layout .footer_section .footer_detail p {
-    color: var(--text-soft, #4c4840);
-}
-[data-theme="light"] body.client-public-layout .footer_section .footer_contact .contact_link_box a {
-    color: var(--text-soft, #4c4840);
-}
-[data-theme="light"] body.client-public-layout .footer_section .footer_social a {
-    background: rgba(23, 23, 23, 0.06);
-    color: var(--text, #171717);
-}
-[data-theme="light"] body.client-public-layout .footer_section .footer_social a:hover {
-    background: var(--gold, #B88618);
-    color: #ffffff;
-}
-[data-theme="light"] body.client-public-layout .footer_section .footer-info p {
-    color: var(--text-muted, #706B62);
+/* --- Responsive (accueil.php) --- */
+@media (max-width: 767px) {
+    .footer_section { padding: 52px 0 30px; }
 }
 
 /* ================================================================
