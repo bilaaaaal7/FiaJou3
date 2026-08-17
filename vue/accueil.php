@@ -1379,27 +1379,22 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             box-shadow: 0 8px 18px rgba(184, 134, 24, 0.4);
         }
 
-        /* La mécanique du carrousel (largeurs/positions/flottement des
-           cartes calculés par Owl Carousel) doit rester stable et
-           prévisible : on isole donc explicitement sa direction en LTR,
-           indépendamment du sens hérité de <html dir="rtl">. C'est ce sens
-           hérité (combiné au conteneur ".row" en display:flex juste
-           au-dessus) qui faisait sortir les cartes du champ visible en
-           arabe alors que les flèches de navigation, elles, restaient
-           visibles. Owl gère lui-même le défilement RTL via son option
-           "rtl" (cf. custom.js) : ce n'est plus le rôle du CSS hérité.
-           On NE force PAS ce sens sur toute la section (le reste du bloc
-           "Ce que disent nos clients" garde le sens de la page) : seule la
-           mécanique du carrousel est isolée. */
-        .client_section .owl-carousel.client_owl-carousel {
+        /* Le conteneur flex ".carousel-wrap.row" hérite du sens RTL de
+           <html dir="rtl">, ce qui combiné à display:flex faisait sortir
+           les cartes du champ visible en arabe. On isole ce conteneur en
+           LTR pour stabiliser la mécanique flex, puis on laisse Owl
+           Carousel obtenir son direction:rtl via sa propre classe
+           "owl-rtl" (ajoutée quand l'option rtl:true est passée dans
+           custom.js). Ainsi le carrousel fonctionne correctement en RTL
+           sans conflit avec le CSS hérité. */
+        .client_section .carousel-wrap {
             direction: ltr;
         }
 
-        /* Le texte des avis (citation, nom, rôle) doit lui rester dans le
-           sens de la langue courante : on réapplique explicitement le RTL
-           hérité de la page sur le contenu, qui serait sinon repassé en LTR
-           par la règle ci-dessus. C'est le seul endroit où le sens de
-           lecture arabe doit s'appliquer dans le carrousel. */
+        /* Le texte des avis (citation, nom, rôle) doit rester en RTL
+           quand la page est en arabe. La classe "owl-rtl" d'Owl Carousel
+           remet déjà direction:rtl sur le carrousel, mais on renforce
+           explicitement pour le contenu texte (citation, nom, rôle). */
         html[dir="rtl"] .client_section .owl-carousel .box .detail-box {
             direction: rtl;
             text-align: right;
