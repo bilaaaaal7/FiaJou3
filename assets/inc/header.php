@@ -6,6 +6,14 @@
  *                       route dans urlRewrite.php, surchargeable par la vue)
  *   $metaDescription : string - meta description SEO (idem, via urlRewrite.php)
  *   $metaKeywords    : string - meta keywords SEO, si pertinent (idem)
+ *   $metaRobots      : string - directive robots ('index, follow' | 'noindex, nofollow')
+ *   $metaCanonical   : string - URL canonique de la page
+ *   $ogTitle         : string - titre Open Graph
+ *   $ogDescription   : string - description Open Graph
+ *   $ogType          : string - type Open Graph ('website' | 'article' | 'profile')
+ *   $ogUrl           : string - URL Open Graph
+ *   $ogImage         : string - image Open Graph (URL absolue)
+ *   $twitterCard     : string - type de carte Twitter ('summary_large_image')
  *   $extraCss        : array  - fichiers CSS additionnels dans assets/css/
  *   $bodyClass       : string - classe CSS optionnelle sur <body>
  *
@@ -16,9 +24,17 @@
  *                       menu_semaine|panier|mes_commandes|profil), posé sur <body>.
  */
 
-$pageTitle       = $pageTitle       ?? APP_NAME;
-$metaDescription = $metaDescription ?? 'Repas faits maison, livrés chez vous avec ' . APP_NAME . '.';
-$metaKeywords    = $metaKeywords    ?? '';
+$pageTitle       = $pageTitle       ?? $_SESSION['pr_title']         ?? APP_NAME;
+$metaDescription = $metaDescription ?? $_SESSION['meta_description'] ?? 'Repas faits maison, livrés chez vous avec ' . APP_NAME . '.';
+$metaKeywords    = $metaKeywords    ?? $_SESSION['meta_keywords']    ?? '';
+$metaRobots      = $metaRobots      ?? $_SESSION['meta_robots']      ?? 'noindex, nofollow';
+$metaCanonical   = $metaCanonical   ?? $_SESSION['meta_canonical']   ?? '';
+$ogTitle         = $ogTitle         ?? $_SESSION['og:title']         ?? $pageTitle;
+$ogDescription   = $ogDescription   ?? $_SESSION['og:description']   ?? $metaDescription;
+$ogType          = $ogType          ?? $_SESSION['og:type']          ?? 'website';
+$ogUrl           = $ogUrl           ?? $_SESSION['og:url']           ?? $metaCanonical;
+$ogImage         = $ogImage         ?? $_SESSION['og:image']         ?? '';
+$twitterCard     = $twitterCard     ?? $_SESSION['twitter:card']     ?? '';
 $extraCss        = $extraCss        ?? [];
 $bodyClass       = $bodyClass       ?? '';
 $i18nActive      = $i18nActive      ?? false;
@@ -71,6 +87,30 @@ if (est_connecte() && !headers_sent()) {
     <meta name="description" content="<?php echo htmlspecialchars($metaDescription); ?>">
     <?php if (!empty($metaKeywords)): ?>
     <meta name="keywords" content="<?php echo htmlspecialchars($metaKeywords); ?>">
+    <?php endif; ?>
+    <?php if (!empty($metaRobots)): ?>
+    <meta name="robots" content="<?php echo htmlspecialchars($metaRobots); ?>">
+    <?php endif; ?>
+    <?php if (!empty($metaCanonical)): ?>
+    <link rel="canonical" href="<?php echo htmlspecialchars($metaCanonical); ?>">
+    <?php endif; ?>
+    <?php if (!empty($ogTitle)): ?>
+    <meta property="og:title" content="<?php echo htmlspecialchars($ogTitle); ?>">
+    <?php endif; ?>
+    <?php if (!empty($ogDescription)): ?>
+    <meta property="og:description" content="<?php echo htmlspecialchars($ogDescription); ?>">
+    <?php endif; ?>
+    <?php if (!empty($ogType)): ?>
+    <meta property="og:type" content="<?php echo htmlspecialchars($ogType); ?>">
+    <?php endif; ?>
+    <?php if (!empty($ogUrl)): ?>
+    <meta property="og:url" content="<?php echo htmlspecialchars($ogUrl); ?>">
+    <?php endif; ?>
+    <?php if (!empty($ogImage)): ?>
+    <meta property="og:image" content="<?php echo htmlspecialchars($ogImage); ?>">
+    <?php endif; ?>
+    <?php if (!empty($twitterCard)): ?>
+    <meta name="twitter:card" content="<?php echo htmlspecialchars($twitterCard); ?>">
     <?php endif; ?>
 
     <link rel="icon" type="image/svg+xml" href="<?php echo BASE_URL; ?>/assets/images/favicon.svg">
