@@ -465,6 +465,8 @@
             'common.activite': 'Activité',
             'common.aucuneActivite': 'Aucune activité récente.',
             'common.marquerPret': 'Marquer comme prête',
+            'common.showPassword': 'Afficher le mot de passe',
+            'common.hidePassword': 'Masquer le mot de passe',
 
             /* ---- Espace admin : tableau de bord ---- */
             'admin_dashboard.pageTitle': 'Tableau de bord — FiaJou3',
@@ -1225,6 +1227,8 @@
             'common.activite': 'Activity',
             'common.aucuneActivite': 'No recent activity.',
             'common.marquerPret': 'Mark as ready',
+            'common.showPassword': 'Show password',
+            'common.hidePassword': 'Hide password',
 
             /* ---- Admin space: dashboard ---- */
             'admin_dashboard.pageTitle': 'Dashboard - FiaJou3',
@@ -1985,6 +1989,8 @@
             'common.activite': 'النشاط',
             'common.aucuneActivite': 'لا يوجد نشاط حديث.',
             'common.marquerPret': 'وضع علامة جاهز',
+            'common.showPassword': 'إظهار كلمة المرور',
+            'common.hidePassword': 'إخفاء كلمة المرور',
 
             /* ---- مساحة المدير: لوحة التحكم ---- */
             'admin_dashboard.pageTitle': 'لوحة التحكم — FiaJou3',

@@ -1,7 +1,7 @@
 <?php
 $pageTitle = "Connexion - " . APP_NAME;
 $extraCss = ['auth.css'];
-$extraJs = ['i18n.js'];
+$extraJs = ['i18n.js', 'password-toggle.js'];
 $i18nActive = true;
 $i18nPage = 'login';
 require ROOT_PATH . '/assets/inc/header.php';
@@ -41,7 +41,12 @@ require ROOT_PATH . '/assets/inc/header.php';
 
                     <div class="mb-3">
                         <label for="password" class="form-label" data-i18n="login.passwordLabel">Mot de passe</label>
-                        <input type="password" class="form-control" id="password" name="password" placeholder="" required>
+                        <div class="password-input-wrap" data-password-toggle>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="" required>
+                            <button type="button" class="password-toggle-btn" aria-label="Afficher le mot de passe">
+                                <i class="fa fa-eye"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <div class="text-end mb-3">

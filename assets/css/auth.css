@@ -357,6 +357,53 @@ html[dir="rtl"] .theme-toggle-fixed {
 [data-theme="dark"] .alert-danger { background: #3a1d1a; border-color: #6e2f27; color: #f09a8f; }
 [data-theme="dark"] .alert-success { background: #16331e; border-color: #2a5236; color: #8fdd9d; }
 
+/* ---------- Password toggle (eye button inside input) ---------- */
+.password-input-wrap {
+    position: relative;
+}
+
+.password-input-wrap input.form-control {
+    padding-right: 44px;
+}
+
+html[dir="rtl"] .password-input-wrap input.form-control {
+    padding-right: 14px;
+    padding-left: 44px;
+}
+
+.password-toggle-btn {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    font-size: 1rem;
+}
+
+html[dir="rtl"] .password-toggle-btn {
+    right: auto;
+    left: 12px;
+}
+
+.password-toggle-btn:hover,
+.password-toggle-btn:focus-visible {
+    color: var(--gold);
+}
+
+.password-toggle-btn:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
 /* ---------- Responsive ---------- */
 @media (max-width: 991px) {
     .card-body-custom {

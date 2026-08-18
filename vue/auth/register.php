@@ -1,7 +1,7 @@
 <?php
 $pageTitle = "Inscription - " . APP_NAME;
 $extraCss = ['auth.css'];
-$extraJs = ['i18n.js'];
+$extraJs = ['i18n.js', 'password-toggle.js'];
 $i18nActive = true;
 $i18nPage = 'register';
 require ROOT_PATH . '/assets/inc/header.php';
@@ -79,16 +79,26 @@ require ROOT_PATH . '/assets/inc/header.php';
 
                         <div class="col-md-6">
                             <label for="password" class="form-label" data-i18n="register.passwordLabel">Mot de passe</label>
-                            <input type="password" class="form-control" id="password" name="password" placeholder=""
-                                   autocomplete="new-password"
-                                   readonly onfocus="this.removeAttribute('readonly')" required>
+                            <div class="password-input-wrap" data-password-toggle>
+                                <input type="password" class="form-control" id="password" name="password" placeholder=""
+                                       autocomplete="new-password"
+                                       readonly onfocus="this.removeAttribute('readonly')" required>
+                                <button type="button" class="password-toggle-btn" aria-label="Afficher le mot de passe">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </div>
                         </div>
 
                         <div class="col-md-6">
                             <label for="confirmation" class="form-label" data-i18n="register.confirmationLabel">Confirmer le mot de passe</label>
-                            <input type="password" class="form-control" id="confirmation" name="confirmation" placeholder=""
-                                   autocomplete="new-password"
-                                   readonly onfocus="this.removeAttribute('readonly')" required>
+                            <div class="password-input-wrap" data-password-toggle>
+                                <input type="password" class="form-control" id="confirmation" name="confirmation" placeholder=""
+                                       autocomplete="new-password"
+                                       readonly onfocus="this.removeAttribute('readonly')" required>
+                                <button type="button" class="password-toggle-btn" aria-label="Afficher le mot de passe">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
