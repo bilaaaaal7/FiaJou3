@@ -89,31 +89,6 @@ $priorityDefaut = isset($_POST['priority']) && !empty($_POST['priority']);
                     </select>
                 </div>
 
-                <div class="form-group">
-                    <label data-i18n="commander.prioritaire">Commande prioritaire</label>
-                    <div style="display: flex; gap: 18px; align-items: center; padding-top: 8px;">
-                        <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
-                            <input type="radio" name="priority" value="1" <?php echo $priorityDefaut ? 'checked' : ''; ?>>
-                            <span data-i18n="commander.oui">Oui</span>
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
-                            <input type="radio" name="priority" value="0" <?php echo !$priorityDefaut ? 'checked' : ''; ?>>
-                            <span data-i18n="commander.non">Non</span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="pause_debut" data-i18n="commander.pauseDebut">Pause — début</label>
-                    <input type="time" id="pause_debut" name="pause_debut"
-                           value="<?php echo htmlspecialchars($pauseDebutDefaut); ?>">
-                </div>
-
-                <div class="form-group">
-                    <label for="pause_fin" data-i18n="commander.pauseFin">Pause — fin</label>
-                    <input type="time" id="pause_fin" name="pause_fin"
-                           value="<?php echo htmlspecialchars($pauseFinDefaut); ?>">
-                </div>
             </div>
 
             <div class="form-group" style="margin-top: 16px;">
