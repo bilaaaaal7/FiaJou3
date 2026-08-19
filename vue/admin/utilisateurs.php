@@ -33,7 +33,6 @@ $roleI18n = [
 <div class="panel">
     <div class="panel-head-actions">
         <h2 data-i18n="admin_clients.listeClients">Liste des clients</h2>
-        <button type="button" class="btn btn-gold" data-modal-open="modalFormUtilisateur" data-mode="add"><span data-i18n="admin_clients.ajouterClient">Ajouter un client</span></button>
     </div>
     <div class="table-wrap">
         <table class="data-table" id="tableUsers">

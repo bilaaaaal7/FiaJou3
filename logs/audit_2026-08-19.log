@@ -1,0 +1,4 @@
+[2026-08-19 02:51:24] user=20 email=saram@gmail.com role=admin action=connexion.reussie details="email=saram@gmail.com" ip=192.168.100.134
+[2026-08-19 02:52:45] user=20 email=saram@gmail.com role=admin action=menu_semaine.creer_semaine details="semaine=2026-08-31 -> 2026-09-06" ip=192.168.100.134
+[2026-08-19 20:24:48] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
+[2026-08-19 20:28:05] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=192.168.100.127
