@@ -843,7 +843,8 @@ table.data-table tr:hover td { background: var(--table-hover); }
 .btn-sm { padding: 6px 12px; font-size: 0.78rem; }
 .btn-block { width: 100%; justify-content: center; }
 
-.actions-cell { display: flex; gap: 6px; flex-wrap: wrap; }
+.actions-cell { vertical-align: middle; white-space: nowrap; }
+.actions-cell > * + * { margin-left: 6px; }
 
 /* ---------- Forms ---------- */
 .form-grid {
@@ -1427,7 +1428,8 @@ body.sidebar-open .sidebar-overlay {
     .form-grid { grid-template-columns: 1fr; }
     .two-col { grid-template-columns: 1fr; }
     .filter-bar { flex-direction: column; align-items: stretch; }
-    .actions-cell { flex-direction: column; gap: 4px; }
+    .actions-cell { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; white-space: normal; }
+    .actions-cell > * + * { margin-left: 0; }
     h1 { font-size: 1.3rem; }
     .table-wrap { margin: 0 -16px; }
     .bar-chart { height: 170px; }

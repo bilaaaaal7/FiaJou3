@@ -2,3 +2,5 @@
 [2026-08-19 02:52:45] user=20 email=saram@gmail.com role=admin action=menu_semaine.creer_semaine details="semaine=2026-08-31 -> 2026-09-06" ip=192.168.100.134
 [2026-08-19 20:24:48] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=::1
 [2026-08-19 20:28:05] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=192.168.100.127
+[2026-08-19 20:33:35] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=192.168.100.127
+[2026-08-19 20:40:51] user=5 email=ismailsghir107@gmail.com role=admin action=commande.statut details="id=18 nouveau_statut=confirmee cook_id= driver_id=" ip=192.168.100.127
