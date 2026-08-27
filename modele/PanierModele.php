@@ -20,7 +20,7 @@ class PanierModele
      * Ajoute un plat au panier, restreint au menu de la semaine (cahier des charges).
      *
      * @param int      $platId
-     * @param string|null $date Date de livraison souhaitée (Y-m-d). Déduite du menu si absente.
+     * @param string|null $date Date de livraison souhaitée (Y-m-d). Ignorée si absente.
      *
      * @return string 'ok' | 'indisponible' | 'horsmenu' | 'quantite_max' | 'fermee'
      */
@@ -47,35 +47,11 @@ class PanierModele
             return 'horsmenu';
         }
 
-        if ($date === null) {
-            $date = $menuModele->getDateCommandePourPlat($platId);
-        }
-        if ($date === null) {
-            return 'horsmenu';
-        }
-
-        [$dateOk, ] = $menuModele->dateLivraisonValide($date);
-        if (!$dateOk) {
-            return 'fermee';
-        }
-
-        $present = false;
-        foreach ($menuModele->getPlatsPourDate($date) as $platDuJour) {
-            if ((int) $platDuJour['id'] === $platId) {
-                $present = true;
-                break;
-            }
-        }
-        if (!$present) {
-            return 'horsmenu';
-        }
-
         if (isset($_SESSION['panier'][$platId])) {
             $_SESSION['panier'][$platId]++;
         } else {
             $_SESSION['panier'][$platId] = 1;
         }
-        $_SESSION['panier_date'] = $date;
         return 'ok';
     }
 
@@ -201,8 +177,7 @@ class PanierModele
 
     /**
      * Valide le panier (disponibilité, quantités, conformité au menu de la
-     * semaine et à la date de livraison choisie). Les articles invalides sont
-     * retirés du panier.
+     * semaine). Les articles invalides sont retirés du panier.
      */
     public function valider(): array
     {
@@ -217,24 +192,6 @@ class PanierModele
                     unset($_SESSION['panier'][$id]);
                 } elseif (!$plat['disponible']) {
                     $erreurs[] = "Le plat \"{$plat['nom']}\" n'est plus disponible.";
-                    unset($_SESSION['panier'][$id]);
-                }
-            }
-        }
-
-        $date = $this->getDate();
-        if ($date !== null && !empty($_SESSION['panier'])) {
-            require_once __DIR__ . '/MenuSemaineModele.php';
-            $menuModele = new MenuSemaineModele();
-            $idsDuJour = [];
-            foreach ($menuModele->getPlatsPourDate($date) as $plat) {
-                $idsDuJour[] = (int) $plat['id'];
-            }
-            foreach ($_SESSION['panier'] as $id => $quantite) {
-                if (!in_array((int) $id, $idsDuJour, true)) {
-                    $plat = $platModele->getParId((int) $id);
-                    $erreurs[] = ($plat ? 'Le plat "' . $plat['nom'] . '"' : "Le plat #$id") .
-                        ' n\'est pas au menu de la semaine pour la date de livraison choisie.';
                     unset($_SESSION['panier'][$id]);
                 }
             }

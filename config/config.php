@@ -42,16 +42,24 @@ define('HEURE_LIMITE_COMMANDE', '21:00');
 
 // Jours composant le menu hebdomadaire : l'administrateur configure les plats
 // de chacun de ces jours (plusieurs plats possibles par jour). Le samedi n'en
-// fait pas partie : c'est un jour de "menu libre".
-define('JOURS_MENU', ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'dimanche']);
+// fait pas partie : c'est un jour de "menu libre". Le dimanche est exclu :
+// aucune commande ne peut être passée pour ce jour.
+define('JOURS_MENU', ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi']);
 
 // Samedi : jour de "menu libre". Aucun plat spécifique n'est configuré ;
 // tous les plats présents dans le menu hebdomadaire sont commandables.
+// Le samedi permet également de commander les plats pour toute la semaine.
 define('JOUR_MENU_LIBRE', 'samedi');
 
-// Jours de livraison autorisés, dans l'ordre (7j/7 : le samedi est un jour
-// de menu libre et le dimanche dispose de son propre menu).
-define('JOURS_LIVRAISON', ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche']);
+// Jours de livraison autorisés, dans l'ordre (6j/7 : le dimanche est exclu).
+define('JOURS_LIVRAISON', ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi']);
+
+// Pourcentage de remise accordé aux clients qui commandent tous les plats
+// de la semaine le samedi (commande couvrant l'ensemble de la semaine).
+define('REMISE_SEMAINE_POURCENT', 10);
+
+// Prix fixe de l'abonnement mensuel (en DH).
+define('PRIX_ABONNEMENT_MENSUEL', 500.00);
 
 // Statuts possibles d'une commande (doivent correspondre à l'ENUM de la BDD)
 define('STATUTS_COMMANDE', [

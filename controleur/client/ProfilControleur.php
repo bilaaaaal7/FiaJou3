@@ -21,6 +21,7 @@ if (isset($_POST['modifier'])) {
     $telephone = trim($_POST['telephone'] ?? '');
     $adresse  = trim($_POST['adresse'] ?? '');
     $ville    = trim($_POST['ville'] ?? '');
+    $societe  = trim($_POST['societe'] ?? '');
 
     if ($prenom === '' || $nom === '') {
         $erreur = 'Le prénom et le nom sont obligatoires.';
@@ -31,6 +32,7 @@ if (isset($_POST['modifier'])) {
             'telephone' => $telephone,
             'adresse'   => $adresse,
             'ville'     => $ville,
+            'societe'   => $societe,
         ]);
 
         $_SESSION['prenom'] = $prenom;

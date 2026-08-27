@@ -79,7 +79,7 @@ $statutI18n = [
                 <tr>
                     <td><?php echo $c['id']; ?></td>
                     <td><?php echo htmlspecialchars($c['prenom'] . ' ' . $c['nom']); ?></td>
-                    <td><?php echo $c['date_livraison']; ?></td>
+                    <td><?php echo $c['date_livraison'] ?? '-'; ?></td>
                     <td><?php echo $c['heure_livraison']; ?></td>
                     <td><?php echo number_format($c['total'], 2); ?> DH</td>
                     <td><?php echo htmlspecialchars($c['zone_nom'] ?? '-'); ?></td>

@@ -18,12 +18,6 @@ require ROOT_PATH . '/assets/inc/client_navbar.php';
 
     <?php if (!empty($panier)): ?>
     <div class="panel">
-        <?php if ($dateLivraison): ?>
-            <div class="alert alert-info py-2" role="alert" style="margin-bottom: 16px;">
-                <span data-i18n="common.livraisonPrevueLe">Date de livraison prévue :</span> <strong><?php echo htmlspecialchars(date('d/m/Y', strtotime($dateLivraison))); ?></strong>
-                <span style="opacity: 0.8;" data-i18n="panier.modifiableFin">— modifiable à la finalisation de la commande.</span>
-            </div>
-        <?php endif; ?>
 
         <div class="table-wrap">
             <table class="data-table">

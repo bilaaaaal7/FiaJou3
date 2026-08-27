@@ -50,6 +50,9 @@ $formMode = !empty($idModifier) ? 'edit' : 'add';
                                 'nom_en' => $zone['nom_en'] ?? '',
                                 'nom_ar' => $zone['nom_ar'] ?? '',
                                 'prix_livraison' => $zone['prix_livraison'],
+                                'lat' => $zone['lat'] ?? '',
+                                'lng' => $zone['lng'] ?? '',
+                                'rayon_km' => $zone['rayon_km'] ?? '',
                             ], JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP), ENT_QUOTES); ?>'><span data-i18n="common.modifier">Modifier</span></button>
                         <a href="<?php echo BASE_URL; ?>/index.php?route=admin/zones&supprimer=<?php echo $zone['id']; ?>" class="btn btn-danger btn-sm" data-confirm="Supprimer cette zone ?" data-confirm-i18n="admin_zones.confirmSupprimer"><span data-i18n="common.supprimer">Supprimer</span></a>
                     </td>
@@ -86,6 +89,18 @@ $formMode = !empty($idModifier) ? 'edit' : 'add';
                 <div class="form-group">
                     <label data-i18n="admin_zones.prixLivraison">Prix de livraison (DH)</label>
                     <input type="number" step="0.01" min="0" name="prix_livraison" value="<?php echo htmlspecialchars($prix); ?>" required>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="admin_zones.latitude">Latitude (centre de la zone)</label>
+                    <input type="number" step="any" name="lat" value="<?php echo htmlspecialchars($lat); ?>" placeholder="Ex : 31.6295000">
+                </div>
+                <div class="form-group">
+                    <label data-i18n="admin_zones.longitude">Longitude</label>
+                    <input type="number" step="any" name="lng" value="<?php echo htmlspecialchars($lng); ?>" placeholder="Ex : -7.9811000">
+                </div>
+                <div class="form-group">
+                    <label data-i18n="admin_zones.rayon">Rayon (km)</label>
+                    <input type="number" step="0.1" min="0" name="rayon_km" value="<?php echo htmlspecialchars($rayon); ?>" placeholder="Ex : 2.5">
                 </div>
             </div>
             <input type="hidden" name="id" value="<?php echo $idModifier; ?>">

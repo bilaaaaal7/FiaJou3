@@ -57,6 +57,7 @@ if (isset($_GET['erreur']) && isset($erreursAdmin[$_GET['erreur']])): ?>
         apparaître plusieurs fois dans la semaine (sur plusieurs jours) et dans toutes
         les semaines : chaque semaine reste indépendante. Le samedi est un jour de
         menu libre : aucun plat spécifique, tous les plats de la semaine y sont commandables.
+        Le dimanche est exclu : aucune commande n'est possible ce jour-là.
     </p>
 
     <?php foreach (JOURS_MENU as $jour): ?>

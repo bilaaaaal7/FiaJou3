@@ -62,7 +62,6 @@ $cleStatutCommande = [
                     <tr>
                         <th>#</th>
                         <th data-i18n="mes_commandes.dateCommande">Date commande</th>
-                        <th data-i18n="mes_commandes.dateLivraison">Date livraison</th>
                         <th data-i18n="mes_commandes.heure">Heure</th>
                         <th data-i18n="mes_commandes.total">Total</th>
                         <th data-i18n="mes_commandes.statut">Statut</th>
@@ -75,7 +74,6 @@ $cleStatutCommande = [
                     <tr data-statut="<?php echo htmlspecialchars($commande['statut']); ?>">
                         <td><?php echo (int) $commande['id']; ?></td>
                         <td><?php echo htmlspecialchars($commande['date_commande']); ?></td>
-                        <td><?php echo htmlspecialchars($commande['date_livraison']); ?></td>
                         <td><?php echo htmlspecialchars($commande['heure_livraison']); ?></td>
                         <td><?php echo number_format((float) $commande['total'], 2, ',', ' '); ?> DH</td>
                         <td>

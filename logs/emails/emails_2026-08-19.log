@@ -1,0 +1,15 @@
+[2026-08-19 16:55:03]
+A: elbbilal00@gmail.com
+Sujet: FiaJou3 : réinitialisation de votre mot de passe
+--- HTML ---
+<div style="font-family:Arial,Helvetica,sans-serif;max-width:600px;margin:0 auto;color:#171717;"><h2 style="color:#B88618;">FiaJou3</h2><p>Bonjour,</p><p>Vous avez demandé la réinitialisation du mot de passe de votre compte FiaJou3.</p><p>Cliquez sur le bouton ci-dessous pour choisir un nouveau mot de passe :</p><p style="text-align:center;margin:28px 0;"><a href="http://192.168.100.106/FiaJou3/index.php?route=mot-de-passe-oublie&amp;token=36297d3083830aca91fc91e9c06b30414ac4458e7f61033437214af5ef416f8e" style="display:inline-block;padding:13px 30px;background:linear-gradient(135deg,#c8931f,#B88618);color:#ffffff;text-decoration:none;border-radius:50px;font-weight:700;">Réinitialiser mon mot de passe</a></p><p>Ce lien est personnel et temporaire : il expirera le <strong>19/08/2026 17:55</strong> et ne peut être utilisé qu'une seule fois.</p><p>Si vous n'êtes pas à l'origine de cette demande, ignorez simplement cet email : votre mot de passe restera inchangé.</p><p style="color:#8a8478;font-size:12px;border-top:1px solid #eee;padding-top:12px;margin-top:28px;">FiaJou3 — Repas faits maison, livrés chez vous.</p></div>
+--- TEXTE ---
+Bonjour,
+
+Vous avez demandé la réinitialisation du mot de passe de votre compte FiaJou3.
+
+Pour choisir un nouveau mot de passe, cliquez sur ce lien (valable jusqu'au 19/08/2026 17:55, usage unique) :
+http://192.168.100.106/FiaJou3/index.php?route=mot-de-passe-oublie&token=36297d3083830aca91fc91e9c06b30414ac4458e7f61033437214af5ef416f8e
+
+Si vous n'êtes pas à l'origine de cette demande, ignorez simplement cet email : votre mot de passe restera inchangé.
+----------------------------------------

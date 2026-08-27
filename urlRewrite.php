@@ -434,6 +434,16 @@ function dispatch(): void
             require ROOT_PATH . '/controleur/client/NotificationsControleur.php';
             return;
 
+        case 'client/abonnement':
+            reset_meta();
+            set_meta(
+                'Abonnement mensuel - ' . APP_NAME,
+                'Souscrivez à un abonnement mensuel ' . APP_NAME . ' pour bénéficier d\'avantages exclusifs.',
+                'abonnement, souscription, ' . APP_NAME
+            );
+            require ROOT_PATH . '/controleur/client/AbonnementControleur.php';
+            return;
+
         /* =========================
            ESPACE CUISINIER
            (protégé par exiger_role(ROLE_CUISINIER))

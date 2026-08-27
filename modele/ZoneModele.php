@@ -30,20 +30,65 @@ class ZoneModele
         return $stmt->fetch();
     }
 
-    public function creer(string $nom, float $prixLivraison, ?string $nomEn = null, ?string $nomAr = null): void
+    /**
+     * Distance en kilomètres entre deux points GPS (formule de Haversine).
+     */
+    public static function distanceKm(float $lat1, float $lng1, float $lat2, float $lng2): float
     {
-        $stmt = $this->pdo->prepare(
-            "INSERT INTO delivery_zones (nom, nom_en, nom_ar, prix_livraison) VALUES (?, ?, ?, ?)"
-        );
-        $stmt->execute([$nom, self::ouNull($nomEn), self::ouNull($nomAr), $prixLivraison]);
+        $rayonTerre = 6371.0;
+        $dLat = deg2rad($lat2 - $lat1);
+        $dLng = deg2rad($lng2 - $lng1);
+        $a = sin($dLat / 2) * sin($dLat / 2)
+            + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($dLng / 2) * sin($dLng / 2);
+        return $rayonTerre * 2 * atan2(sqrt($a), sqrt(1 - $a));
     }
 
-    public function mettreAJour(int $id, string $nom, float $prixLivraison, ?string $nomEn = null, ?string $nomAr = null): void
+    /**
+     * Détermine la zone de livraison correspondant à des coordonnées GPS.
+     *
+     * Parcourt les zones disposant d'un centre et d'un rayon et retourne la
+     * zone la plus proche dont le rayon couvre la position donnée. Retourne
+     * false si aucune zone ne couvre les coordonnées.
+     */
+    public function getZoneParCoordonnees(float $lat, float $lng): array|false
+    {
+        $zones = $this->getToutes();
+        $meilleureZone = false;
+        $distanceMin = PHP_FLOAT_MAX;
+
+        foreach ($zones as $zone) {
+            $zoneLat = (float) ($zone['lat'] ?? 0);
+            $zoneLng = (float) ($zone['lng'] ?? 0);
+            $rayon = (float) ($zone['rayon_km'] ?? 0);
+
+            if ($zoneLat == 0 && $zoneLng == 0) {
+                continue;
+            }
+
+            $distance = self::distanceKm($lat, $lng, $zoneLat, $zoneLng);
+            if ($distance <= $rayon && $distance < $distanceMin) {
+                $distanceMin = $distance;
+                $meilleureZone = $zone;
+            }
+        }
+
+        return $meilleureZone;
+    }
+
+    public function creer(string $nom, float $prixLivraison, ?string $nomEn = null, ?string $nomAr = null, ?float $lat = null, ?float $lng = null, ?float $rayonKm = null): void
     {
         $stmt = $this->pdo->prepare(
-            "UPDATE delivery_zones SET nom = ?, nom_en = ?, nom_ar = ?, prix_livraison = ? WHERE id = ?"
+            "INSERT INTO delivery_zones (nom, nom_en, nom_ar, prix_livraison, lat, lng, rayon_km) VALUES (?, ?, ?, ?, ?, ?, ?)"
         );
-        $stmt->execute([$nom, self::ouNull($nomEn), self::ouNull($nomAr), $prixLivraison, $id]);
+        $stmt->execute([$nom, self::ouNull($nomEn), self::ouNull($nomAr), $prixLivraison, $lat, $lng, $rayonKm]);
+    }
+
+    public function mettreAJour(int $id, string $nom, float $prixLivraison, ?string $nomEn = null, ?string $nomAr = null, ?float $lat = null, ?float $lng = null, ?float $rayonKm = null): void
+    {
+        $stmt = $this->pdo->prepare(
+            "UPDATE delivery_zones SET nom = ?, nom_en = ?, nom_ar = ?, prix_livraison = ?, lat = ?, lng = ?, rayon_km = ? WHERE id = ?"
+        );
+        $stmt->execute([$nom, self::ouNull($nomEn), self::ouNull($nomAr), $prixLivraison, $lat, $lng, $rayonKm, $id]);
     }
 
     private static function ouNull(?string $valeur): ?string

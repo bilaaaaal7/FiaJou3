@@ -13,6 +13,7 @@ $emailProfil  = (string) ($profil['email'] ?? '');
 $telephoneProfil = (string) ($profil['telephone'] ?? '');
 $adresseProfil   = (string) ($profil['adresse'] ?? '');
 $villeProfil     = (string) ($profil['ville'] ?? '');
+$societeProfil   = (string) ($profil['societe'] ?? '');
 $initialesProfil = mb_strtoupper(mb_substr($prenomProfil, 0, 1) . mb_substr($nomProfil, 0, 1));
 if ($initialesProfil === '') {
     $initialesProfil = '?';
@@ -121,6 +122,15 @@ if ($initialesProfil === '') {
                             <i data-lucide="building-2" aria-hidden="true"></i>
                             <input type="text" id="ville" name="ville"
                                    value="<?php echo htmlspecialchars($villeProfil); ?>" placeholder="Votre ville">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="societe" data-i18n="parametres.societeLabel">Société</label>
+                        <div class="input-icon-wrap">
+                            <i data-lucide="briefcase" aria-hidden="true"></i>
+                            <input type="text" id="societe" name="societe"
+                                   value="<?php echo htmlspecialchars($societeProfil); ?>" placeholder="Votre société (facultatif)">
                         </div>
                     </div>
                 </div>

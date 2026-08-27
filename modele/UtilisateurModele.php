@@ -96,7 +96,7 @@ class UtilisateurModele
     {
         $stmt = $this->pdo->prepare(
             "SELECT users.id, users.email, users.actif, profiles.prenom, profiles.nom,
-                    profiles.telephone, profiles.adresse, profiles.ville, profiles.role, profiles.langue
+                    profiles.telephone, profiles.adresse, profiles.ville, profiles.societe, profiles.role, profiles.langue
              FROM users
              INNER JOIN profiles ON users.id = profiles.user_id
              WHERE users.id = ?"
@@ -200,7 +200,7 @@ class UtilisateurModele
     {
         $stmt = $this->pdo->prepare(
             "SELECT users.id, users.email, users.actif, profiles.prenom, profiles.nom,
-                    profiles.telephone, profiles.adresse, profiles.ville, profiles.role
+                    profiles.telephone, profiles.adresse, profiles.ville, profiles.societe, profiles.role
              FROM users
              INNER JOIN profiles ON users.id = profiles.user_id
              WHERE users.id = ?"
@@ -234,7 +234,7 @@ class UtilisateurModele
     {
         $stmt = $this->pdo->prepare(
             "UPDATE profiles
-             SET prenom = ?, nom = ?, telephone = ?, adresse = ?, ville = ?
+             SET prenom = ?, nom = ?, telephone = ?, adresse = ?, ville = ?, societe = ?
              WHERE user_id = ?"
         );
         $stmt->execute([
@@ -243,6 +243,7 @@ class UtilisateurModele
             $donnees['telephone'] ?? '',
             $donnees['adresse'] ?? '',
             $donnees['ville'] ?? '',
+            $donnees['societe'] ?? null,
             $id,
         ]);
     }

@@ -142,7 +142,7 @@ require ROOT_PATH . '/assets/inc/quick_access.php';
                 <?php if (!empty($c['priority'])): ?> <span class="badge-status st-en_attente" data-i18n="common.prioritaire">Prioritaire</span><?php endif; ?>
             </div>
             <div style="color:var(--text-soft); font-size:0.86rem;">
-                <span data-i18n="cuisinier_dashboard.livraison">Livraison :</span> <?php echo $c['date_livraison'] . ' ' . $c['heure_livraison']; ?>
+                <span data-i18n="cuisinier_dashboard.livraison">Livraison :</span> <?php echo ($c['date_livraison'] ?? '-') . ' ' . $c['heure_livraison']; ?>
                 &middot; <?php echo number_format($c['total'], 2); ?> DH
             </div>
         </div>
@@ -182,7 +182,7 @@ require ROOT_PATH . '/assets/inc/quick_access.php';
                 <?php echo htmlspecialchars($c['prenom'] . ' ' . $c['nom']); ?>
             </div>
             <div style="color:var(--text-soft); font-size:0.86rem;">
-                <span data-i18n="cuisinier_dashboard.livraison">Livraison :</span> <?php echo $c['date_livraison'] . ' ' . $c['heure_livraison']; ?>
+                <span data-i18n="cuisinier_dashboard.livraison">Livraison :</span> <?php echo ($c['date_livraison'] ?? '-') . ' ' . $c['heure_livraison']; ?>
                 &middot; <?php echo number_format($c['total'], 2); ?> DH
             </div>
         </div>

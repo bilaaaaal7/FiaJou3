@@ -67,6 +67,7 @@
 <script src="<?php echo BASE_URL; ?>/assets/js/theme.js"></script>
 <script src="<?php echo BASE_URL; ?>/assets/js/profile-menu.js"></script>
 <script src="<?php echo BASE_URL; ?>/assets/js/i18n.js?<?php echo (int) @filemtime(ROOT_PATH . '/assets/js/i18n.js'); ?>"></script>
+<script src="<?php echo BASE_URL; ?>/assets/js/honeypot.js?v=<?php echo (int) @filemtime(ROOT_PATH . '/assets/js/honeypot.js'); ?>"></script>
 <script>if (window.lucide) { lucide.createIcons(); }</script>
 <script>
     document.getElementById('displayYear') && (document.getElementById('displayYear').textContent = new Date().getFullYear());

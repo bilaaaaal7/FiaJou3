@@ -4,3 +4,12 @@
 [2026-08-19 20:28:05] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=192.168.100.127
 [2026-08-19 20:33:35] user=5 email=ismailsghir107@gmail.com role=admin action=connexion.reussie details="email=ismailsghir107@gmail.com" ip=192.168.100.127
 [2026-08-19 20:40:51] user=5 email=ismailsghir107@gmail.com role=admin action=commande.statut details="id=18 nouveau_statut=confirmee cook_id= driver_id=" ip=192.168.100.127
+[2026-08-19 13:54:13] user=0 email= role=anonyme action=connexion.google.reussie details="email=elbbilal00@gmail.com" ip=::1
+[2026-08-19 16:41:15] user=5 email=elbbilal00@gmail.com role=admin action=connexion.reussie details="email=elbbilal00@gmail.com" ip=192.168.100.127
+[2026-08-19 16:55:06] user=0 email= role=anonyme action=mot_de_passe_oublie.demande details="email=elbbilal00@gmail.com" ip=192.168.100.127
+[2026-08-19 17:01:20] user=5 email=elbbilal00@gmail.com role=admin action=connexion.reussie details="email=elbbilal00@gmail.com" ip=192.168.100.148
+[2026-08-19 17:01:49] user=5 email=elbbilal00@gmail.com role=admin action=connexion.reussie details="email=elbbilal00@gmail.com" ip=192.168.100.127
+[2026-08-19 17:03:07] user=5 email=elbbilal00@gmail.com role=admin action=connexion.reussie details="email=elbbilal00@gmail.com" ip=192.168.100.127
+[2026-08-19 17:03:50] user=5 email=elbbilal00@gmail.com role=admin action=plat.modifier details="id=10 nom=Mix Grill prix=120 disponible=1" ip=192.168.100.127
+[2026-08-19 17:45:24] user=5 email=elbbilal00@gmail.com role=admin action=connexion.reussie details="email=elbbilal00@gmail.com" ip=192.168.100.127
+[2026-08-19 17:45:46] user=5 email=elbbilal00@gmail.com role=admin action=commande.statut details="id=19 nouveau_statut=en_preparation cook_id=11 driver_id=" ip=192.168.100.127

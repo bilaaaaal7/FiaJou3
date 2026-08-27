@@ -41,6 +41,25 @@ class CommandeModele
     }
 
     /**
+     * Résout le nom de société dans la langue active pour un jeu de résultats.
+     */
+    private static function localiserSocietes(array $lignes): array
+    {
+        $langue = langue_actuelle();
+        if ($langue === 'fr') {
+            return $lignes;
+        }
+        foreach ($lignes as &$ligne) {
+            $cleLocale = 'societe_nom_' . $langue;
+            if (!empty($ligne[$cleLocale])) {
+                $ligne['societe_nom'] = $ligne[$cleLocale];
+            }
+        }
+        unset($ligne);
+        return $lignes;
+    }
+
+    /**
      * Liste complète des commandes (vue admin), avec infos client.
      */
     public function getToutesAvecClient(): array
@@ -50,15 +69,17 @@ class CommandeModele
                     orders.total, orders.statut, orders.commentaire, orders.priority, orders.pause,
                     orders.assigned_cook_id, orders.assigned_driver_id,
                     users.email, profiles.prenom, profiles.nom,
-                    dz.nom AS zone_nom, dz.nom_en AS zone_nom_en, dz.nom_ar AS zone_nom_ar
+                    dz.nom AS zone_nom, dz.nom_en AS zone_nom_en, dz.nom_ar AS zone_nom_ar,
+                    COALESCE(orders.societe_nom, s.nom) AS societe_nom, s.nom_en AS societe_nom_en, s.nom_ar AS societe_nom_ar
              FROM orders
              INNER JOIN users ON orders.user_id = users.id
              INNER JOIN profiles ON users.id = profiles.user_id
              LEFT JOIN delivery_zones dz ON orders.zone_id = dz.id
+             LEFT JOIN societes s ON orders.societe_id = s.id
              ORDER BY orders.id DESC"
         );
         $stmt->execute();
-        return self::localiserZones($stmt->fetchAll());
+        return self::localiserZones(self::localiserSocietes($stmt->fetchAll()));
     }
 
     /**
@@ -154,32 +175,43 @@ class CommandeModele
     public function getParUtilisateur(int $userId): array
     {
         $stmt = $this->pdo->prepare(
-            "SELECT orders.*, dz.nom AS zone_nom, dz.nom_en AS zone_nom_en, dz.nom_ar AS zone_nom_ar
+            "SELECT orders.*, dz.nom AS zone_nom, dz.nom_en AS zone_nom_en, dz.nom_ar AS zone_nom_ar,
+                    COALESCE(orders.societe_nom, s.nom) AS societe_nom, s.nom_en AS societe_nom_en, s.nom_ar AS societe_nom_ar
              FROM orders
              LEFT JOIN delivery_zones dz ON orders.zone_id = dz.id
+             LEFT JOIN societes s ON orders.societe_id = s.id
              WHERE orders.user_id = ?
              ORDER BY orders.id DESC"
         );
         $stmt->execute([$userId]);
-        return self::localiserZones($stmt->fetchAll());
+        return self::localiserZones(self::localiserSocietes($stmt->fetchAll()));
     }
 
     public function getParId(int $id): array|false
     {
         $stmt = $this->pdo->prepare(
             "SELECT orders.*, dz.nom AS zone_nom, dz.nom_en AS zone_nom_en, dz.nom_ar AS zone_nom_ar, dz.prix_livraison,
+                    COALESCE(orders.societe_nom, s.nom) AS societe_nom, s.nom_en AS societe_nom_en, s.nom_ar AS societe_nom_ar,
                     profiles.prenom, profiles.nom, users.email, profiles.telephone,
                     profiles.adresse, profiles.ville
              FROM orders
              INNER JOIN users ON orders.user_id = users.id
              INNER JOIN profiles ON users.id = profiles.user_id
              LEFT JOIN delivery_zones dz ON orders.zone_id = dz.id
+             LEFT JOIN societes s ON orders.societe_id = s.id
              WHERE orders.id = ?"
         );
         $stmt->execute([$id]);
         $ligne = $stmt->fetch();
         if ($ligne) {
             $ligne = self::localiserZones([$ligne])[0];
+            $langue = langue_actuelle();
+            if ($langue !== 'fr') {
+                $cleLocale = 'societe_nom_' . $langue;
+                if (!empty($ligne[$cleLocale])) {
+                    $ligne['societe_nom'] = $ligne[$cleLocale];
+                }
+            }
         }
         return $ligne;
     }
@@ -340,8 +372,12 @@ class CommandeModele
 
     /**
      * Crée une commande + ses lignes (order_items) à partir du panier en session.
+     *
+     * @param string|null $societeNom Nom de société en texte libre (l'identifiant
+     *                                `societeId` reste conservé pour les commandes
+     *                                liées à une société prédéfinie historique).
      */
-    public function creerDepuisPanier(int $userId, int $zoneId, string $dateLivraison, string $heureLivraison, string $commentaire, array $panier, int $priority = 0, ?string $pause = null): int
+    public function creerDepuisPanier(int $userId, int $zoneId, string $heureLivraison, string $commentaire, array $panier, int $priority = 0, ?string $pause = null, bool $couvreSemaine = false, int $societeId = 0, ?string $societeNom = null): int
     {
         $platModele = new PlatModele();
         $total = 0;
@@ -361,16 +397,24 @@ class CommandeModele
             $total += $zone['prix_livraison'];
         }
 
+        $remise = 0;
+        if ($couvreSemaine && defined('REMISE_SEMAINE_POURCENT')) {
+            $remise = round($total * REMISE_SEMAINE_POURCENT / 100, 2);
+            $total -= $remise;
+        }
+
         $stmt = $this->pdo->prepare(
-            "INSERT INTO orders (user_id, zone_id, date_commande, date_livraison, heure_livraison, total, statut, commentaire, priority, pause)
-             VALUES (?, ?, NOW(), ?, ?, ?, 'en_attente', ?, ?, ?)"
+            "INSERT INTO orders (user_id, zone_id, societe_id, societe_nom, date_commande, date_livraison, heure_livraison, total, remise, statut, commentaire, priority, pause)
+             VALUES (?, ?, ?, ?, NOW(), NULL, ?, ?, ?, 'en_attente', ?, ?, ?)"
         );
         $stmt->execute([
             $userId,
             $zoneId,
-            $dateLivraison,
+            $societeId > 0 ? $societeId : null,
+            $societeNom !== null && trim($societeNom) !== '' ? trim($societeNom) : null,
             $heureLivraison,
             $total,
+            $remise,
             $commentaire,
             $priority,
             $pause,

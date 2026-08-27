@@ -19,7 +19,7 @@ $erreurI18n = [
 ];
 $jourLabel = [
     'lundi' => 'Lundi', 'mardi' => 'Mardi', 'mercredi' => 'Mercredi',
-    'jeudi' => 'Jeudi', 'vendredi' => 'Vendredi', 'dimanche' => 'Dimanche',
+    'jeudi' => 'Jeudi', 'vendredi' => 'Vendredi',
 ];
 ?>
 
@@ -43,9 +43,10 @@ $jourLabel = [
         <?php endif; ?>
     <?php endif; ?>
 
-    <?php if ($panierModele->getDate()): ?>
+    <?php if ($panierModele->nombreArticles() > 0): ?>
         <div class="alert alert-info py-2" role="alert">
-            <span data-i18n="common.dateLivraisonPanier">Date de livraison du panier :</span> <strong><?php echo htmlspecialchars(date('d/m/Y', strtotime($panierModele->getDate()))); ?></strong>
+            <span data-i18n="common.nbArticlesPanier">Articles dans le panier :</span> <strong><?php echo $panierModele->nombreArticles(); ?></strong>
+            <a href="<?php echo BASE_URL; ?>/index.php?route=client/panier" style="color: var(--gold-dark); margin-left: 8px;" data-i18n="common.voirPanier">Voir le panier</a>
         </div>
     <?php endif; ?>
 
@@ -59,17 +60,12 @@ $jourLabel = [
         <?php endif; ?>
         <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 16px;">
             <span data-i18n="menu.infoCmdAvant">Commandez avant</span> <?php echo HEURE_LIMITE_COMMANDE; ?>
-            <span data-i18n="menu.infoCmdAvantFin">pour une livraison le lendemain (7j/7).</span>
+            <span data-i18n="menu.infoCmdAvantFin">pour une livraison le lendemain (lundi-samedi).</span>
             <span data-i18n="commander.livraisonInfoFin">Le samedi, le menu est libre : tous les plats de la semaine sont commandables.</span>
         </p>
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
-            <?php $semaineRef = MenuSemaineModele::semaineReference($menu); ?>
             <?php foreach (JOURS_MENU as $jour): ?>
                 <?php if (empty($itemsParJour[$jour])): continue; endif; ?>
-                <?php
-                $dateJour = MenuSemaineModele::datePourJour($jour, $semaineRef);
-                [$jourOuvert] = $dateJour ? $menuSemaineModele->dateLivraisonValide($dateJour) : [false];
-                ?>
                 <div style="background: var(--gold-light); border: 1px solid var(--border); border-radius: 12px; padding: 12px;">
                     <div style="font-weight: 700; color: var(--gold-dark); margin-bottom: 8px;" data-i18n="jours.<?php echo $jour; ?>"><?php echo $jourLabel[$jour]; ?></div>
                     <?php foreach ($itemsParJour[$jour] as $item): ?>
@@ -80,12 +76,12 @@ $jourLabel = [
                                     <?php echo htmlspecialchars($item['categorie'] ?? ''); ?> · <?php echo number_format((float) $item['prix'], 2, ',', ' '); ?> DH
                                 </div>
                             </div>
-                            <?php if ($item['disponible'] && $jourOuvert): ?>
-                                <a href="<?php echo BASE_URL; ?>/index.php?route=client&ajouter=<?php echo (int) $item['product_id']; ?>&date=<?php echo $dateJour; ?>"
-                                   class="btn btn-gold btn-sm" title="Livraison le <?php echo date('d/m/Y', strtotime($dateJour)); ?>" data-i18n-aria="common.ajouterPanier">+</a>
+                            <?php if ($item['disponible'] && !empty($ouvertParJour[$jour])): ?>
+                                <a href="<?php echo BASE_URL; ?>/index.php?route=client&ajouter=<?php echo (int) $item['product_id']; ?>"
+                                   class="btn btn-gold btn-sm" data-i18n-aria="common.ajouterPanier">+</a>
                             <?php else: ?>
-                                <span class="badge-status st-annulee" data-i18n="<?php echo $jourOuvert ? 'common.indisponible' : 'common.cloture'; ?>">
-                                    <?php echo $jourOuvert ? 'Indisponible' : 'Clôturé'; ?>
+                                <span class="badge-status st-annulee" data-i18n="<?php echo ($ouvertParJour[$jour] ?? true) ? 'common.indisponible' : 'common.cloture'; ?>">
+                                    <?php echo ($ouvertParJour[$jour] ?? true) ? 'Indisponible' : 'Clôturé'; ?>
                                 </span>
                             <?php endif; ?>
                         </div>
@@ -101,18 +97,11 @@ $jourLabel = [
                 $itemsSamedi[$item['product_id']] = $item;
             }
         }
-        $dateSamedi = MenuSemaineModele::datePourJour(JOUR_MENU_LIBRE, $semaineRef);
-        [$samediOuvert] = $dateSamedi ? $menuSemaineModele->dateLivraisonValide($dateSamedi) : [false];
         ?>
         <?php if (!empty($itemsSamedi)): ?>
         <div style="margin-top: 16px; background: var(--gold); border-radius: 12px; padding: 16px; color: var(--dark);">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
                 <div style="font-weight: 700; font-size: 1.05rem;" data-i18n="jours.samediMenuLibre">Samedi — Menu libre</div>
-                <?php if ($samediOuvert): ?>
-                    <div style="font-size: 0.82rem; font-weight: 600;">
-                        <span data-i18n="common.livraisonLe">Livraison le</span> <?php echo date('d/m/Y', strtotime($dateSamedi)); ?>
-                    </div>
-                <?php endif; ?>
             </div>
             <p style="font-size: 0.82rem; margin: 0 0 10px; opacity: 0.85;" data-i18n="accueil.samediDesc">Aucun menu spécifique le samedi : choisissez librement parmi tous les plats de la semaine.</p>
             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px;">
@@ -124,11 +113,13 @@ $jourLabel = [
                                 <?php echo htmlspecialchars($item['categorie'] ?? ''); ?> · <?php echo number_format((float) $item['prix'], 2, ',', ' '); ?> DH
                             </div>
                         </div>
-                        <?php if ($item['disponible'] && $samediOuvert): ?>
-                            <a href="<?php echo BASE_URL; ?>/index.php?route=client&ajouter=<?php echo (int) $item['product_id']; ?>&date=<?php echo $dateSamedi; ?>"
-                               class="btn btn-sm" style="background: var(--dark); color: var(--cream); border: none;" title="Livraison le samedi <?php echo date('d/m/Y', strtotime($dateSamedi)); ?>" data-i18n-aria="common.ajouterPanier">+</a>
+                        <?php if ($item['disponible'] && !empty($ouvertParJour[JOUR_MENU_LIBRE])): ?>
+                            <a href="<?php echo BASE_URL; ?>/index.php?route=client&ajouter=<?php echo (int) $item['product_id']; ?>"
+                               class="btn btn-sm" style="background: var(--dark); color: var(--cream); border: none;" data-i18n-aria="common.ajouterPanier">+</a>
                         <?php else: ?>
-                            <span class="badge-status st-annulee" data-i18n="common.indisponible">Indisponible</span>
+                            <span class="badge-status st-annulee" data-i18n="<?php echo ($ouvertParJour[JOUR_MENU_LIBRE] ?? true) ? 'common.indisponible' : 'common.cloture'; ?>">
+                                <?php echo ($ouvertParJour[JOUR_MENU_LIBRE] ?? true) ? 'Indisponible' : 'Clôturé'; ?>
+                            </span>
                         <?php endif; ?>
                     </div>
                 <?php endforeach; ?>

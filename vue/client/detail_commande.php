@@ -67,10 +67,6 @@ if ($initialesDetail === '') {
                         <td><?php echo htmlspecialchars($commande['date_commande']); ?></td>
                     </tr>
                     <tr>
-                        <td style="font-weight: 600;" data-i18n="detail_commande.dateLivraison">Date de livraison</td>
-                        <td><?php echo htmlspecialchars($commande['date_livraison']); ?></td>
-                    </tr>
-                    <tr>
                         <td style="font-weight: 600;" data-i18n="detail_commande.heureLivraison">Heure de livraison</td>
                         <td><?php echo htmlspecialchars($commande['heure_livraison']); ?></td>
                     </tr>
@@ -78,6 +74,12 @@ if ($initialesDetail === '') {
                         <td style="font-weight: 600;" data-i18n="detail_commande.zone">Zone</td>
                         <td><?php echo htmlspecialchars($commande['zone_nom'] ?? '-'); ?></td>
                     </tr>
+                    <?php if (!empty($commande['societe_nom'])): ?>
+                    <tr>
+                        <td style="font-weight: 600;" data-i18n="detail_commande.societe">Société</td>
+                        <td><?php echo htmlspecialchars($commande['societe_nom']); ?></td>
+                    </tr>
+                    <?php endif; ?>
                     <?php if (!empty($commande['priority'])): ?>
                     <tr>
                         <td style="font-weight: 600;" data-i18n="detail_commande.prioritaire">Prioritaire</td>
@@ -102,6 +104,14 @@ if ($initialesDetail === '') {
                             <?php echo number_format((float) $commande['total'], 2, ',', ' '); ?> DH
                         </td>
                     </tr>
+                    <?php if (!empty($commande['remise']) && $commande['remise'] > 0): ?>
+                    <tr>
+                        <td style="font-weight: 600;" data-i18n="detail_commande.remise">Remise appliquée</td>
+                        <td style="color: #27ae60;">
+                            -<?php echo number_format((float) $commande['remise'], 2, ',', ' '); ?> DH
+                        </td>
+                    </tr>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>

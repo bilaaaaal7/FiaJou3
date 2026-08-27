@@ -51,10 +51,10 @@ if (isset($_GET['erreur']) && isset($erreursAdmin[$_GET['erreur']])):
                     <th data-i18n="common.client">Client</th>
                     <th data-i18n="common.email">Email</th>
                     <th data-i18n="common.dateCommande">Date commande</th>
-                    <th data-i18n="common.dateLivraison">Date livraison</th>
                     <th data-i18n="common.heure">Heure</th>
                     <th data-i18n="common.zone">Zone</th>
                     <th data-i18n="common.total">Total</th>
+                    <th data-i18n="common.remise">Remise</th>
                     <th data-i18n="common.statut">Statut</th>
                     <th data-i18n="common.commentaire">Commentaire</th>
                     <th data-i18n="admin_commandes.affectation">Affectation</th>
@@ -68,10 +68,10 @@ if (isset($_GET['erreur']) && isset($erreursAdmin[$_GET['erreur']])):
                     <td><?php echo htmlspecialchars($commande['prenom'] . ' ' . $commande['nom']); ?></td>
                     <td><?php echo htmlspecialchars($commande['email']); ?></td>
                     <td><?php echo $commande['date_commande']; ?></td>
-                    <td><?php echo $commande['date_livraison']; ?></td>
                     <td><?php echo $commande['heure_livraison']; ?></td>
                     <td><?php echo htmlspecialchars($commande['zone_nom'] ?? '-'); ?></td>
                     <td><?php echo number_format($commande['total'], 2); ?> DH</td>
+                    <td><?php echo !empty($commande['remise']) && $commande['remise'] > 0 ? '-' . number_format($commande['remise'], 2) . ' DH' : '-'; ?></td>
                     <td><span class="badge-status st-<?php echo $commande['statut']; ?>" data-i18n="<?php echo $statutI18n[$commande['statut']] ?? ''; ?>"><?php echo STATUTS_COMMANDE[$commande['statut']] ?? $commande['statut']; ?></span></td>
                     <td><?php echo htmlspecialchars(mb_strimwidth($commande['commentaire'] ?? '-', 0, 30, '...')); ?></td>
                     <td>

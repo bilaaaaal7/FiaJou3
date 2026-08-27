@@ -45,7 +45,7 @@ $statutI18n = [
                 <tr>
                     <td><?php echo $cmd['id']; ?></td>
                     <td><?php echo htmlspecialchars($cmd['prenom'] . ' ' . $cmd['nom']); ?></td>
-                    <td><?php echo $cmd['date_livraison']; ?></td>
+                    <td><?php echo $cmd['date_livraison'] ?? '-'; ?></td>
                     <td><?php echo $cmd['heure_livraison']; ?></td>
                     <td><?php echo number_format($cmd['total'], 2); ?> DH</td>
                     <td><span class="badge-status st-<?php echo $cmd['statut']; ?>" data-i18n="<?php echo $statutI18n[$cmd['statut']] ?? ''; ?>"><?php echo STATUTS_COMMANDE[$cmd['statut']] ?? $cmd['statut']; ?></span></td>

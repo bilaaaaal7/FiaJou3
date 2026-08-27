@@ -35,7 +35,6 @@ require ROOT_PATH . '/assets/inc/client_navbar.php';
             'mercredi' => 'Mercredi',
             'jeudi'    => 'Jeudi',
             'vendredi' => 'Vendredi',
-            'dimanche' => 'Dimanche',
         ];
         ?>
 

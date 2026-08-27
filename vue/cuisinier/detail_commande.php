@@ -57,7 +57,7 @@ $statutI18n = [
                             </tr>
                             <tr>
                                 <td style="font-weight: 600;" data-i18n="common.livraison">Livraison</td>
-                                <td><?php echo htmlspecialchars($commande['date_livraison'] . ' ' . $commande['heure_livraison']); ?></td>
+                                <td><?php echo htmlspecialchars(($commande['date_livraison'] ?? '-') . ' ' . $commande['heure_livraison']); ?></td>
                             </tr>
                             <?php if (!empty($commande['priority'])): ?>
                             <tr>

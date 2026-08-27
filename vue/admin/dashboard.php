@@ -169,7 +169,7 @@ require ROOT_PATH . '/assets/inc/quick_access.php';
                 <span data-i18n="admin_dashboard.alerteRetardCommande">Commande</span>
                 #<?php echo (int) $retard['id']; ?> (<?php echo htmlspecialchars($retard['prenom'] . ' ' . $retard['nom']); ?>)
                 <span data-i18n="admin_dashboard.alerteRetardEnRetard">en retard — livraison prévue le</span>
-                <?php echo htmlspecialchars($retard['date_livraison']); ?> à <?php echo htmlspecialchars($retard['heure_livraison']); ?>.
+                <?php echo htmlspecialchars($retard['date_livraison'] ?? '-'); ?> à <?php echo htmlspecialchars($retard['heure_livraison']); ?>.
                 <span data-i18n="admin_dashboard.alerteRetardPrevoyez">Prévoyez le rattrapage.</span>
             </li>
         <?php endforeach; ?>
@@ -323,7 +323,7 @@ $couleursStatuts = [
                     <tr>
                         <td><?php echo $pl['id']; ?></td>
                         <td><?php echo htmlspecialchars($pl['prenom'] . ' ' . $pl['nom']); ?></td>
-                        <td><?php echo $pl['date_livraison'] . ' ' . $pl['heure_livraison']; ?></td>
+                        <td><?php echo ($pl['date_livraison'] ?? '-') . ' ' . $pl['heure_livraison']; ?></td>
                         <td><?php echo htmlspecialchars($pl['zone_nom'] ?? '-'); ?></td>
                         <td><?php echo $pl['priority'] ? '<span class="badge-status st-en_attente" data-i18n="common.urgent">Urgent</span>' : '-'; ?></td>
                     </tr>

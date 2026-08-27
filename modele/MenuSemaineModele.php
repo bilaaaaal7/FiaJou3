@@ -52,9 +52,8 @@ class MenuSemaineModele
 
     /**
      * Menu publié affiché au public : c'est le menu de la semaine actuellement
-     * active (la semaine qui contient la date du jour). Une semaine future,
-     * même déjà publiée et préparée à l'avance par l'admin, n'est pas montrée
-     * tant que sa période n'a pas commencé.
+     * active. Le samedi, le menu de la semaine suivante est retourné (même en
+     * brouillon) pour que les clients puissent commander à l'avance.
      */
     public function getPublie(): array|false
     {
@@ -352,14 +351,47 @@ class MenuSemaineModele
     }
 
     /**
-     * Menu publié qui gouverne actuellement les commandes : le menu publié
-     * dont la période couvre la date du jour. Une semaine future, même déjà
-     * publiée, n'est pas considérée active tant que sa période n'a pas
-     * commencé : le client ne voit jamais une semaine non publiée à l'avance.
+     * Menu publié qui gouverne actuellement les commandes.
+     *
+     * Du lundi au vendredi : le menu publié dont la période couvre la date
+     * du jour (semaine en cours).
+     *
+     * Le samedi : le menu de la SEMAINE SUIVANTE est affiché (les clients
+     * commandent déjà pour la semaine à venir). On accepte tout menu non-
+     * archivé (publié ou brouillon) pour que le client puisse commander
+     * dès le samedi sans attendre la publication manuelle. À défaut, on
+     * retombe sur le menu de la semaine en cours.
+     *
      * En repli, un menu hérité sans période (semaine non définie) est renvoyé.
      */
     public function getActif(): array|false
     {
+        $jourActuel = self::jourFrPourDate(date('Y-m-d'));
+
+        if ($jourActuel === JOUR_MENU_LIBRE) {
+            // Samedi : on affiche le menu de la semaine suivante (lundi + 7j).
+            // On accepte tout menu non-archivé (publié OU brouillon) pour que
+            // le client puisse commander dès le samedi sans attendre la
+            // publication manuelle par l'admin.
+            $lundiSuivant = date('Y-m-d', strtotime('monday next week'));
+            $dimancheSuivant = self::finSemaine($lundiSuivant);
+
+            $stmt = $this->pdo->prepare(
+                "SELECT * FROM weekly_menus
+                 WHERE statut != 'archive'
+                   AND week_start IS NOT NULL AND week_end IS NOT NULL
+                   AND week_start = ? AND week_end = ?
+                 ORDER BY (statut = 'publie') DESC, date_creation DESC LIMIT 1"
+            );
+            $stmt->execute([$lundiSuivant, $dimancheSuivant]);
+            $menu = $stmt->fetch();
+            if ($menu) {
+                return $menu;
+            }
+            // Aucun menu (même brouillon) pour la semaine prochaine : repli
+            // sur le menu de la semaine en cours.
+        }
+
         $stmt = $this->pdo->prepare(
             "SELECT * FROM weekly_menus
              WHERE statut = 'publie'
@@ -374,7 +406,7 @@ class MenuSemaineModele
         }
         $stmt = $this->pdo->query(
             "SELECT * FROM weekly_menus
-             WHERE statut = 'publie' AND week_start IS NULL AND week_end IS NULL
+             WHERE statut = 'publie' AND week_start IS NOT NULL AND week_end IS NULL
              ORDER BY date_creation DESC LIMIT 1"
         );
         return $stmt->fetch();
@@ -383,9 +415,38 @@ class MenuSemaineModele
     /**
      * Menu publié couvrant une date de livraison donnée, ou le dernier publié
      * sans période pour les menus hérités. Retourne false si aucun menu ne couvre.
+     *
+     * Le samedi (jour de « menu libre ») : le menu retourné est celui de la
+     * SEMAINE SUIVANTE, puisque le samedi sert à commander pour la semaine
+     * à venir. On accepte tout menu non-archivé (publié ou brouillon). Si
+     * aucun menu futur n'existe, on retombe sur le menu de la semaine en cours.
      */
     public function getPourDate(string $date): array|false
     {
+        $jour = self::jourFrPourDate($date);
+
+        // Le samedi, on cherche d'abord le menu de la semaine suivante.
+        // On accepte tout menu non-archivé (publié OU brouillon) pour que
+        // le client puisse commander dès le samedi sans attendre la
+        // publication manuelle par l'admin.
+        if ($jour === JOUR_MENU_LIBRE) {
+            $lundiSuivant = date('Y-m-d', strtotime('monday next week'));
+            $dimancheSuivant = self::finSemaine($lundiSuivant);
+
+            $stmt = $this->pdo->prepare(
+                "SELECT * FROM weekly_menus
+                 WHERE statut != 'archive'
+                   AND week_start IS NOT NULL AND week_end IS NOT NULL
+                   AND week_start = ? AND week_end = ?
+                 ORDER BY (statut = 'publie') DESC, date_creation DESC LIMIT 1"
+            );
+            $stmt->execute([$lundiSuivant, $dimancheSuivant]);
+            $menu = $stmt->fetch();
+            if ($menu) {
+                return $menu;
+            }
+        }
+
         $stmt = $this->pdo->prepare(
             "SELECT * FROM weekly_menus
              WHERE statut = 'publie'
@@ -398,6 +459,23 @@ class MenuSemaineModele
         if ($menu) {
             return $menu;
         }
+
+        // Repli : si aucun menu publié ne couvre cette date, on accepte
+        // un menu non-archivé (brouillon). Cela permet la validation des
+        // dates lorsque getActif() a retourné un brouillon le samedi.
+        $stmt = $this->pdo->prepare(
+            "SELECT * FROM weekly_menus
+             WHERE statut != 'archive'
+               AND week_start IS NOT NULL AND week_end IS NOT NULL
+               AND week_start <= ? AND week_end >= ?
+             ORDER BY (statut = 'publie') DESC, week_start DESC LIMIT 1"
+        );
+        $stmt->execute([$date, $date]);
+        $menu = $stmt->fetch();
+        if ($menu) {
+            return $menu;
+        }
+
         $stmt = $this->pdo->query(
             "SELECT * FROM weekly_menus
              WHERE statut = 'publie' AND week_start IS NULL AND week_end IS NULL
@@ -560,8 +638,7 @@ class MenuSemaineModele
 
     /**
      * Valide une date de livraison selon le cahier des charges :
-     * - jour livré (7j/7 : le samedi est un jour de menu libre, le dimanche
-     *   dispose de son propre menu),
+     * - jour livré (lundi à samedi uniquement, le dimanche est exclu),
      * - couverte par un menu publié avec un plat commandable ce jour-là,
      * - commande pour D à passer avant D-1 21h00.
      *
@@ -578,6 +655,9 @@ class MenuSemaineModele
         $jour = self::jourFrPourDate($date);
         if ($jour === null) {
             return [false, 'La date de livraison est invalide.'];
+        }
+        if ($jour === 'dimanche') {
+            return [false, 'Les commandes ne sont pas disponibles le dimanche.'];
         }
         $plats = $this->getPlatsPourDate($date);
         if (empty($plats)) {
@@ -596,6 +676,55 @@ class MenuSemaineModele
     public static function estJourMenuLibre(string $jourFr): bool
     {
         return $jourFr === JOUR_MENU_LIBRE;
+    }
+
+    /**
+     * Vérifie si un panier couvre tous les jours de la semaine (lundi à vendredi).
+     * Utilisé pour appliquer la remise samedi aux commandes de la semaine complète.
+     *
+     * @param array $contenuBrut [plat_id => quantite]
+     * @return bool true si le panier contient au moins un plat pour chaque jour (lun-ven)
+     */
+    public function commandeCouvreSemaine(array $contenuBrut): bool
+    {
+        if (empty($contenuBrut)) {
+            return false;
+        }
+
+        $menu = $this->getActif();
+        if (!$menu) {
+            return false;
+        }
+
+        $joursRequis = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi'];
+        $platsParJour = [];
+
+        foreach ($joursRequis as $jour) {
+            $items = [];
+            $stmt = $this->pdo->prepare(
+                "SELECT product_id FROM weekly_menu_items WHERE weekly_menu_id = ? AND jour = ?"
+            );
+            $stmt->execute([$menu['id'], $jour]);
+            foreach ($stmt->fetchAll() as $row) {
+                $items[] = (int) $row['product_id'];
+            }
+            $platsParJour[$jour] = $items;
+        }
+
+        foreach ($joursRequis as $jour) {
+            $trouve = false;
+            foreach ($contenuBrut as $platId => $quantite) {
+                if (in_array((int) $platId, $platsParJour[$jour], true)) {
+                    $trouve = true;
+                    break;
+                }
+            }
+            if (!$trouve) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

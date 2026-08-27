@@ -154,7 +154,7 @@ require ROOT_PATH . '/assets/inc/quick_access.php';
                         <?php else: ?>-<?php endif; ?>
                     </td>
                     <td><?php echo htmlspecialchars($c['zone_nom'] ?? '-'); ?></td>
-                    <td><?php echo $c['date_livraison'] . ' ' . $c['heure_livraison']; ?></td>
+                    <td><?php echo ($c['date_livraison'] ?? '-') . ' ' . $c['heure_livraison']; ?></td>
                     <td><?php echo number_format($c['total'], 2); ?> DH</td>
                     <td>
                         <a href="<?php echo BASE_URL; ?>/index.php?route=livreur/commande&id=<?php echo (int) $c['id']; ?>" class="btn btn-outline btn-sm" data-i18n="livreur_dashboard.detail">Détail</a>
@@ -200,7 +200,7 @@ require ROOT_PATH . '/assets/inc/quick_access.php';
                         <?php else: ?>-<?php endif; ?>
                     </td>
                     <td><?php echo htmlspecialchars($c['zone_nom'] ?? '-'); ?></td>
-                    <td><?php echo $c['date_livraison'] . ' ' . $c['heure_livraison']; ?></td>
+                    <td><?php echo ($c['date_livraison'] ?? '-') . ' ' . $c['heure_livraison']; ?></td>
                     <td><?php echo number_format($c['total'], 2); ?> DH</td>
                     <td><?php echo $c['priority'] ? '<span class="badge-status st-en_attente" data-i18n="common.urgent">Urgent</span>' : '-'; ?></td>
                     <td class="actions-cell" style="flex-direction:column; gap:4px;">

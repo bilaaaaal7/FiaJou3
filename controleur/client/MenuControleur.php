@@ -14,8 +14,7 @@ $panierModele = new PanierModele();
 $menuSemaineModele = new MenuSemaineModele();
 
 if (isset($_GET['ajouter'])) {
-    $date = isset($_GET['date']) ? trim($_GET['date']) : null;
-    $succes = $panierModele->ajouter((int) $_GET['ajouter'], $date);
+    $succes = $panierModele->ajouter((int) $_GET['ajouter']);
 
     $params = 'route=client';
     if ($succes === 'ok') {
@@ -27,14 +26,6 @@ if (isset($_GET['ajouter'])) {
     exit;
 }
 
-if (isset($_GET['date'])) {
-    $date = trim($_GET['date']);
-    [$dateOk, $dateErreur] = $menuSemaineModele->dateLivraisonValide($date);
-    if ($dateOk) {
-        $panierModele->setDate($date);
-    }
-}
-
 $platModele = new PlatModele();
 $plats = $platModele->getMenu();
 $nombreArticles = $panierModele->nombreArticles();
@@ -43,6 +34,13 @@ $menu = $menuSemaineModele->getActif();
 $itemsParJour = [];
 if ($menu) {
     $itemsParJour = $menuSemaineModele->getItemsParJour((int) $menu['id']);
+}
+
+$semaineRef = MenuSemaineModele::semaineReference($menu);
+$ouvertParJour = [];
+foreach (JOURS_LIVRAISON as $jour) {
+    $date = MenuSemaineModele::datePourJour($jour, $semaineRef);
+    $ouvertParJour[$jour] = $date ? $menuSemaineModele->dateLivraisonValide($date)[0] : false;
 }
 
 $libelleSemaine = '';

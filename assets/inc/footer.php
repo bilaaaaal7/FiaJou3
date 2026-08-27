@@ -20,6 +20,7 @@ $extraJs = $extraJs ?? [];
     <?php foreach ($extraJs as $js): ?>
     <script src="<?php echo BASE_URL; ?>/assets/js/<?php echo htmlspecialchars($js); ?>?v=<?php echo (int) @filemtime(ROOT_PATH . '/assets/js/' . $js); ?>"></script>
     <?php endforeach; ?>
+    <script src="<?php echo BASE_URL; ?>/assets/js/honeypot.js?v=<?php echo (int) @filemtime(ROOT_PATH . '/assets/js/honeypot.js'); ?>"></script>
     <script>
         if (window.lucide) { lucide.createIcons(); }
     </script>

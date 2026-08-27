@@ -35,7 +35,6 @@ $jourLabels = [
     'mercredi'  => 'Mercredi',
     'jeudi'     => 'Jeudi',
     'vendredi'  => 'Vendredi',
-    'dimanche'  => 'Dimanche',
 ];
 
 // Quelques photos maison pour illustrer le hero et les mises en avant
@@ -2544,6 +2543,8 @@ $hasMenu = $menu && !empty($itemsParJour) && array_sum(array_map('count', $items
             });
         })();
     </script>
+
+    <script src="<?php echo BASE_URL; ?>/assets/js/honeypot.js?v=<?php echo (int) @filemtime(ROOT_PATH . '/assets/js/honeypot.js'); ?>"></script>
 
 </body>
 </html>

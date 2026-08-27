@@ -44,6 +44,5 @@ if (isset($_GET['vider'])) {
 $details = $panierModele->getDetails();
 $panier = $details['articles'];
 $total = $details['total'];
-$dateLivraison = $panierModele->getDate();
 
 require ROOT_PATH . '/vue/client/panier.php';
