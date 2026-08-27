@@ -158,6 +158,30 @@
 }
 
 /* ==============================================================
+   DROPDOWN — Abonnement (couronne + badge « Premium »)
+   La couronne (lucide) reprend les règles partagées des autres
+   icônes : même doré #B88618, même taille 16px, alignée à gauche.
+   Le badge « Premium » est discret, doré, aligné à droite.
+   ============================================================== */
+.user-dropdown a.user-menu-premium .user-menu-premium-badge {
+    margin-left: auto;
+    background: rgba(184, 134, 24, 0.12);
+    color: #B88618;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    border: 1px solid rgba(184, 134, 24, 0.25);
+    border-radius: 999px;
+    padding: 1px 7px;
+    white-space: nowrap;
+}
+
+.user-dropdown a.user-menu-premium:hover {
+    background: rgba(184, 134, 24, 0.16);
+}
+
+/* ==============================================================
    DROPDOWN — badge notif
    ============================================================== */
 .user-menu-badge {
@@ -255,6 +279,10 @@ html[dir="rtl"] .user-dropdown {
     left: 0;
 }
 html[dir="rtl"] .user-chevron {
+    margin-left: 0;
+    margin-right: auto;
+}
+html[dir="rtl"] .user-dropdown a.user-menu-premium .user-menu-premium-badge {
     margin-left: 0;
     margin-right: auto;
 }

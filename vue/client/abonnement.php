@@ -82,9 +82,9 @@ require ROOT_PATH . '/assets/inc/client_navbar.php';
             </ul>
         </div>
 
-        <form method="POST" style="text-align: center;">
-            <button type="submit" name="souscrire" class="btn btn-gold" style="padding: 12px 40px; font-size: 1.05rem;" data-i18n="abonnement.souscrire">Souscrire maintenant</button>
-        </form>
+        <div style="text-align: center;">
+            <a href="<?php echo BASE_URL; ?>/index.php?route=client/abonnement/paiement" class="btn btn-gold" style="padding: 12px 40px; font-size: 1.05rem; text-decoration: none;" data-i18n="abonnement.souscrire">Souscrire maintenant</a>
+        </div>
     </div>
     <?php endif; ?>
 

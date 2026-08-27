@@ -41,8 +41,9 @@ if (!empty($_SESSION['user_id'])) {
         <a href="<?php echo BASE_URL; ?>/index.php?route=client/mes-commandes">
             <i class="fa fa-shopping-bag" aria-hidden="true"></i> <span data-i18n="nav.mesCommandes">Mes Commandes</span>
         </a>
-        <a href="<?php echo BASE_URL; ?>/index.php?route=client/abonnement">
-            <i class="fa fa-crown" aria-hidden="true"></i> <span data-i18n="nav.abonnement">Abonnement</span>
+        <a href="<?php echo BASE_URL; ?>/index.php?route=client/abonnement" class="user-menu-premium">
+            <i data-lucide="crown" aria-hidden="true"></i> <span data-i18n="nav.abonnement">Abonnement</span>
+            <span class="user-menu-premium-badge" data-i18n="nav.premium">Premium</span>
         </a>
         <a href="<?php echo BASE_URL; ?>/index.php?route=client/notifications">
             <i class="fa fa-bell" aria-hidden="true"></i> <span data-i18n="nav.notifications">Notifications</span>

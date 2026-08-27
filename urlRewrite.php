@@ -444,6 +444,26 @@ function dispatch(): void
             require ROOT_PATH . '/controleur/client/AbonnementControleur.php';
             return;
 
+        case 'client/abonnement/paiement':
+            reset_meta();
+            set_meta(
+                'Paiement de l\'abonnement - ' . APP_NAME,
+                'Réglez votre abonnement mensuel ' . APP_NAME . ' en toute sécurité.',
+                'abonnement, paiement, ' . APP_NAME
+            );
+            require ROOT_PATH . '/controleur/client/AbonnementPaiementControleur.php';
+            return;
+
+        case 'client/abonnement/confirmation':
+            reset_meta();
+            set_meta(
+                'Confirmation - ' . APP_NAME,
+                'Votre abonnement mensuel ' . APP_NAME . ' est confirmé.',
+                'abonnement, confirmation, ' . APP_NAME
+            );
+            require ROOT_PATH . '/controleur/client/AbonnementConfirmationControleur.php';
+            return;
+
         /* =========================
            ESPACE CUISINIER
            (protégé par exiger_role(ROLE_CUISINIER))

@@ -20,16 +20,10 @@ $prix = defined('PRIX_ABONNEMENT_MENSUEL') ? PRIX_ABONNEMENT_MENSUEL : 500.00;
 $erreur = '';
 $succes = '';
 
-if (isset($_POST['souscrire'])) {
-    if ($abonnement) {
-        $erreur = 'Vous avez déjà un abonnement actif.';
-    } else {
-        $id = $abonnementModele->creer($userId);
-        $succes = 'Votre abonnement a été souscrit avec succès ! Valide jusqu\'au ' . date('d/m/Y', strtotime('+1 month')) . '.';
-        $abonnement = $abonnementModele->getActif($userId);
-        $abonnements = $abonnementModele->getParUtilisateur($userId);
-    }
-}
+// La souscription passe désormais par le parcours de paiement
+// (route client/abonnement/paiement) : le bouton « Souscrire maintenant »
+// redirige vers le formulaire de paiement au lieu de créer directement
+// un abonnement sans paiement.
 
 if (isset($_POST['annuler'])) {
     $subId = (int) ($_POST['subscription_id'] ?? 0);
