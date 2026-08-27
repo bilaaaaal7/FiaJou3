@@ -416,37 +416,14 @@ class MenuSemaineModele
      * Menu publié couvrant une date de livraison donnée, ou le dernier publié
      * sans période pour les menus hérités. Retourne false si aucun menu ne couvre.
      *
-     * Le samedi (jour de « menu libre ») : le menu retourné est celui de la
-     * SEMAINE SUIVANTE, puisque le samedi sert à commander pour la semaine
-     * à venir. On accepte tout menu non-archivé (publié ou brouillon). Si
-     * aucun menu futur n'existe, on retombe sur le menu de la semaine en cours.
+     * Un jour est TOUJOURS résolu vers le menu de la semaine qui contient cette
+     * date (lundi → dimanche) : c'est ce menu qui gouverne la disponibilité et
+     * les plats commandables de ce jour. Le samedi (jour de « menu libre »)
+     * n'échappe pas à cette règle : on accepte tout menu non-archivé (publié ou
+     * brouillon) dont la période couvre le samedi demandé.
      */
     public function getPourDate(string $date): array|false
     {
-        $jour = self::jourFrPourDate($date);
-
-        // Le samedi, on cherche d'abord le menu de la semaine suivante.
-        // On accepte tout menu non-archivé (publié OU brouillon) pour que
-        // le client puisse commander dès le samedi sans attendre la
-        // publication manuelle par l'admin.
-        if ($jour === JOUR_MENU_LIBRE) {
-            $lundiSuivant = date('Y-m-d', strtotime('monday next week'));
-            $dimancheSuivant = self::finSemaine($lundiSuivant);
-
-            $stmt = $this->pdo->prepare(
-                "SELECT * FROM weekly_menus
-                 WHERE statut != 'archive'
-                   AND week_start IS NOT NULL AND week_end IS NOT NULL
-                   AND week_start = ? AND week_end = ?
-                 ORDER BY (statut = 'publie') DESC, date_creation DESC LIMIT 1"
-            );
-            $stmt->execute([$lundiSuivant, $dimancheSuivant]);
-            $menu = $stmt->fetch();
-            if ($menu) {
-                return $menu;
-            }
-        }
-
         $stmt = $this->pdo->prepare(
             "SELECT * FROM weekly_menus
              WHERE statut = 'publie'

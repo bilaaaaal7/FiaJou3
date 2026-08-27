@@ -1,0 +1,8 @@
+[2026-08-27 14:16:35] user=5 email=elbbilal00@gmail.com role=admin action=connexion.reussie details="email=elbbilal00@gmail.com" ip=::1
+[2026-08-27 14:17:12] user=5 email=elbbilal00@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=37 product_id=12 jour=jeudi" ip=::1
+[2026-08-27 14:18:04] user=5 email=elbbilal00@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=37 product_id=11 jour=lundi" ip=::1
+[2026-08-27 14:18:09] user=5 email=elbbilal00@gmail.com role=admin action=menu_semaine.supprimer_plat details="item_id=124 menu_id=37" ip=::1
+[2026-08-27 14:18:13] user=5 email=elbbilal00@gmail.com role=admin action=menu_semaine.supprimer_plat details="item_id=114 menu_id=37" ip=::1
+[2026-08-27 14:18:23] user=5 email=elbbilal00@gmail.com role=admin action=menu_semaine.ajouter_plat details="menu_id=37 product_id=24 jour=mardi" ip=::1
+[2026-08-27 14:18:57] user=5 email=elbbilal00@gmail.com role=admin action=menu_semaine.creer details="nom=dd semaine=2026-08-31 -> 2026-09-06" ip=::1
+[2026-08-27 14:19:01] user=5 email=elbbilal00@gmail.com role=admin action=menu_semaine.publier details="id=39" ip=::1
