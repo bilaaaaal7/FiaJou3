@@ -137,7 +137,7 @@ $zonesJson = json_encode($zonesPourJs, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_
                 </div>
                 <?php if ($remiseMontant > 0): ?>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px; color: #27ae60;">
-                    <span data-i18n="commander.remise">Remise semaine complète (<?php echo REMISE_SEMAINE_POURCENT; ?>%)</span>
+                    <span data-i18n="commander.remise" data-i18n-params='{"pourcent": <?php echo REMISE_SEMAINE_POURCENT; ?>}'>Remise semaine complète (<?php echo REMISE_SEMAINE_POURCENT; ?>%)</span>
                     <span id="lblRemise">-<?php echo number_format($remiseMontant, 2, ',', ' '); ?> DH</span>
                 </div>
                 <?php endif; ?>

@@ -391,16 +391,21 @@ class CommandeModele
             }
         }
 
+        // La remise « semaine complète » est calculée sur le sous-total des
+        // plats uniquement (jamais sur les frais de livraison), ce qui correspond
+        // exactement à la remise affichée au client dans le récapitulatif de
+        // commande (controleur/CommanderControleur.php). On l'applique donc avant
+        // d'ajouter les frais de livraison au total.
+        $remise = 0;
+        if ($couvreSemaine && defined('REMISE_SEMAINE_POURCENT') && REMISE_SEMAINE_POURCENT > 0) {
+            $remise = round($total * REMISE_SEMAINE_POURCENT / 100, 2);
+            $total -= $remise;
+        }
+
         $zoneModele = new ZoneModele();
         $zone = $zoneModele->getParId($zoneId);
         if ($zone) {
             $total += $zone['prix_livraison'];
-        }
-
-        $remise = 0;
-        if ($couvreSemaine && defined('REMISE_SEMAINE_POURCENT')) {
-            $remise = round($total * REMISE_SEMAINE_POURCENT / 100, 2);
-            $total -= $remise;
         }
 
         $stmt = $this->pdo->prepare(
